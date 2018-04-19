@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.atom.vpn.demo">
+
+    <application
+        android:name="com.atom.vpn.demo.AtomDemoApplicationController"
+        android:allowBackup="false"
+        android:icon="@mipmap/atom_launcher"
+        android:label="@string/app_name"
+        android:logo="@mipmap/atom_launcher"
+        android:roundIcon="@mipmap/atom_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:replace="icon,name,logo,allowBackup">
+
+        <activity
+            android:name=".activity.SampleMainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name=".activity.ConnectActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:screenOrientation="portrait"/>
+
+
+        <service
+            android:name="org.strongswan.android.logic.VpnStateService"
+            android:exported="false" />
+        <service
+            android:name="org.strongswan.android.logic.CharonVpnService"
+            android:exported="false"
+            android:permission="android.permission.BIND_VPN_SERVICE">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>
