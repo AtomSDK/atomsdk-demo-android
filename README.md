@@ -276,6 +276,6 @@ atomManager.cancel(Context context);
  To disconnect, simply call the Disconnect method of AtomManager.
 
 ```
-atomManager.diconnect(Context context);
+atomManager.disconnect(Context context);
 ```
 
