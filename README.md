@@ -39,7 +39,8 @@ compile 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
 compile 'br.com.zbra:android-linq:1.1.0'
 ```
 
-and <a href="https://github.com/evant/gradle-retrolambda">Retrolambda Plugin</a>.
+<a href="https://github.com/laurentbh/icmp4j">Icmp4j</a> and 
+<a href="https://github.com/evant/gradle-retrolambda">Retrolambda Plugin</a>.
 
 
 # Getting Started with the Code
