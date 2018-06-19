@@ -19,6 +19,7 @@ This is a demo application for Android Application with basic usage of ATOM VPN 
  
 ## SDK Installation
  
+
 Although ATOM SDK library is already compiled with the demo application but you can install the latest version from
 <a href="https://s3.eu-central-1.amazonaws.com/atom-assets/android/AtomSdk-1.0.4.aar">Atom SDK aar</a>
 
@@ -276,7 +277,9 @@ atomManager.cancel(Context context);
 # Disconnect VPN Connection
  To disconnect, simply call the Disconnect method of AtomManager.
 
+
 ```
 atomManager.disconnect(Context context);
 ```
+
 
