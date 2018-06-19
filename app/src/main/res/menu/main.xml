@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="AppCompatResource">
+    <item
+        android:id="@+id/menu_toggle_log"
+        android:showAsAction="always"
+        android:title="@string/sample_show_log" />
+    <item
+        android:id="@+id/menu_clear_log"
+        android:showAsAction="ifRoom"
+        android:title="@string/clear" />
+</menu>

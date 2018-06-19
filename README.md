@@ -19,14 +19,30 @@ This is a demo application for Android Application with basic usage of ATOM VPN 
  
 ## SDK Installation
  
-Although ATOM SDK library is already compiled with the demo application but you can install the latest version through
-<a href="">Atom SDK aar</a>
+
+Although ATOM SDK library is already compiled with the demo application but you can install the latest version from
+<a href="https://s3.eu-central-1.amazonaws.com/atom-assets/android/AtomSdk-1.0.4.aar">Atom SDK aar</a>
 
 Import module aar as library in your project using Android Studio then add it to build.gradle of app
 
 ```
 compile project(':AtomSdk-1.0.4')
 ```
+### Requirements
+
+ATOM SDK requires following libraries to properly build.
+```
+compile 'com.google.code.gson:gson:2.8.0'
+compile 'com.jakewharton.timber:timber:4.6.0'
+compile 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+compile 'com.squareup.retrofit2:converter-moshi:2.3.0'
+compile 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
+compile 'br.com.zbra:android-linq:1.1.0'
+```
+
+<a href="https://github.com/laurentbh/icmp4j">Icmp4j</a> and 
+<a href="https://github.com/evant/gradle-retrolambda">Retrolambda Plugin</a>.
+
 
 # Getting Started with the Code
  ATOM SDK needs to be initialized with a “SecretKey” provided to you after you buy the subscription which is typically a hex-numeric literal.
@@ -73,7 +89,7 @@ Remove the callback using
 AtomManager.removeVPNStateListener(VPNStateListener this);
 ```
 
-### Listening to IKEV Event
+### Listening to IKEV Callbacks
 
 While connecting to IKEV protocol callbacks must be registered using bind service
 
@@ -116,9 +132,9 @@ Callbacks will be registered for the ease of the developer.
     }
 ```
 
-## Packet Transmitted Event
+## Packet Transmitted Callback
 
-ATOM SDK offers an additional event onPacketTransmitted only trigger while connected using TCP or UDP to read in/out packet transmitted.
+ATOM SDK offers an additional callback onPacketTransmitted only trigger while connected using TCP or UDP to read in/out packet transmitted.
  
 ``` 
     @Override
@@ -196,7 +212,7 @@ atomManager.getProtocols(new CollectionCallback<Protocol>() {
 
 ## How to Connect
 
-As soon as you call Connect method, the events you were listening to will get the updates about the states being changed and Dial Error (if any occurs) as well.
+As soon as you call Connect method, the callbacks you were listening to will get the updates about the states being changed and Dial Error (if any occurs) as well.
 
 After initializing the VPNProperties, just call Connect method of ATOM SDK.
  
@@ -261,6 +277,9 @@ atomManager.cancel(Context context);
 # Disconnect VPN Connection
  To disconnect, simply call the Disconnect method of AtomManager.
 
+
 ```
-atomManager.diconnect(Context context);
+atomManager.disconnect(Context context);
 ```
+
+
