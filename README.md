@@ -39,6 +39,7 @@ compile 'com.squareup.retrofit2:converter-moshi:2.3.0'
 compile 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
 compile 'br.com.zbra:android-linq:1.1.0'
 ```
+You also need to configure the following libraries:
 
 <a href="https://github.com/laurentbh/icmp4j">Icmp4j</a> and 
 <a href="https://github.com/evant/gradle-retrolambda">Retrolambda Plugin</a>.
@@ -144,18 +145,28 @@ ATOM SDK offers an additional callback onPacketTransmitted only trigger while co
 ```
 
 ## VPN Authentication
+
 ATOM SDK provided two ways to authenticate your vpn user.
 First one is to offer VPN Credentials directly to the SDK which you may create through the Admin Panel provided by ATOM.
 
 ```
 AtomManager.getInstance().setVPNCredentials(new VPNCredentials(String VPNUsername,String VPNPassword));
-```
 
-Alternatively, if you don’t want to take hassle of creating users yourself, leave
+```
+Alternatively, if you don’t want to take hassle of creating users yourself, leave it on us and we will do the rest for you! 
+
+```
+AtomManager.getInstance().setUUID(String UniqueUserID);
+
+```
+ 
+You just need to provide a Unique User ID for your user e.g. any unique hash or even user’s email which you think remains consistent and unique for your user. ATOM SDK will generate VPN Account behind the scenes automatically and gets your user connected! Easy isn’t it?
+
+# VPN Connection
+You need to declare an object of “VPNProperties” Class to define your connection preferences. Details of all the available properties can be seen in the inline documentation of “VPNProperties” Class. For the least, you need to give Country and Protocol with which you want to connect.
 
 ```
 VPNProperties.Builder vpnPropertiesBuilder = new VPNProperties.Builder(Country country, Protocol protocol);
-
 VPNProperties vpnProperties = vpnPropertiesBuilder.build();
 
 ```
