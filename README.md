@@ -20,8 +20,8 @@ This is a demo application for Android Application with basic usage of ATOM VPN 
 ## SDK Installation
  
 
-Although ATOM SDK library is already compiled with the demo application but you can install the latest version from
-<a href="https://atom.secure.com/downloads/sdk/android/1.0.4/AtomSDK-Android.zip">Atom SDK aar</a>
+Although ATOM SDK library is already compiled with the demo application but you can download the latest version from
+<a href="https://atom.secure.com/downloads/sdk/android/1.0.4/AtomSDK-Android.zip">here</a>
 
 Import module aar as library in your project using Android Studio then add it to build.gradle of app
 
