@@ -6,48 +6,49 @@ This is a demo application for Android Application with basic usage of ATOM VPN 
 * Connection with Dedicated IP
 * Connection with Multiple Protocols (Auto-Retry Functionality)
 * Connection with Real-time Optimized Servers (Countries based on latency from user in Real-time)
- 
+* Connection with Smart Dialing (Use getCountriesForSmartDialing() to get the Advanced VPN Dialing supported countries)
+
 ## Compatibility
- 
-* Compatible with Android 4.0/API Level: 14 (ICE_CREAM_SANDWICH) and later  
-* Compatible with ATOM SDK Version 1.0.4 and onwards 
+
+* Compatible with Android 4.0/API Level: 14 (ICE_CREAM_SANDWICH) and later
+* Compatible with ATOM SDK Version 2.0 and onwards
 
 ## Supported Protocols
 * TCP
 * UDP
 * IKEV
- 
-## SDK Installation
- 
 
-Although ATOM SDK library is already compiled with the demo application but you can download the latest version from
-<a href="https://secure.com/atom/downloads/sdk/android/1.0.4/AtomSDK-Android.zip">here</a>
+## SDK Installation
+
+Although ATOM SDK library is already compiled with the demo application but you can download the latest version from [ATOM SDK Download](https://secure.com/atom/downloads/sdk/android/2.0/AtomSdk-Android-2.0.zip)
 
 Import module aar as library in your project using Android Studio then add it to build.gradle of app
 
 ```
-compile project(':AtomSdk-1.0.4')
+implementation project(':AtomSdk-2.0')
 ```
-### Requirements
+>To successfully build ATOM SDK, developer must enable Kotlin support in Android Studio using Kotlin Extension.
 
-ATOM SDK requires following libraries to properly build.
+### Setup Kotlin Extension in Android Studio
+
+Add Kotlin gradle plugin to project build.gradle
 ```
-compile 'com.google.code.gson:gson:2.8.0'
-compile 'com.jakewharton.timber:timber:4.6.0'
-compile 'com.squareup.okhttp3:logging-interceptor:3.9.0'
-compile 'com.squareup.retrofit2:converter-moshi:2.3.0'
-compile 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
-compile 'br.com.zbra:android-linq:1.1.0'
+classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.71"
 ```
-You also need to configure the following libraries:
 
-<a href="https://github.com/laurentbh/icmp4j">Icmp4j</a> and 
-<a href="https://github.com/evant/gradle-retrolambda">Retrolambda Plugin</a>.
-
+Add Kotlin Android Extention plugin to app build.gradle
+```
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+```
+Add Kotlin support to app build.gradle in dependencies
+```
+implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.71"
+```
 
 # Getting Started with the Code
  ATOM SDK needs to be initialized with a “SecretKey” provided to you after you buy the subscription which is typically a hex-numeric literal.
- 
+
 Don’t forget to change the following entry with your SECRET KEY.
 
 ```
@@ -64,16 +65,23 @@ AtomManager.initialize(this, atomConfiguration, new AtomManager.InitializeCallba
             @Override
             public void onInitialized(AtomManager atomManager) {
             // Get initialized AtomManager instance here
-                        
        }
 });
 ```
-PS: ATOM SDK is a singleton, and must be initialized before accessing its methods, otherwise NullPointerException will be thrown.
+```PS:``` ATOM SDK is a singleton, and must be initialized before accessing its methods, otherwise NullPointerException will be thrown.
+
+## Enable Local Inventory Support
+ATOM SDK offers a feature to enable the local inventory support. This can help Application to fetch Countries and Protocols even when device network is not working.
+
+* To enable it, Log In to the Atom Console
+* Download the local data file in json format
+* File name should be localdata.json. Please rename the file to localdata.json if you find any discrepancy in the file name.
+* Paste the file in assets folder of your application.
 
 ## Callbacks to Register
 
 ATOM SDK offers five callbacks to register for the ease of the developer.
- 
+
 * onStateChange
 * onConnected
 * onDisconnected
@@ -81,7 +89,7 @@ ATOM SDK offers five callbacks to register for the ease of the developer.
 * onRedialing
 
 Details of these callbacks can be seen in the inline documentation or method summaries. You need to register these callback to get notified about what’s happening behind the scenes
- 
+
 ```
 AtomManager.addVPNStateListener(VPNStateListener this);
 ```
@@ -89,18 +97,17 @@ Remove the callback using
 ```
 AtomManager.removeVPNStateListener(VPNStateListener this);
 ```
-
 ### Listening to IKEV Callbacks
 
 While connecting to IKEV protocol callbacks must be registered using bind service
 
-```           
+```
 atomManager.bindIKEVStateService(this);
 ```
 
-and unbind using 
+and unbind using
 
-```           
+```
 atomManager.unBindIKEVStateService(this);
 ```
 
@@ -109,38 +116,38 @@ Callbacks will be registered for the ease of the developer.
 ```
     @Override
     public void onStateChange(String state) {
-       
+
     }
-    
+
     @Override
-    public void onConnected() {
-        
+    public void onConnected(ConnectionDetails connectionDetails) {
+
     }
-    
+
     @Override
-    public void onDisconnected(boolean isCancelled) {
-        
+    public void onDisconnected(ConnectionDetails connectionDetails) {
+
     }
-    
+
     @Override
     public void onDialError(AtomException exception, ConnectionDetails connectionDetails) {
-        
+
     }
 
     @Override
     public void onRedialing(AtomException exception, ConnectionDetails connectionDetails) {
-        
+
     }
 ```
 
 ## Packet Transmitted Callback
 
 ATOM SDK offers an additional callback onPacketTransmitted only trigger while connected using TCP or UDP to read in/out packet transmitted.
- 
-``` 
+
+```
     @Override
     public void onPacketsTransmitted(String in, String out) {
-        
+
     }
 ```
 
@@ -151,15 +158,13 @@ First one is to offer VPN Credentials directly to the SDK which you may create t
 
 ```
 AtomManager.getInstance().setVPNCredentials(new VPNCredentials(String VPNUsername,String VPNPassword));
-
 ```
-Alternatively, if you don’t want to take hassle of creating users yourself, leave it on us and we will do the rest for you! 
+Alternatively, if you don’t want to take hassle of creating users yourself, leave it on us and we will do the rest for you!
 
 ```
 AtomManager.getInstance().setUUID(String UniqueUserID);
-
 ```
- 
+
 You just need to provide a Unique User ID for your user e.g. any unique hash or even user’s email which you think remains consistent and unique for your user. ATOM SDK will generate VPN Account behind the scenes automatically and gets your user connected! Easy isn’t it?
 
 # VPN Connection
@@ -168,12 +173,11 @@ You need to declare an object of “VPNProperties” Class to define your connec
 ```
 VPNProperties.Builder vpnPropertiesBuilder = new VPNProperties.Builder(Country country, Protocol protocol);
 VPNProperties vpnProperties = vpnPropertiesBuilder.build();
-
 ```
 
 ## Fetch Countries
 
-You can get the Countries list through ATOM SDK. 
+You can get the Countries list through ATOM SDK.
 
 ```
 atomManager.getCountries(new Callback<List<Country>>() {
@@ -192,9 +196,33 @@ atomManager.getCountries(new Callback<List<Country>>() {
             public void onNetworkError(AtomException exception) {
 
             }
-
         });
 ```
+
+## Fetch Countries For Smart Dialing
+
+You can get the Countries those support Smart Dialing through ATOM SDK.
+
+```
+atomManager.getCountriesForSmartDialing(new Callback<List<Country>>() {
+
+            @Override
+            public void onSuccess(List<Country> countries) {
+
+            }
+
+            @Override
+            public void onError(AtomException exception) {
+
+            }
+
+            @Override
+            public void onNetworkError(AtomException exception) {
+
+            }
+        });
+```
+
 ## Fetch Protocols
 
 Protocols can be obtained through ATOM SDK.
@@ -213,12 +241,10 @@ atomManager.getProtocols(new CollectionCallback<Protocol>() {
             }
 
             @Override
-            public void onNetworkError(AtomException exception) {  
+            public void onNetworkError(AtomException exception) {
 
             }
-
-        }); 
-
+        });
 ```
 
 ## How to Connect
@@ -226,14 +252,14 @@ atomManager.getProtocols(new CollectionCallback<Protocol>() {
 As soon as you call Connect method, the callbacks you were listening to will get the updates about the states being changed and Dial Error (if any occurs) as well.
 
 After initializing the VPNProperties, just call Connect method of ATOM SDK.
- 
+
 ### Connection with Parameters
 
 It is the simplest way of connection which is well explained in the steps above. You just need to provide the Country and the Protocol objects and call the Connect method.
 
 ```
 VPNProperties.Builder vpnPropertiesBuilder = new VPNProperties.Builder(Country country, Protocol protocol);
-VPNProperties vpnProperties = vpnPropertiesBuilder.build(); 
+VPNProperties vpnProperties = vpnPropertiesBuilder.build();
 
 atomManager.connect(this, vpnProperties);
 ```
@@ -246,11 +272,11 @@ VPNProperties vpnProperties = new VPNProperties.Builder(String PSK).build();
 
 atomManager.connect(this, vpnProperties);
 ```
- 
+
 ### Connection with Dedicated IP
 You can also make your user comfortable with this type of connection by just providing them with a Dedicated DNS Host and they will always connect to a dedicated server! For this purpose, ATOM SDK provides you with the following constructor.
 ```
-VPNProperties vpnProperties = new VPNProperties.Builder(String dedicatedHostName, Protocol protocol, String ServerType).build();
+VPNProperties vpnProperties = new VPNProperties.Builder(String dedicatedHostName, Protocol protocol).build();
 
 atomManager.connect(this, vpnProperties);
 ```
@@ -259,26 +285,33 @@ atomManager.connect(this, vpnProperties);
 This one is same as the first one i.e. “Connection with Parameters” with a slight addition of using Real-time optimized servers best from your user’s location. You just need to call "withOptimization" and rest will be handled by the ATOM SDK.
 ```
 VPNProperties.Builder vpnPropertiesBuilder = new VPNProperties.Builder(Country country, Protocol protocol).withOptimization();
-VPNProperties vpnProperties = vpnPropertiesBuilder.build(); 
+VPNProperties vpnProperties = vpnPropertiesBuilder.build();
 
 atomManager.connect(this, vpnProperties);
-
 ```
 If you want to show your user the best location for him on your GUI then ATOM SDK have it ready for you as well! ATOM SDK has a method exposed namely “getOptimizedCountries” which has a method “getLatency()” in the country object which has the real-time latency of all countries from your user’s location (only if ping is enabled on your user’s system and ISP doesn’t blocks any of our datacenters). You can use this property to find the best speed countries from your user’s location.
 
- 
+### Connection with Smart Dialing
+“Connection with Parameters” with a slight addition of using smart dialing to connect. You just need to call "withSmartDialing" and rest will handled by the ATOM SDK.
+```
+VPNProperties.Builder vpnPropertiesBuilder = new VPNProperties.Builder(Country country, Protocol protocol).withSmartDialing();
+VPNProperties vpnProperties = vpnPropertiesBuilder.build();
+
+atomManager.connect(this, vpnProperties);
+```
+
 ### Connection with Multiple Protocols (Auto-Retry Functionality)
-You can provide THREE Protocols at max so ATOM SDK can attempt automatically on your behalf to get your user connected with the Secondary or Tertiary Protocol if your base Protocol fails to connect. 
+You can provide THREE Protocols at max so ATOM SDK can attempt automatically on your behalf to get your user connected with the Secondary or Tertiary Protocol if your base Protocol fails to connect.
 
 ```
 VPNProperties.Builder vpnPropertiesBuilder = new VPNProperties.Builder(Country country, Protocol protocol);
 vpnPropertiesBuilder.withSecondaryProtocol(Protocol secondaryProtocol);
 vpnPropertiesBuilder.withTertiaryProtocol(Protocol tertiaryProtocol);
-VPNProperties vpnProperties = vpnPropertiesBuilder.build(); 
+VPNProperties vpnProperties = vpnPropertiesBuilder.build();
 
 atomManager.connect(this, vpnProperties);
 ```
- 
+
 For more information, please see the inline documentation of VPNProperties Class.
 # Cancel VPN Connection
 You can Cancel connection between dialing process by calling following method.
@@ -287,10 +320,27 @@ atomManager.cancel(Context context);
 ```
 # Disconnect VPN Connection
  To disconnect, simply call the Disconnect method of AtomManager.
-
-
 ```
 atomManager.disconnect(Context context);
 ```
+
+## Proguard rules:
+```
+-dontwarn com.atom.sdk.**
+-keep class com.atom.sdk.** { *; }
+-keep interface com.atom.sdk.** { *; }
+```
+
+# Resolve dependencies conflicts if any :
+In case any dependency conflict is faced while building ATOM SDK with your application e.g. “Duplicate jar entry”, exclude that dependency from app build.gradle configuration.
+```
+android{
+    configurations {
+        all*.exclude module: 'DEPENDENCY_MODULE_NAME_HERE'
+    }
+}
+```
+
+
 
 

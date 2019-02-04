@@ -1,56 +1,64 @@
-<resources>
-    <string name="app_name">Atom SDK Demo</string>
-    <string name="atom_secret_key">YOUR_SECRET_KEY</string>
+<resources
+     >
+  <string name="app_name">Atom SDK Demo</string>
 
-    <string name="intro_message">
-        <![CDATA[
+  <string name="atom_secret_key">YOUR_SECRET_KEY</string>
+
+  <string name="intro_message">
+      <![CDATA[
+
+          This sample demonstrates the use of Atom SDK for
+          Privacy and Security.
 
 
-            This sample demonstrates the use of Atom SDK for
-            Privacy and Security.
+      ]]>
+  </string>
+  <string name="sample_show_log">Show Log</string>
+  <string name="sample_hide_log">Hide Log</string>
+  <string name="clear">Clear</string>
+  <string name="vpn_not_supported_during_lockdown">VPN connections are not supported in lockdown mode.</string>
+  <string name="vpn_not_supported">Your device does not support VPN applications.\nPlease contact the manufacturer.</string>
+  <string name="profile_not_found">Profile not found</string>
+  <string name="connect">Connect</string>
+  <string name="replaces_active_connection">This will replace your active VPN connection!</string>
+  <string name="reconnect">Reconnect</string>
+  <string name="connect_profile_question">Connect %1$s?</string>
+  <string name="vpn_profile_connected">This VPN profile is currently connected!</string>
+  <string name="vpn_not_supported_title">VPN not supported</string>
+  <string name="vpn_connected">VPN connected</string>
+
+  <string name="hint_dedicated_ip">Dedicated IP</string>
+  <string name="hint_username">Username</string>
+  <string name="hint_password">Password</string>
+  <string name="hint_uuid">Enter UUID</string>
+  <string name="hint_psk">Enter PSK</string>
+  <string name="label_secret_key">Secret Key</string>
+  <string name="label_auto_generate">Auto generate user credentials</string>
+  <string name="label_username">Username</string>
+  <string name="label_password">Password</string>
+  <string name="label_uuid">UUID</string>
+  <string name="label_connect_via">Connect with</string>
+  <string name="label_connect_with_psk">Connect with Pre-Shared Key</string>
+  <string name="label_connect_with_params">Connect with Params</string>
+  <string name="label_connect_with_dedicated_ip">Connect with Dedicated IP</string>
+  <string name="lbl_optimize_connection">Optimize Connection</string>
+  <string name="lbl_connect">Connect</string>
+  <string name="lbl_reconnect">Reconnect</string>
+  <string name="lbl_select_protocol">Select Protocol</string>
+  <string name="lbl_dedicated_ip">Dedicated IP</string>
+  <string name="lbl_skip_user_verification">Skip User Verification</string>
+  <string name="lbl_pre_shared_key">Pre-Shared Key</string>
+  <string name="empty_secret_key">Secret Key is required</string>
+  <string name="lbl_primary_protocol">Primary Protocol</string>
+  <string name="lbl_secondary_protocol">Secondary Protocol</string>
+  <string name="lbl_tertiary_protocol">Tertiary Protocol</string>
+  <string name="lbl_select_country">Select Country</string>
+  <string name="lbl_optimized_countries">Optimized countries</string>
 
 
-        ]]>
-    </string>
-    <string name="sample_show_log">Show Log</string>
-    <string name="sample_hide_log">Hide Log</string>
-    <string name="clear">Clear</string>
-    <string name="vpn_not_supported_during_lockdown">VPN connections are not supported in lockdown mode.</string>
-    <string name="vpn_not_supported">Your device does not support VPN applications.\nPlease contact the manufacturer.</string>
-    <string name="profile_not_found">Profile not found</string>
-    <string name="connect">Connect</string>
-    <string name="replaces_active_connection">This will replace your active VPN connection!</string>
-    <string name="reconnect">Reconnect</string>
-    <string name="connect_profile_question">Connect %1$s?</string>
-    <string name="vpn_profile_connected">This VPN profile is currently connected!</string>
-    <string name="vpn_not_supported_title">VPN not supported</string>
-    <string name="vpn_connected">VPN connected</string>
+  <string name="lbl_select_server">Select Server Type</string>
 
-    <string name="hint_dedicated_ip">Dedicated IP</string>
-    <string name="hint_username">Username</string>
-    <string name="hint_password">Password</string>
-    <string name="hint_uuid">Enter UUID</string>
-    <string name="hint_psk">Enter PSK</string>
-    <string name="label_secret_key">Secret Key</string>
-    <string name="label_auto_generate">Auto generate user credentials</string>
-    <string name="label_username">Username</string>
-    <string name="label_password">Password</string>
-    <string name="label_uuid">UUID</string>
-    <string name="label_connect_via">Connect with</string>
-    <string name="label_connect_with_psk">Connect with Pre-Shared Key</string>
-    <string name="label_connect_with_params">Connect with Params</string>
-    <string name="label_connect_with_dedicated_ip">Connect with Dedicated IP</string>
-    <string name="lbl_optimize_connection">Optimize Connection</string>
-    <string name="lbl_connect">Connect</string>
-    <string name="lbl_select_protocol">Select Protocol</string>
-    <string name="lbl_dedicated_ip">Dedicated IP</string>
-    <string name="lbl_skip_user_verification">Skip User Verification</string>
-    <string name="lbl_pre_shared_key">Pre-Shared Key</string>
-    <string name="empty_secret_key">Secret Key is required</string>
-    <string name="lbl_primary_protocol">Primary Protocol</string>
-    <string name="lbl_secondary_protocol">Secondary Protocol</string>
-    <string name="lbl_tertiary_protocol">Tertiary Protocol</string>
-    <string name="lbl_select_country">Select Country</string>
+  <string name="lbl_smart_dialing">Smart Dialing</string>
 
 
 </resources>

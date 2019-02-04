@@ -1,55 +1,54 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+
+repositories {
+
+}
 
 android {
-        compileSdkVersion 25
-        buildToolsVersion "25.0.3"
-        defaultConfig {
-            applicationId "com.atom.vpn.demo"
-            minSdkVersion 14
-            targetSdkVersion 25
-            versionCode 1
-            versionName "1.0"
 
-            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-            multiDexKeepProguard file("proguard.multidex.config")
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+    defaultConfig {
+        applicationId "com.atom.vpn.demo"
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 2
+        versionName "1.0.1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexKeepProguard file("proguard.multidex.config")
+
     }
     buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-        }
-
+//        release {
+//            minifyEnabled true
+//            proguardFile 'proguard-rules.pro'
+//            proguardFile getDefaultProguardFile('proguard-android.txt')
+//        }
         debug {
             minifyEnabled false
             debuggable true
         }
     }
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
 
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
-    // Latest one on maven central
-    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:+'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.jakewharton.timber:timber:4.6.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.9.0'
-    compile 'com.squareup.retrofit2:converter-moshi:2.3.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
-    compile 'br.com.zbra:android-linq:1.1.0'
-    compile 'com.github.vihtarb:tooltip:0.1.9'
-    compile project(':AtomSdk-1.0.4')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.github.vihtarb:tooltip:0.1.9'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation project(':AtomSdk-2.0')
 }

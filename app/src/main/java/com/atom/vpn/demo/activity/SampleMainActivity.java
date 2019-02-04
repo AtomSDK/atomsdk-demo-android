@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Atom SDK Demo.
+ * Copyright (c) 2018 ATOM SDK Demo.
  * All rights reserved.
  */
 
@@ -9,11 +9,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
 import com.atom.sdk.android.AtomManager;
-import com.atom.sdk.android.VPNProperties;
 import com.atom.vpn.demo.AtomDemoApplicationController;
 import com.atom.vpn.demo.R;
 import com.atom.vpn.demo.common.base.BaseSampleActivity;
 import com.atom.vpn.demo.fragment.MainFragment;
+
+
 
 public class SampleMainActivity extends BaseSampleActivity {
 

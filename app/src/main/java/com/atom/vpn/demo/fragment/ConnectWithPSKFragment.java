@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Atom SDK Demo.
+ * Copyright (c) 2018 ATOM SDK Demo.
  * All rights reserved.
  */
 
@@ -7,6 +7,8 @@ package com.atom.vpn.demo.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
+
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -19,10 +21,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.atom.sdk.android.AtomManager;
+import com.atom.sdk.android.ConnectionDetails;
 import com.atom.sdk.android.Errors;
+import com.atom.sdk.android.VPNCredentials;
 import com.atom.sdk.android.VPNProperties;
 import com.atom.sdk.android.VPNStateListener;
-import com.atom.sdk.android.data.model.lastConnectionDetail.ConnectionDetails;
 import com.atom.sdk.android.exceptions.AtomException;
 import com.atom.sdk.android.exceptions.AtomValidationException;
 import com.atom.vpn.demo.AtomDemoApplicationController;
@@ -32,6 +35,11 @@ import com.atom.vpn.demo.common.Constants;
 import com.atom.vpn.demo.common.logger.Log;
 import com.tooltip.Tooltip;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+
 import static com.atom.vpn.demo.common.Utilities.changeButtonState;
 import static com.atom.vpn.demo.common.Utilities.changeButtonText;
 
@@ -39,8 +47,9 @@ import static com.atom.vpn.demo.common.Utilities.changeButtonText;
 public class ConnectWithPSKFragment extends Fragment implements VPNStateListener {
 
     private static final String TAG = "ConnectWithPSKFragment";
-    EditText etPSK;
-    Button btnConnect;
+    private EditText etPSK;
+    private Button btnConnect;
+    private String uuid,vpnUsername,vpnPassword;
 
     public ConnectWithPSKFragment() {
         // Required empty public constructor
@@ -50,42 +59,73 @@ public class ConnectWithPSKFragment extends Fragment implements VPNStateListener
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Bundle extras  = this.getArguments();
+        if(extras!=null) {
+
+            if (extras.containsKey("uuid")) {
+                uuid =  extras.getString("uuid");
+            }
+
+            if (extras.containsKey("vpnUsername")) {
+                vpnUsername =  extras.getString("vpnUsername");
+            }
+
+            if (extras.containsKey("vpnPassword")) {
+                vpnPassword =  extras.getString("vpnPassword");
+            }
+
+        }
+
+
         AtomManager.addVPNStateListener(this);
 
-        new Handler().postDelayed(() -> AtomDemoApplicationController.getInstance().getAtomManager().bindIKEVStateService(getActivity()),500);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AtomDemoApplicationController.getInstance().getAtomManager().bindIKEVStateService(getActivity());
+            }
+        },500);
 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_connect_with_psk, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        etPSK = (EditText) view.findViewById(R.id.etPSK);
+        etPSK = view.findViewById(R.id.etPSK);
 
-        ImageView pskHint = (ImageView) view.findViewById(R.id.pskHint);
+        ImageView pskHint =  view.findViewById(R.id.pskHint);
         Tooltip.Builder pskHintTipBuilder = new Tooltip.Builder(pskHint, R.style.TooltipStyle);
         Tooltip pskHintTip = pskHintTipBuilder.setText(Constants.TooltipPSK).setDismissOnClick(true).build();
 
-        pskHint.setOnClickListener(v -> {
+        pskHint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            if (!pskHintTip.isShowing()) {
-                pskHintTip.show();
-                final Handler handler = new Handler();
-                handler.postDelayed(pskHintTip::dismiss, 3000);
-            } else {
-                pskHintTip.dismiss();
+                if (!pskHintTip.isShowing()) {
+                    pskHintTip.show();
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            pskHintTip.dismiss();
+                        }
+                    }, 3000);
+                } else {
+                    pskHintTip.dismiss();
+                }
+
             }
-
         });
 
-        btnConnect = (Button) view.findViewById(R.id.btnConnect);
+        btnConnect =  view.findViewById(R.id.btnConnect);
         changeButtonText(getActivity(),btnConnect);
         btnConnect.setOnClickListener(v -> {
 
@@ -107,11 +147,18 @@ public class ConnectWithPSKFragment extends Fragment implements VPNStateListener
 
                             etPSK.setError(null);
                             try {
-                                //  Put PSK here
-                                VPNProperties vpnProperties  = new VPNProperties.Builder(etPSK.getText().toString())
-                                        .build();
+                                // Put PSK here
+                                VPNProperties.Builder vpnProperties = new VPNProperties.Builder(etPSK.getText().toString());
 
-                                AtomDemoApplicationController.getInstance().getAtomManager().connect(getActivity(), vpnProperties);
+                                if(!TextUtils.isEmpty(vpnUsername) && !TextUtils.isEmpty(vpnPassword)) {
+                                    AtomDemoApplicationController.getInstance().getAtomManager().setVPNCredentials(new VPNCredentials(vpnUsername,vpnPassword));
+                                }else if(!TextUtils.isEmpty(uuid)){
+                                    AtomDemoApplicationController.getInstance().getAtomManager().setUUID(uuid);
+                                }
+
+                                VPNProperties vpnProperties1 = vpnProperties.build();
+
+                                AtomDemoApplicationController.getInstance().getAtomManager().connect(getActivity(), vpnProperties1);
 
                             } catch (AtomValidationException e) {
                                 e.printStackTrace();
@@ -128,18 +175,32 @@ public class ConnectWithPSKFragment extends Fragment implements VPNStateListener
         });
 
 
+
     }
 
     @Override
     public void onConnected() {
-        changeButtonState(btnConnect, "Disconnect");
 
+    }
+
+    @Override
+    public void onConnected(ConnectionDetails connectionDetails) {
+        Log.d("connected",   "Connected");
+        changeButtonState(btnConnect, "Disconnect");
+        Log.d("ip",AtomDemoApplicationController.getInstance().getAtomManager().getConnectedIp(getActivity()));
+        Date date = AtomDemoApplicationController.getInstance().getAtomManager().getConnectedTime(getActivity());
+
+        if(date!=null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+            Log.d("date", sdf.format(date));
+        }
     }
 
     @Override
     public void onConnecting() {
 
     }
+
 
     @Override
     public void onRedialing(AtomException atomException, ConnectionDetails connectionDetails) {
@@ -148,36 +209,56 @@ public class ConnectWithPSKFragment extends Fragment implements VPNStateListener
 
     @Override
     public void onDialError(AtomException atomException, ConnectionDetails connectionDetails) {
-        Log.d("onDialError", atomException.getMessage());
-        if(atomException.getCode()!= Errors._5039)
-            changeButtonState(btnConnect, "Connect");
+
+        if(!AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(getActivity()).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTED)) {
+            Log.d("onDialError", atomException.getMessage());
+            if (atomException.getCode() != Errors._5039)
+                changeButtonState(btnConnect, "Connect");
+        }
+
+        if(atomException!=null) {
+            Log.d("Code", atomException.getCode() + "");
+            if (atomException.getMessage() != null)
+                Log.d("Message", atomException.getMessage());
+            if (atomException.getCause() != null)
+                Log.d("Cause", atomException.getCause() + "");
+        }
+
     }
 
 
     @Override
     public void onStateChange(String state) {
-        Log.d("state", state);
 
-        if (state.equalsIgnoreCase(AtomManager.VPNStatus.CONNECTING)) {
+        Log.e("state",  state);
+
+        if (state.equalsIgnoreCase(AtomManager.VPNStatus.CONNECTING) || state.equalsIgnoreCase(VPNState.RECONNECTING)) {
             changeButtonState(btnConnect, "Cancel");
         }
-
     }
+
 
     @Override
     public void onDisconnected(boolean isCancelled) {
-        if (isCancelled) {
-            Log.d("onCancelled", "Cancelled");
+
+    }
+
+
+    @Override
+    public void onDisconnected(ConnectionDetails connectionDetails) {
+        if (connectionDetails.isCancelled()) {
+            Log.d("onCancelled",   "Cancelled");
         } else {
-            Log.d("onDisconnected", "Disconnected");
+            Log.d("onDisconnected",   "Disconnected");
         }
+
         changeButtonState(btnConnect, "Connect");
 
     }
 
     @Override
     public void onPacketsTransmitted(String in, String out) {
-        //Log.d("onPacketsTransmitted", in + " : " + out);
+
     }
 
 
@@ -190,4 +271,5 @@ public class ConnectWithPSKFragment extends Fragment implements VPNStateListener
             AtomDemoApplicationController.getInstance().getAtomManager().unBindIKEVStateService(getActivity());
         }
     }
+
 }

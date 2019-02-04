@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
+
 /** Simple TextView which is used to output log data received through the LogNode interface.
 */
 public class LogView extends AppCompatTextView implements LogNode {

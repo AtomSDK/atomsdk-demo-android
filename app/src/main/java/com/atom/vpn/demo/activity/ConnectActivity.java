@@ -34,6 +34,7 @@ public class ConnectActivity extends BaseSampleActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
 
+        //initializing logging
         initializeLogging();
 
         if (savedInstanceState == null) {
@@ -48,16 +49,19 @@ public class ConnectActivity extends BaseSampleActivity {
             if(connection_type == 1) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 ConnectWithPSKFragment fragment = new ConnectWithPSKFragment();
+                fragment.setArguments(extras);
                 transaction.replace(R.id.connect_fragment, fragment);
                 transaction.commit();
             }else if(connection_type == 2) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 ConnectWithParamsFragment fragment = new ConnectWithParamsFragment();
+                fragment.setArguments(extras);
                 transaction.replace(R.id.connect_fragment, fragment);
                 transaction.commit();
             }else{
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 ConnectWithDedicatedIPFragment fragment = new ConnectWithDedicatedIPFragment();
+                fragment.setArguments(extras);
                 transaction.replace(R.id.connect_fragment, fragment);
                 transaction.commit();
             }
@@ -77,6 +81,7 @@ public class ConnectActivity extends BaseSampleActivity {
     /**
      * Create a chain of targets that will receive log data
      */
+    @Override
     public void initializeLogging() {
         // Wraps Android's native log framework.
         logWrapper= new LogWrapper();
@@ -92,9 +97,10 @@ public class ConnectActivity extends BaseSampleActivity {
 
         logFragment = (LogFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.log_fragment);
+        if(logFragment!=null)
         msgFilter.setNext(logFragment.getLogView());
 
-        ViewAnimator output = (ViewAnimator) findViewById(R.id.sample_output);
+        ViewAnimator output =  findViewById(R.id.sample_output);
         output.setDisplayedChild(1);
 
     }
@@ -106,7 +112,13 @@ public class ConnectActivity extends BaseSampleActivity {
             String vpnStatus = AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(this);
             if (!vpnStatus.equalsIgnoreCase(AtomManager.VPNStatus.DISCONNECTED)) {
                 if(!isFinishing()) {
-                    runOnUiThread(() -> Toast.makeText(ConnectActivity.this, Constants.DisconnectBeforeExit, Toast.LENGTH_LONG).show());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            Toast.makeText(ConnectActivity.this, Constants.DisconnectBeforeExit, Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }            } else {
                 super.onBackPressed();
             }

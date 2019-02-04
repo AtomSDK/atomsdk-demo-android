@@ -16,9 +16,6 @@ import android.widget.TextView;
 import com.atom.sdk.android.data.model.countries.Country;
 
 
-
-
-
 public class CountryAdapter extends ArrayAdapter<Country> {
 
 

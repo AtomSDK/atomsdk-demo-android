@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Atom SDK Demo.
+ * Copyright (c) 2018 ATOM SDK Demo.
  * All rights reserved.
  */
 package com.atom.vpn.demo.fragment;
@@ -7,6 +7,8 @@ package com.atom.vpn.demo.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -20,13 +22,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.atom.sdk.android.VPNCredentials;
-
 import com.atom.vpn.demo.AtomDemoApplicationController;
 import com.atom.vpn.demo.R;
 import com.atom.vpn.demo.activity.ConnectActivity;
 import com.atom.vpn.demo.common.Constants;
 import com.tooltip.Tooltip;
+
 
 import static com.atom.vpn.demo.common.Utilities.setViewAndChildrenEnabled;
 
@@ -34,14 +35,13 @@ import static com.atom.vpn.demo.common.Utilities.setViewAndChildrenEnabled;
 public class MainFragment extends Fragment {
 
     private static final String TAG = "MainFragment";
-    Switch autoGenerateSwitch;
-    LinearLayout usernameLay;
-    LinearLayout passwordLay;
-    LinearLayout uuidLay;
-    EditText etUsername;
-    EditText etPassword;
-    EditText etUUID;
-    TextView tvSecretKey;
+    private Switch autoGenerateSwitch;
+    private LinearLayout usernameLay;
+    private LinearLayout passwordLay;
+    private LinearLayout uuidLay;
+    private EditText etUsername;
+    private EditText etPassword;
+    private EditText etUUID;
 
     public MainFragment() {
         // Required empty public constructor
@@ -54,60 +54,75 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        LinearLayout secretKeyLay = (LinearLayout) view.findViewById(R.id.secretKeyLay);
+        LinearLayout secretKeyLay = view.findViewById(R.id.secretKeyLay);
         Handler mHandler = new Handler();
-        mHandler.postDelayed(() -> secretKeyLay.setAlpha(0.5f), 500);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                secretKeyLay.setAlpha(0.5f);
+
+            }
+        }, 500);
 
 
-        tvSecretKey = (TextView) view.findViewById(R.id.tvSecretKey);
-        TextView secretKey = (TextView) view.findViewById(R.id.secretKey);
+        TextView secretKey =  view.findViewById(R.id.secretKey);
         if (TextUtils.isEmpty(getString(R.string.atom_secret_key))) {
-            secretKey.setText(R.string.empty_secret_key);
+            secretKey.setText(getString(R.string.empty_secret_key));
         } else {
             secretKey.setText(getString(R.string.atom_secret_key));
         }
 
-        usernameLay = (LinearLayout) view.findViewById(R.id.usernameLay);
-        passwordLay = (LinearLayout) view.findViewById(R.id.passwordLay);
-        uuidLay = (LinearLayout) view.findViewById(R.id.uuidLay);
+        usernameLay = view.findViewById(R.id.usernameLay);
+        passwordLay =  view.findViewById(R.id.passwordLay);
+        uuidLay =  view.findViewById(R.id.uuidLay);
 
         setViewAndChildrenEnabled(usernameLay, true);
         setViewAndChildrenEnabled(passwordLay, true);
         setViewAndChildrenEnabled(uuidLay, false);
 
-        ImageView autoGenerateHint = (ImageView) view.findViewById(R.id.autoGenerateHint);
+        ImageView autoGenerateHint =  view.findViewById(R.id.autoGenerateHint);
         Tooltip.Builder autoGenerateTipBuilder = new Tooltip.Builder(autoGenerateHint, R.style.TooltipStyle);
         Tooltip autoGenerateTip = autoGenerateTipBuilder.setText(Constants.TooltipAutoGenCred).setDismissOnClick(true).build();
 
-        autoGenerateHint.setOnClickListener(v -> {
+        autoGenerateHint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            if (!autoGenerateTip.isShowing()) {
-                autoGenerateTip.show();
-                final Handler handler = new Handler();
-                handler.postDelayed(autoGenerateTip::dismiss, 3000);
-            } else {
-                autoGenerateTip.dismiss();
+                if (!autoGenerateTip.isShowing()) {
+                    autoGenerateTip.show();
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            autoGenerateTip.dismiss();
+                        }
+                    }, 3000);
+                } else {
+                    autoGenerateTip.dismiss();
+                }
+
             }
-
         });
 
 
-        autoGenerateSwitch = (Switch) view.findViewById(R.id.autoGenerateSwitch);
+        autoGenerateSwitch = view.findViewById(R.id.autoGenerateSwitch);
         autoGenerateSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // do something, the isChecked will be
             // true if the switch is in the On position
             etUsername.setError(null);
             etPassword.setError(null);
+            etUUID.setError(null);
+
             if (isChecked) {
                 setViewAndChildrenEnabled(usernameLay, false);
                 setViewAndChildrenEnabled(passwordLay, false);
@@ -122,10 +137,12 @@ public class MainFragment extends Fragment {
         });
 
 
-        etUsername = (EditText) view.findViewById(R.id.etUsername);
-        etPassword = (EditText) view.findViewById(R.id.etPassword);
-        etUUID = (EditText) view.findViewById(R.id.etUUID);
 
+        etUsername =  view.findViewById(R.id.etUsername);
+        etPassword =  view.findViewById(R.id.etPassword);
+        etUUID =  view.findViewById(R.id.etUUID);
+
+        autoGenerateSwitch.setChecked(false);
 
         // Connect with Pre-Shared Key
         view.findViewById(R.id.btnConnectPsk).setOnClickListener(v -> {
@@ -145,10 +162,11 @@ public class MainFragment extends Fragment {
                     etPassword.setError(null);
 
                     if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-                        AtomDemoApplicationController.getInstance().getAtomManager().setVPNCredentials(new VPNCredentials(etUsername.getText().toString(), etPassword.getText().toString()));
 
                         Intent intent = new Intent(getActivity(), ConnectActivity.class);
                         intent.putExtra("connection_type", 1);
+                        intent.putExtra("vpnUsername", etUsername.getText().toString());
+                        intent.putExtra("vpnPassword", etPassword.getText().toString());
                         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
                     } else {
@@ -166,10 +184,10 @@ public class MainFragment extends Fragment {
                     etUUID.setError(null);
 
                     if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-                        AtomDemoApplicationController.getInstance().getAtomManager().setUUID(etUUID.getText().toString().trim());
 
                         Intent intent = new Intent(getActivity(), ConnectActivity.class);
                         intent.putExtra("connection_type", 1);
+                        intent.putExtra("uuid",etUUID.getText().toString().trim());
                         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
                     } else {
@@ -191,7 +209,8 @@ public class MainFragment extends Fragment {
                 if (TextUtils.isEmpty(etUsername.getText().toString().trim())) {
                     etUsername.setError(Constants.UsernameRequired);
 
-                } else if (TextUtils.isEmpty(etPassword.getText().toString().trim())) {
+                }
+                else if (TextUtils.isEmpty(etPassword.getText().toString().trim())) {
                     etUsername.setError(null);
                     etPassword.setError(Constants.PasswordRequired);
                 } else {
@@ -200,10 +219,10 @@ public class MainFragment extends Fragment {
                     etPassword.setError(null);
 
                     if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-                        AtomDemoApplicationController.getInstance().getAtomManager().setVPNCredentials(new VPNCredentials(etUsername.getText().toString(), etPassword.getText().toString()));
-
                         Intent intent = new Intent(getActivity(), ConnectActivity.class);
                         intent.putExtra("connection_type", 2);
+                        intent.putExtra("vpnUsername", etUsername.getText().toString());
+                        intent.putExtra("vpnPassword", etPassword.getText().toString());
                         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
                     } else {
@@ -222,10 +241,10 @@ public class MainFragment extends Fragment {
                     etUUID.setError(null);
 
                     if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-                        AtomDemoApplicationController.getInstance().getAtomManager().setUUID(etUUID.getText().toString().trim());
 
                         Intent intent = new Intent(getActivity(), ConnectActivity.class);
                         intent.putExtra("connection_type", 2);
+                        intent.putExtra("uuid",etUUID.getText().toString().trim());
                         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
                     } else {
@@ -257,10 +276,10 @@ public class MainFragment extends Fragment {
                     etPassword.setError(null);
 
                     if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-                        AtomDemoApplicationController.getInstance().getAtomManager().setVPNCredentials(new VPNCredentials(etUsername.getText().toString(), etPassword.getText().toString()));
-
                         Intent intent = new Intent(getActivity(), ConnectActivity.class);
                         intent.putExtra("connection_type", 3);
+                        intent.putExtra("vpnUsername", etUsername.getText().toString());
+                        intent.putExtra("vpnPassword", etPassword.getText().toString());
                         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
                     } else {
@@ -278,10 +297,10 @@ public class MainFragment extends Fragment {
                     etUUID.setError(null);
 
                     if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-                        AtomDemoApplicationController.getInstance().getAtomManager().setUUID(etUUID.getText().toString().trim());
 
                         Intent intent = new Intent(getActivity(), ConnectActivity.class);
                         intent.putExtra("connection_type", 3);
+                        intent.putExtra("uuid",etUUID.getText().toString().trim());
                         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
                     } else {
@@ -291,9 +310,6 @@ public class MainFragment extends Fragment {
             }
 
         });
-
-
     }
-
 
 }

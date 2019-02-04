@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Atom SDK Demo.
+ * Copyright (c) 2018 ATOM SDK Demo.
  * All rights reserved.
  */
 
@@ -29,28 +29,33 @@ public class Utilities {
 
     public static void changeButtonState(Button button, String text) {
 
-        button.postDelayed(() -> {
-            try {
-                if (button != null) {
-                    button.setText(text);
+        if(button!=null) {
+            button.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (button != null) {
+                            button.setText(text);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }, 1000);
+            }, 1000);
+        }
     }
 
     public static void changeButtonText(Context context, Button button) {
         if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-            if (AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(context).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTED)) {
+            if(AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(context).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTED)){
                 if (button != null) {
                     button.setText("Disconnect");
                 }
-            } else if (AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(context).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTING)) {
+            }else if(AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(context).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTING)){
                 if (button != null) {
                     button.setText("Cancel");
                 }
-            } else {
+            }else{
                 if (button != null) {
                     button.setText("Connect");
                 }

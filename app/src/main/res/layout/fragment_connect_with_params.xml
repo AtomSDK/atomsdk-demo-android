@@ -139,6 +139,35 @@
 
     </RelativeLayout>
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        >
+
+        <Switch
+            android:id="@+id/switchSmartDialing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_smart_dialing"
+            android:layout_centerVertical="true"
+            android:theme="@style/BrandedSwitch.control"
+            />
+
+
+        <ImageView
+            android:id="@+id/smartDialingHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="125dp"
+            android:background="@drawable/ic_info"
+            android:gravity="center_horizontal"
+            />
+
+    </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -151,7 +180,6 @@
             android:layout_centerHorizontal="true"
             android:text="@string/lbl_connect" />
 
-
     </RelativeLayout>
 
 
@@ -159,7 +187,6 @@
         android:id="@+id/console"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
     </FrameLayout>
 
 </LinearLayout>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Atom SDK Demo.
+ * Copyright (c) 2018 ATOM SDK Demo.
  * All rights reserved.
  */
 
@@ -7,6 +7,7 @@ package com.atom.vpn.demo.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -19,15 +20,16 @@ import android.widget.ImageView;
 import android.widget.Switch;
 
 import com.atom.sdk.android.AtomManager;
+import com.atom.sdk.android.ConnectionDetails;
 import com.atom.sdk.android.Errors;
+import com.atom.sdk.android.ProtocolName;
 import com.atom.sdk.android.ProtocolType;
 import com.atom.sdk.android.ServerType;
+import com.atom.sdk.android.VPNCredentials;
 import com.atom.sdk.android.VPNProperties;
 import com.atom.sdk.android.VPNStateListener;
 import com.atom.sdk.android.data.callbacks.CollectionCallback;
-import com.atom.sdk.android.data.model.lastConnectionDetail.ConnectionDetails;
 import com.atom.sdk.android.data.model.protocol.Protocol;
-
 import com.atom.sdk.android.exceptions.AtomException;
 import com.atom.sdk.android.exceptions.AtomValidationException;
 import com.atom.vpn.demo.AtomDemoApplicationController;
@@ -37,7 +39,10 @@ import com.atom.vpn.demo.common.Constants;
 import com.atom.vpn.demo.common.logger.Log;
 import com.tooltip.Tooltip;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static br.com.zbra.androidlinq.Linq.stream;
 import static com.atom.vpn.demo.common.Utilities.changeButtonState;
@@ -47,13 +52,15 @@ import static com.atom.vpn.demo.common.Utilities.changeButtonText;
 public class ConnectWithDedicatedIPFragment extends Fragment implements VPNStateListener {
 
     private static final String TAG = "ConnectWithDedicatedIPFragment";
-    EditText etDedicatedIP;
-    EditText etProtocol;
-    List<Protocol> protocolList;
+    private EditText etDedicatedIP;
+    private EditText etProtocol;
+    private List<Protocol> protocolList;
     //IKEV is only supported protocol for dedicated ip
-    Protocol supportedProtocol;
-    Switch switchSkipUserVerification;
-    Button btnConnect;
+    private Protocol supportedProtocol;
+    private Switch switchSkipUserVerification;
+    private Button btnConnect;
+
+    private String uuid,vpnUsername,vpnPassword;
 
     public ConnectWithDedicatedIPFragment() {
         // Required empty public constructor
@@ -63,55 +70,78 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Bundle extras  = this.getArguments();
+        if(extras!=null) {
 
+            if (extras.containsKey("uuid")) {
+                uuid =  extras.getString("uuid");
+            }
+
+            if (extras.containsKey("vpnUsername")) {
+                vpnUsername =  extras.getString("vpnUsername");
+            }
+
+            if (extras.containsKey("vpnPassword")) {
+                vpnPassword =  extras.getString("vpnPassword");
+            }
+
+        }
 
         AtomManager.addVPNStateListener(this);
 
-        new Handler().postDelayed(() -> AtomDemoApplicationController.getInstance().getAtomManager().bindIKEVStateService(getActivity()),500);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AtomDemoApplicationController.getInstance().getAtomManager().bindIKEVStateService(getActivity());
+            }
+        },500);
 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_connect_with_dedicatedip, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        switchSkipUserVerification = (Switch) view.findViewById(R.id.switchSkipUserVerification);
+        switchSkipUserVerification = view.findViewById(R.id.switchSkipUserVerification);
 
-        ImageView skipUserVerificationHint = (ImageView) view.findViewById(R.id.skipUserVerificationHint);
+        ImageView skipUserVerificationHint = view.findViewById(R.id.skipUserVerificationHint);
         Tooltip.Builder skipUserVerificationHintTipBuilder = new Tooltip.Builder(skipUserVerificationHint, R.style.TooltipStyle);
         Tooltip skipUserVerificationHintTip = skipUserVerificationHintTipBuilder.setText(Constants.TooltipSkipVerify).setDismissOnClick(true).build();
 
-        skipUserVerificationHint.setOnClickListener(v -> {
+        skipUserVerificationHint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            if (!skipUserVerificationHintTip.isShowing()) {
-                skipUserVerificationHintTip.show();
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        skipUserVerificationHintTip.dismiss();
-                    }
-                }, 3000);
-            } else {
-                skipUserVerificationHintTip.dismiss();
+                if (!skipUserVerificationHintTip.isShowing()) {
+                    skipUserVerificationHintTip.show();
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            skipUserVerificationHintTip.dismiss();
+                        }
+                    }, 3000);
+                } else {
+                    skipUserVerificationHintTip.dismiss();
+                }
+
             }
-
         });
 
 
-        etDedicatedIP = (EditText) view.findViewById(R.id.etDedicatedIP);
+        etDedicatedIP =  view.findViewById(R.id.etDedicatedIP);
 
-        etProtocol = (EditText) view.findViewById(R.id.etProtocol);
+        etProtocol = view.findViewById(R.id.etProtocol);
         etProtocol.setClickable(false);
 
-        btnConnect = (Button) view.findViewById(R.id.btnConnect);
+        btnConnect = view.findViewById(R.id.btnConnect);
         changeButtonText(getActivity(),btnConnect);
         btnConnect.setOnClickListener(v -> {
 
@@ -126,24 +156,34 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
                     if (!TextUtils.isEmpty(etDedicatedIP.getText().toString().trim())) {
 
                         ConnectActivity connectActivity = (ConnectActivity)getActivity();
+                        if(connectActivity!=null)
                         connectActivity.logWrapper.clear();
 
                         etDedicatedIP.setError(null);
 
                         if (supportedProtocol != null) {
-
-                            btnConnect.setText("Cancel");
-
                             try {
+                                VPNProperties.Builder vpnPropertiesBuilder;
                                 // Dedicated Host here
-                                VPNProperties.Builder vpnPropertiesBuilder = new VPNProperties.Builder(
-                                        etDedicatedIP.getText().toString(), supportedProtocol, ServerType.LINUX);
 
-                                if (switchSkipUserVerification.isChecked()) {
-                                    vpnPropertiesBuilder.withSkipUserVerification();
-                                }
+                                    vpnPropertiesBuilder = new VPNProperties.Builder(
+                                            etDedicatedIP.getText().toString(), supportedProtocol);
 
-                                AtomDemoApplicationController.getInstance().getAtomManager().connect(getActivity(), vpnPropertiesBuilder.build());
+                                        if (switchSkipUserVerification.isChecked()) {
+                                            vpnPropertiesBuilder.withSkipUserVerification();
+                                        }
+
+                                        if (!TextUtils.isEmpty(vpnUsername) && !TextUtils.isEmpty(vpnPassword)) {
+                                            AtomDemoApplicationController.getInstance().getAtomManager().setVPNCredentials(new VPNCredentials(vpnUsername, vpnPassword));
+                                        } else if (!TextUtils.isEmpty(uuid)) {
+                                            AtomDemoApplicationController.getInstance().getAtomManager().setUUID(uuid);
+                                        }
+
+                                        btnConnect.setText("Cancel");
+
+                                        AtomDemoApplicationController.getInstance().getAtomManager().connect(getActivity(), vpnPropertiesBuilder.build());
+
+
 
                             } catch (AtomValidationException e) {
                                 e.printStackTrace();
@@ -159,42 +199,34 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
 
         });
 
-        // get Protocols from Atom SDK
-        if(AtomDemoApplicationController.getInstance().getAtomManager()!=null) {
-            AtomDemoApplicationController.getInstance().getAtomManager().getProtocols(new CollectionCallback<Protocol>() {
-                @Override
-                public void onError(AtomException atomException) {
-                    Log.e("error", atomException.getMessage() + " : " + atomException.getCode());
+        // Only Ikev2 Protocol is supported from ATOM SDK
+        supportedProtocol = new Protocol();
+        supportedProtocol.setName(ProtocolName.IKEV);
+        supportedProtocol.setNumber(ProtocolType.IKEV);
 
-                }
+        if(supportedProtocol!=null)
+        etProtocol.setText(supportedProtocol.getName());
 
-                @Override
-                public void onNetworkError(AtomException atomException) {
-                    Log.e("error", atomException.getMessage() + " : " + atomException.getCode());
-
-                }
-
-                @Override
-                public void onSuccess(List<Protocol> list) {
-                    protocolList = list;
-
-                    // Dedicated IP Supported Protocol
-                    if (protocolList != null) {
-                        supportedProtocol = stream(list)
-                                .where(c -> c.getNumber() == ProtocolType.IKEV).first();
-
-                        etProtocol.setText(supportedProtocol.getName());
-                    }
-                }
-            });
-        }
 
     }
 
     @Override
     public void onConnected() {
-        Log.e("connected",   "Connected");
+
+    }
+
+    @Override
+    public void onConnected(ConnectionDetails connectionDetails) {
+        Log.d("connected",   "Connected");
         changeButtonState(btnConnect, "Disconnect");
+        Log.d("ip",AtomDemoApplicationController.getInstance().getAtomManager().getConnectedIp(getActivity()));
+        Date date = AtomDemoApplicationController.getInstance().getAtomManager().getConnectedTime(getActivity());
+
+        if(date!=null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+            Log.d("date", sdf.format(date));
+        }
+
     }
 
     @Override
@@ -209,27 +241,46 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
 
     @Override
     public void onDialError(AtomException atomException, ConnectionDetails connectionDetails) {
-        Log.d("onDialError", atomException.getMessage());
-        if(atomException.getCode()!= Errors._5039)
-            changeButtonState(btnConnect, "Connect");
+
+        if(!AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(getActivity()).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTED)) {
+            Log.d("onDialError", atomException.getMessage());
+            if (atomException.getCode() != Errors._5039)
+                changeButtonState(btnConnect, "Connect");
+        }
+
+        if(atomException!=null) {
+            Log.d("Code", atomException.getCode() + "");
+            if (atomException.getMessage() != null)
+                Log.d("Message", atomException.getMessage());
+            if (atomException.getCause() != null)
+                Log.d("Cause", atomException.getCause() + "");
+        }
+
     }
+
 
     @Override
     public void onStateChange(String state) {
-        Log.d("state", state);
 
-        if (state.equalsIgnoreCase(AtomManager.VPNStatus.CONNECTING)) {
+        Log.d("state",  state );
 
+        if (state.equalsIgnoreCase(AtomManager.VPNStatus.CONNECTING) || state.equalsIgnoreCase(VPNState.RECONNECTING)) {
             changeButtonState(btnConnect, "Cancel");
         }
     }
 
+
     @Override
     public void onDisconnected(boolean isCancelled) {
-        if (isCancelled) {
-            Log.d("onCancelled", "Cancelled");
+
+    }
+
+    @Override
+    public void onDisconnected(ConnectionDetails connectionDetails) {
+        if (connectionDetails.isCancelled()) {
+            Log.d("onCancelled",   "Cancelled");
         } else {
-            Log.d("onDisconnected", "Disconnected");
+            Log.d("onDisconnected",   "Disconnected");
         }
 
         changeButtonState(btnConnect, "Connect");
@@ -238,8 +289,9 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
 
     @Override
     public void onPacketsTransmitted(String in, String out) {
-        //Log.d("onPacketsTransmitted", in + " : " + out);
+
     }
+
 
     @Override
     public void onDestroyView() {

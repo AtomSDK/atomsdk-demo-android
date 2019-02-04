@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Atom SDK Demo.
+ * Copyright (c) 2018 ATOM SDK Demo.
  * All rights reserved.
  */
 
@@ -11,16 +11,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 
+
+
 /**
  * Base launcher activity, to handle most of the common plumbing for samples.
  */
-public abstract class BaseSampleActivity extends AppCompatActivity {
+public class BaseSampleActivity extends AppCompatActivity {
 
     public static final String TAG = "SampleActivityBase";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setupHomeButton();
     }
 
@@ -36,9 +39,29 @@ public abstract class BaseSampleActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                onMenuHomePressed();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    protected void onMenuHomePressed() {
+        onBackPressed();
+    }
+
+
+    @Override
+    protected  void onStart() {
+        super.onStart();
+    }
+
+    /** Set up targets to receive log data */
+    public void initializeLogging() {
+        // Using Log, front-end to the logging chain, emulates android.util.log method signatures.
+        // Wraps Android's native log framework
+//        LogWrapper logWrapper = new LogWrapper();
+//        Log.setLogNode(logWrapper);
+
     }
 }
