@@ -406,7 +406,6 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
                             }
 
                             if (switchSmartDialing.isChecked()) {
-                                //vpnPropertiesBuilder.withManualPort(5600);
                                 vpnPropertiesBuilder.withSmartDialing();
                             }
 
@@ -528,6 +527,35 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
         }
 
 
+        // get Optimized Countries from ATOM SDK
+//        if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
+//            AtomDemoApplicationController.getInstance().getAtomManager().getOptimizedCountries(new CollectionCallback<Country>() {
+//                @Override
+//                public void onSuccess(List<Country> countries) {
+//
+//                    if(countries!=null) {
+//                        for (int i = 0; i < countries.size(); i++) {
+//                            Log.e("country", countries.get(i).getName() + " : " + countries.get(i).getLatency());
+//                        }
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onError(AtomException atomException) {
+//                    Log.e("error", atomException.getMessage() + " : " + atomException.getCode());
+//
+//                }
+//
+//                @Override
+//                public void onNetworkError(AtomException atomException) {
+//                    Log.e("error", atomException.getMessage() + " : " + atomException.getCode());
+//
+//                }
+//
+//            });
+//        }
+
     }
 
     private List<Country> getCountriesByAllSelectedProtocol(List<Country> countries, Protocol primaryProtocol, Protocol secondaryProtocol, Protocol tertiaryProtocol) {
@@ -585,24 +613,6 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
             }
         }
     }
-    //         AtomDemoApplicationController.getInstance().getAtomManager().getOptimizedCountries(new CollectionCallback<Country>() {
-//             @Override
-//             public void onSuccess(List<Country> list) {
-//                    Log.e("list",list.size()+"");
-//
-//             }
-//
-//             @Override
-//             public void onError(AtomException exception) {
-//
-//             }
-//
-//             @Override
-//             public void onNetworkError(AtomException exception) {
-//
-//             }
-//         });
-
 
     @Override
     public void onConnected() {

@@ -20,12 +20,12 @@ This is a demo application for Android Application with basic usage of ATOM VPN 
 
 ## SDK Installation
 
-Although ATOM SDK library is already compiled with the demo application but you can download the latest version from [ATOM SDK Download](https://secure.com/atom/downloads/sdk/android/2.0/AtomSDK.zip)
+Although ATOM SDK library is already compiled with the demo application but you can download the latest version from [ATOM SDK Download](https://secure.com/atom/downloads/sdk/android/2.1.0/AtomSDK.zip)
 
 Import module aar as library in your project using Android Studio then add it to build.gradle of app
 
 ```
-implementation project(':AtomSdk-2.0')
+implementation project(':AtomSdk-2.1.0')
 ```
 >To successfully build ATOM SDK, developer must enable Kotlin support in Android Studio using Kotlin Extension.
 
@@ -33,7 +33,7 @@ implementation project(':AtomSdk-2.0')
 
 Add Kotlin gradle plugin to project build.gradle
 ```
-classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.71"
+classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.0"
 ```
 
 Add Kotlin Android Extension plugin to app build.gradle
@@ -43,7 +43,7 @@ apply plugin: 'kotlin-android'
 ```
 Add Kotlin support to app build.gradle in dependencies
 ```
-implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.71"
+implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.0"
 ```
 
 # Getting Started with the Code
@@ -157,12 +157,12 @@ ATOM SDK provided two ways to authenticate your vpn user.
 First one is to offer VPN Credentials directly to the SDK which you may create through the Admin Panel provided by ATOM.
 
 ```
-AtomManager.getInstance().setVPNCredentials(new VPNCredentials(String VPNUsername,String VPNPassword));
+atomManager.setVPNCredentials(new VPNCredentials(String VPNUsername,String VPNPassword));
 ```
 Alternatively, if you don’t want to take hassle of creating users yourself, leave it on us and we will do the rest for you!
 
 ```
-AtomManager.getInstance().setUUID(String UniqueUserID);
+atomManager.setUUID(String UniqueUserID);
 ```
 
 You just need to provide a Unique User ID for your user e.g. any unique hash or even user’s email which you think remains consistent and unique for your user. ATOM SDK will generate VPN Account behind the scenes automatically and gets your user connected! Easy isn’t it?

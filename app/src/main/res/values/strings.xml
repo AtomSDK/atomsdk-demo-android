@@ -1,5 +1,4 @@
-<resources
-     >
+<resources>
   <string name="app_name">Atom SDK Demo</string>
 
   <string name="atom_secret_key">YOUR_SECRET_KEY</string>
