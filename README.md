@@ -25,7 +25,7 @@ Although ATOM SDK library is already compiled with the demo application but you 
 Import module aar as library in your project using Android Studio then add it to build.gradle of app
 
 ```
-implementation project(':AtomSdk-2.1.0')
+implementation project(':AtomSdk-2.1.1')
 ```
 >To successfully build ATOM SDK, developer must enable Kotlin support in Android Studio using Kotlin Extension.
 
