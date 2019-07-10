@@ -24,11 +24,9 @@ import com.atom.sdk.android.ConnectionDetails;
 import com.atom.sdk.android.Errors;
 import com.atom.sdk.android.ProtocolName;
 import com.atom.sdk.android.ProtocolType;
-import com.atom.sdk.android.ServerType;
 import com.atom.sdk.android.VPNCredentials;
 import com.atom.sdk.android.VPNProperties;
 import com.atom.sdk.android.VPNStateListener;
-import com.atom.sdk.android.data.callbacks.CollectionCallback;
 import com.atom.sdk.android.data.model.protocol.Protocol;
 import com.atom.sdk.android.exceptions.AtomException;
 import com.atom.sdk.android.exceptions.AtomValidationException;
@@ -37,14 +35,12 @@ import com.atom.vpn.demo.R;
 import com.atom.vpn.demo.activity.ConnectActivity;
 import com.atom.vpn.demo.common.Constants;
 import com.atom.vpn.demo.common.logger.Log;
-import com.tooltip.Tooltip;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static br.com.zbra.androidlinq.Linq.stream;
 import static com.atom.vpn.demo.common.Utilities.changeButtonState;
 import static com.atom.vpn.demo.common.Utilities.changeButtonText;
 
@@ -57,7 +53,6 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
     private List<Protocol> protocolList;
     //IKEV is only supported protocol for dedicated ip
     private Protocol supportedProtocol;
-    private Switch switchSkipUserVerification;
     private Button btnConnect;
 
     private String uuid,vpnUsername,vpnPassword;
@@ -109,32 +104,6 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        switchSkipUserVerification = view.findViewById(R.id.switchSkipUserVerification);
-
-        ImageView skipUserVerificationHint = view.findViewById(R.id.skipUserVerificationHint);
-        Tooltip.Builder skipUserVerificationHintTipBuilder = new Tooltip.Builder(skipUserVerificationHint, R.style.TooltipStyle);
-        Tooltip skipUserVerificationHintTip = skipUserVerificationHintTipBuilder.setText(Constants.TooltipSkipVerify).setDismissOnClick(true).build();
-
-        skipUserVerificationHint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (!skipUserVerificationHintTip.isShowing()) {
-                    skipUserVerificationHintTip.show();
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            skipUserVerificationHintTip.dismiss();
-                        }
-                    }, 3000);
-                } else {
-                    skipUserVerificationHintTip.dismiss();
-                }
-
-            }
-        });
-
 
         etDedicatedIP =  view.findViewById(R.id.etDedicatedIP);
 
@@ -169,9 +138,6 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
                                     vpnPropertiesBuilder = new VPNProperties.Builder(
                                             etDedicatedIP.getText().toString(), supportedProtocol);
 
-                                        if (switchSkipUserVerification.isChecked()) {
-                                            vpnPropertiesBuilder.withSkipUserVerification();
-                                        }
 
                                         if (!TextUtils.isEmpty(vpnUsername) && !TextUtils.isEmpty(vpnPassword)) {
                                             AtomDemoApplicationController.getInstance().getAtomManager().setVPNCredentials(new VPNCredentials(vpnUsername, vpnPassword));

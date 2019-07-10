@@ -42,29 +42,6 @@
         android:textSize="14sp"
         android:theme="@style/BrandedEditText.control" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-
-        <Switch
-            android:id="@+id/switchSkipUserVerification"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/lbl_skip_user_verification"
-            android:theme="@style/BrandedSwitch.control" />
-
-        <ImageView
-            android:id="@+id/skipUserVerificationHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="135dp"
-            android:background="@drawable/ic_info"
-            android:gravity="center_horizontal" />
-
-    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

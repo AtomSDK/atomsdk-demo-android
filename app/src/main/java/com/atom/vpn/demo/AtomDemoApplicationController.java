@@ -5,12 +5,14 @@
 package com.atom.vpn.demo;
 
 import android.app.Application;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 
 import com.atom.sdk.android.AtomConfiguration;
 import com.atom.sdk.android.AtomManager;
+import com.atom.sdk.android.AtomNotification;
 import com.atom.sdk.android.exceptions.AtomValidationException;
 import com.atom.vpn.demo.common.Constants;
 
@@ -22,6 +24,8 @@ public class AtomDemoApplicationController extends Application {
 
     private static AtomDemoApplicationController mInstance;
     private AtomManager atomManager;
+
+    private final int NOTIFICATION_ID = 99999;
 
     public static synchronized AtomDemoApplicationController getInstance() {
         return mInstance;
@@ -44,6 +48,8 @@ public class AtomDemoApplicationController extends Application {
             // configure the ATOM SDK
             AtomConfiguration.Builder atomConfigurationBuilder = new AtomConfiguration.Builder(ATOM_SECRET_KEY);
             atomConfigurationBuilder.setVpnInterfaceName("Atom SDK Demo");
+            AtomNotification.Builder atomNotificationBuilder = new AtomNotification.Builder(NOTIFICATION_ID,"Atom SDK Demo","You are now secured with Atom",R.drawable.ic_stat_icn_connected, Color.BLUE);
+            atomConfigurationBuilder.setNotification(atomNotificationBuilder.build());
             AtomConfiguration atomConfiguration = atomConfigurationBuilder.build();
             try {
                 AtomManager.initialize(this, atomConfiguration, new AtomManager.InitializeCallback() {
