@@ -527,6 +527,13 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
         }
 
 
+        if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
+            if (AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(getActivity()).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTED)) {
+                changeButtonState(btnConnect, "Disconnect");
+            }
+        }
+
+
         // get Optimized Countries from ATOM SDK
 //        if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
 //            AtomDemoApplicationController.getInstance().getAtomManager().getOptimizedCountries(new CollectionCallback<Country>() {

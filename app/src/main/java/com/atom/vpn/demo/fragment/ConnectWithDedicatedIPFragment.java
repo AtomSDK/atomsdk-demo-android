@@ -174,6 +174,12 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
         etProtocol.setText(supportedProtocol.getName());
 
 
+        if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
+            if (AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(getActivity()).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTED)) {
+                changeButtonState(btnConnect, "Disconnect");
+            }
+        }
+
     }
 
     @Override

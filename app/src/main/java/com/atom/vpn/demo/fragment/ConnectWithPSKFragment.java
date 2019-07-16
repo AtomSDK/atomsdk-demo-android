@@ -174,6 +174,12 @@ public class ConnectWithPSKFragment extends Fragment implements VPNStateListener
 
         });
 
+        if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
+            if (AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(getActivity()).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTED)) {
+                changeButtonState(btnConnect, "Disconnect");
+            }
+        }
+
 
 
     }

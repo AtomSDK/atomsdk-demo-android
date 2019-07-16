@@ -53,10 +53,7 @@
   <string name="lbl_tertiary_protocol">Tertiary Protocol</string>
   <string name="lbl_select_country">Select Country</string>
   <string name="lbl_optimized_countries">Optimized countries</string>
-
-
   <string name="lbl_select_server">Select Server Type</string>
-
   <string name="lbl_smart_dialing">Smart Dialing</string>
 
 
