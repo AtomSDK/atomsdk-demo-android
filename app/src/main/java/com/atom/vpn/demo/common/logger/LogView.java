@@ -17,8 +17,9 @@ package com.atom.vpn.demo.common.logger;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 
 /** Simple TextView which is used to output log data received through the LogNode interface.

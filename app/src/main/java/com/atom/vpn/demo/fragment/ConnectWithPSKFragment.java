@@ -8,9 +8,7 @@ package com.atom.vpn.demo.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +17,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.atom.sdk.android.AtomManager;
 import com.atom.sdk.android.ConnectionDetails;

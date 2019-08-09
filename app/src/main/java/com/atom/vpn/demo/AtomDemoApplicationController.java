@@ -10,9 +10,9 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 
-import com.atom.sdk.android.AtomConfiguration;
+import com.atom.core.models.AtomConfiguration;
+import com.atom.core.models.AtomNotification;
 import com.atom.sdk.android.AtomManager;
-import com.atom.sdk.android.AtomNotification;
 import com.atom.sdk.android.exceptions.AtomValidationException;
 import com.atom.vpn.demo.common.Constants;
 

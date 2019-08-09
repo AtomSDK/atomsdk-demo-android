@@ -7,13 +7,14 @@ package com.atom.vpn.demo.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.atom.sdk.android.data.model.countries.Country;
+import androidx.annotation.NonNull;
+
+import com.atom.core.models.Country;
 
 
 public class CountryAdapter extends ArrayAdapter<Country> {

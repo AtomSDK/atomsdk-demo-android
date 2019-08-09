@@ -1,10 +1,11 @@
 package com.atom.vpn.demo.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.atom.sdk.android.AtomManager;
 import com.atom.vpn.demo.AtomDemoApplicationController;

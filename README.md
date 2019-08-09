@@ -19,31 +19,45 @@ This is a demo application for Android Application with basic usage of ATOM VPN 
 * IKEV
 
 ## SDK Installation
+To use this library you should add **jitpack** repository.
 
-Although ATOM SDK library is already compiled with the demo application but you can download the latest version from [ATOM SDK Download](https://secure.com/atom/downloads/sdk/android/2.2.2/AtomSDK.zip)
+Add **authToken=jp_l1hv3212tltdau845qago2l4e** in gradle.properties of your root project
 
-Import module aar as library in your project using Android Studio then add it to build.gradle of app
+Add this to root **build.gradle** 
 
+    allprojects {
+        repositories {
+            maven { url 'https://jitpack.io'
+                credentials { username authToken }
+            }
+        }
+    }
+
+And then add dependencies in build.gradle of your app module.
+```groovy
+dependencies {
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:2.3.0'
+}
 ```
-implementation project(':AtomSdk-2.2.2')
-```
->To successfully build ATOM SDK, developer must enable Kotlin support in Android Studio using Kotlin Extension.
+>To successfully build ATOM SDK, developer must migrate their project to AndroidX. Developer can use **Refactor** -> **Migrate to AndroidX** option in Android Studio.
+
+>Developer must enable Kotlin support in Android Studio using Kotlin Extension.
 
 ### Setup Kotlin Extension in Android Studio
 
 Add Kotlin gradle plugin to project build.gradle
 ```
-classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.0"
+classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.31"
 ```
 
 Add Kotlin Android Extension plugin to app build.gradle
 ```
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 ```
 Add Kotlin support to app build.gradle in dependencies
 ```
-implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.0"
+implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.31"
 ```
 
 # Getting Started with the Code
@@ -340,7 +354,5 @@ android{
     }
 }
 ```
-
-
 
 

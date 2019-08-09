@@ -7,10 +7,6 @@ package com.atom.vpn.demo.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatSpinner;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,17 +17,20 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.fragment.app.Fragment;
+
+import com.atom.core.models.Country;
+import com.atom.core.models.Protocol;
 import com.atom.sdk.android.AtomManager;
 import com.atom.sdk.android.ConnectionDetails;
 import com.atom.sdk.android.Errors;
 import com.atom.sdk.android.VPNCredentials;
 import com.atom.sdk.android.VPNProperties;
 import com.atom.sdk.android.VPNStateListener;
-import com.atom.sdk.android.common.Common;
 import com.atom.sdk.android.data.callbacks.CollectionCallback;
-import com.atom.sdk.android.data.model.countries.Country;
-import com.atom.sdk.android.data.model.protocol.Protocol;
-import com.atom.sdk.android.exceptions.AtomAPIException;
 import com.atom.sdk.android.exceptions.AtomException;
 import com.atom.sdk.android.exceptions.AtomValidationException;
 import com.atom.vpn.demo.AtomDemoApplicationController;
@@ -49,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
 
 
 import static br.com.zbra.androidlinq.Linq.stream;

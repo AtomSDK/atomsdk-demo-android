@@ -7,18 +7,18 @@ package com.atom.vpn.demo.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Switch;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.atom.core.models.Protocol;
 import com.atom.sdk.android.AtomManager;
 import com.atom.sdk.android.ConnectionDetails;
 import com.atom.sdk.android.Errors;
@@ -27,7 +27,6 @@ import com.atom.sdk.android.ProtocolType;
 import com.atom.sdk.android.VPNCredentials;
 import com.atom.sdk.android.VPNProperties;
 import com.atom.sdk.android.VPNStateListener;
-import com.atom.sdk.android.data.model.protocol.Protocol;
 import com.atom.sdk.android.exceptions.AtomException;
 import com.atom.sdk.android.exceptions.AtomValidationException;
 import com.atom.vpn.demo.AtomDemoApplicationController;
@@ -168,7 +167,7 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
         // Only Ikev2 Protocol is supported from ATOM SDK
         supportedProtocol = new Protocol();
         supportedProtocol.setName(ProtocolName.IKEV);
-        supportedProtocol.setNumber(ProtocolType.IKEV);
+        supportedProtocol.setProtocol(ProtocolType.IKEV);
 
         if(supportedProtocol!=null)
         etProtocol.setText(supportedProtocol.getName());

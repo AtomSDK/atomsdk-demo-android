@@ -30,6 +30,7 @@
             android:name=".activity.ConnectActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:screenOrientation="portrait"/>
+        <activity android:name=".common.base.BaseSampleActivity" />
 
 
     </application>

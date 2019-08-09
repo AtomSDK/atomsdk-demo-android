@@ -6,7 +6,8 @@
 package com.atom.vpn.demo.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+
+import androidx.fragment.app.FragmentTransaction;
 
 import com.atom.sdk.android.AtomManager;
 import com.atom.vpn.demo.AtomDemoApplicationController;

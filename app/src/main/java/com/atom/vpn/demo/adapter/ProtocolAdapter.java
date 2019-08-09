@@ -12,10 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.atom.sdk.android.data.model.protocol.Protocol;
-
-
-
+import com.atom.core.models.Protocol;
 
 public class ProtocolAdapter extends ArrayAdapter<Protocol> {
 
