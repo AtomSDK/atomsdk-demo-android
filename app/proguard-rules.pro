@@ -91,10 +91,12 @@
 -dontwarn org.jetbrains.annotations.**
 
 -keep class com.jakewharton.timber.** { *; }
--keep class com.jakewharton.timber.** { *; }
--keep class com.jakewharton.timber.** { *; }
 
 -dontwarn com.atom.sdk.**
 -keep class com.atom.sdk.** { *; }
 -keep interface com.atom.sdk.** { *; }
+
+-dontwarn com.atom.core.**
+-keep class com.atom.core.models.** { *; }
+-keep interface com.atom.core.** { *; }
 
