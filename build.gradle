@@ -23,10 +23,8 @@ allprojects {
         jcenter()
         google()
 
-        repositories {
-            maven { url 'https://jitpack.io'
-                credentials { username authToken }
-            }
+        maven { url 'https://jitpack.io'
+            credentials { username authToken }
         }
 
     }
