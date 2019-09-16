@@ -22,12 +22,12 @@ android {
     }
 
     buildTypes {
-        release {
-            multiDexEnabled true
-            minifyEnabled true
-            proguardFile 'proguard-rules.pro'
-            proguardFile getDefaultProguardFile('proguard-android.txt')
-        }
+//        release {
+//            multiDexEnabled true
+//            minifyEnabled true
+//            proguardFile 'proguard-rules.pro'
+//            proguardFile getDefaultProguardFile('proguard-android.txt')
+//        }
 
         debug {
             multiDexEnabled true
