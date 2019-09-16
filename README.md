@@ -36,7 +36,7 @@ Add this to root **build.gradle**
 And then add dependencies in build.gradle of your app module.
 ```groovy
 dependencies {
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:2.3.0'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:2.3.1'
 }
 ```
 >To successfully build ATOM SDK, developer must migrate their project to AndroidX. Developer can use **Refactor** -> **Migrate to AndroidX** option in Android Studio.
@@ -194,7 +194,7 @@ VPNProperties vpnProperties = vpnPropertiesBuilder.build();
 You can get the Countries list through ATOM SDK.
 
 ```
-atomManager.getCountries(new Callback<List<Country>>() {
+atomManager.getCountries(new CollectionCallback<Country>() {
 
             @Override
             public void onSuccess(List<Country> countries) {
@@ -218,7 +218,7 @@ atomManager.getCountries(new Callback<List<Country>>() {
 You can get the Countries those support Smart Dialing through ATOM SDK.
 
 ```
-atomManager.getCountriesForSmartDialing(new Callback<List<Country>>() {
+atomManager.getCountriesForSmartDialing(new CollectionCallback<Country>() {
 
             @Override
             public void onSuccess(List<Country> countries) {
@@ -343,6 +343,10 @@ atomManager.disconnect(Context context);
 -dontwarn com.atom.sdk.**
 -keep class com.atom.sdk.** { *; }
 -keep interface com.atom.sdk.** { *; }
+
+-dontwarn com.atom.core.**
+-keep class com.atom.core.models.** { *; }
+-keep interface com.atom.core.** { *; }
 ```
 
 # Resolve dependencies conflicts if any :
