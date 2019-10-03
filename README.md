@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/org.bitbucket.purevpn/purevpn-sdk-android.svg)](https://jitpack.io/#org.bitbucket.purevpn/purevpn-sdk-android)
+
 # ATOM VPN SDK demo for Android  Applications
 This is a demo application for Android Application with basic usage of ATOM VPN SDK which will help the developers to create smooth applications over ATOM SDK quickly.
 ## SDK Features covered in this Demo
