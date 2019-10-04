@@ -16,7 +16,6 @@ This is a demo application for Android Application with basic usage of ATOM VPN 
 ## Supported Protocols
 * TCP
 * UDP
-* IKEV
 
 ## SDK Installation
 To use this library you should add **jitpack** repository.
