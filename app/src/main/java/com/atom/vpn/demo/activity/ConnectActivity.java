@@ -16,9 +16,11 @@ import com.atom.vpn.demo.common.logger.Log;
 import com.atom.vpn.demo.common.logger.LogFragment;
 import com.atom.vpn.demo.common.logger.LogWrapper;
 import com.atom.vpn.demo.common.logger.MessageOnlyLogFilter;
+import com.atom.vpn.demo.fragment.ConnectWithChannelFragment;
 import com.atom.vpn.demo.fragment.ConnectWithDedicatedIPFragment;
 import com.atom.vpn.demo.fragment.ConnectWithPSKFragment;
 import com.atom.vpn.demo.fragment.ConnectWithParamsFragment;
+import com.atom.vpn.demo.fragment.ConnectWithSmartConnectFragment;
 
 /**
  * ConnectActivity
@@ -59,9 +61,21 @@ public class ConnectActivity extends BaseSampleActivity {
                 fragment.setArguments(extras);
                 transaction.replace(R.id.connect_fragment, fragment);
                 transaction.commit();
-            }else{
+            }else if(connection_type == 3) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 ConnectWithDedicatedIPFragment fragment = new ConnectWithDedicatedIPFragment();
+                fragment.setArguments(extras);
+                transaction.replace(R.id.connect_fragment, fragment);
+                transaction.commit();
+            }else if(connection_type == 4) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                ConnectWithChannelFragment fragment = new ConnectWithChannelFragment();
+                fragment.setArguments(extras);
+                transaction.replace(R.id.connect_fragment, fragment);
+                transaction.commit();
+            }else if(connection_type == 5){
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                ConnectWithSmartConnectFragment fragment = new ConnectWithSmartConnectFragment();
                 fragment.setArguments(extras);
                 transaction.replace(R.id.connect_fragment, fragment);
                 transaction.commit();
@@ -104,6 +118,7 @@ public class ConnectActivity extends BaseSampleActivity {
         ViewAnimator output =  findViewById(R.id.sample_output);
         output.setDisplayedChild(1);
 
+
     }
 
     @Override
@@ -113,13 +128,7 @@ public class ConnectActivity extends BaseSampleActivity {
             String vpnStatus = AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(this);
             if (!vpnStatus.equalsIgnoreCase(AtomManager.VPNStatus.DISCONNECTED)) {
                 if(!isFinishing()) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            Toast.makeText(ConnectActivity.this, Constants.DisconnectBeforeExit, Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    runOnUiThread(() -> Toast.makeText(ConnectActivity.this, Constants.DisconnectBeforeExit, Toast.LENGTH_LONG).show());
                 }            } else {
                 super.onBackPressed();
             }

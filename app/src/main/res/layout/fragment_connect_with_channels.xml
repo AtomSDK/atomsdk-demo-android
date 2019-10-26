@@ -97,10 +97,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="6"
-            android:text="@string/lbl_select_country" />
+            android:text="@string/lbl_select_channel" />
 
         <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/countrySpinner"
+            android:id="@+id/channelsSpinner"
             style="@style/Widget.AppCompat.Spinner.Underlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -110,89 +110,6 @@
             android:theme="@style/BrandedSpinner.control"/>
 
     </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="6"
-            android:text="@string/lbl_select_city" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/citySpinner"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:minHeight="40dp"
-            android:spinnerMode="dropdown"
-            android:theme="@style/BrandedSpinner.control"/>
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        >
-
-        <Switch
-            android:id="@+id/switchOptConnection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_optimize_connection"
-            android:layout_centerVertical="true"
-            android:theme="@style/BrandedSwitch.control"
-            />
-
-
-        <ImageView
-            android:id="@+id/optConnectionHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="125dp"
-            android:background="@drawable/ic_info"
-            android:gravity="center_horizontal"
-             />
-
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        >
-
-        <Switch
-            android:id="@+id/switchSmartDialing"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_smart_dialing"
-            android:layout_centerVertical="true"
-            android:theme="@style/BrandedSwitch.control"
-            />
-
-
-        <ImageView
-            android:id="@+id/smartDialingHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="125dp"
-            android:background="@drawable/ic_info"
-            android:gravity="center_horizontal"
-            />
-
-    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

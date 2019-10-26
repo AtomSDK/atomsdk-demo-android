@@ -10,11 +10,14 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 
+import com.atom.core.exceptions.AtomValidationException;
 import com.atom.core.models.AtomConfiguration;
 import com.atom.core.models.AtomNotification;
 import com.atom.sdk.android.AtomManager;
-import com.atom.sdk.android.exceptions.AtomValidationException;
+import com.atom.sdk.android.ConnectionDetails;
+import com.atom.sdk.android.common.Common;
 import com.atom.vpn.demo.common.Constants;
+import com.atom.vpn.demo.common.logger.Log;
 
 /**
  * AtomDemoApplicationController
@@ -57,6 +60,9 @@ public class AtomDemoApplicationController extends Application {
                     public void onInitialized(AtomManager mAtomManager) {
 
                         atomManager = mAtomManager;
+
+                        ConnectionDetails connectionDetails =  atomManager.getConnectionDetails();
+                        Log.e("connectionDetails", Common.objectToString(connectionDetails));
                     }
                 });
             } catch (AtomValidationException e) {

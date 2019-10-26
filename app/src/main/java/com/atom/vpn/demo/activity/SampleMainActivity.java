@@ -15,11 +15,7 @@ import com.atom.vpn.demo.R;
 import com.atom.vpn.demo.common.base.BaseSampleActivity;
 import com.atom.vpn.demo.fragment.MainFragment;
 
-
-
 public class SampleMainActivity extends BaseSampleActivity {
-
-    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

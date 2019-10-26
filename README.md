@@ -1,5 +1,6 @@
 # ATOM VPN SDK demo for Android  Applications
 This is a demo application for Android Application with basic usage of ATOM VPN SDK which will help the developers to create smooth applications over ATOM SDK quickly.
+
 ## SDK Features covered in this Demo
 * Connection with Parameters
 * Connection with Pre-Shared Key (PSK)
@@ -7,16 +8,16 @@ This is a demo application for Android Application with basic usage of ATOM VPN 
 * Connection with Multiple Protocols (Auto-Retry Functionality)
 * Connection with Real-time Optimized Servers (Countries based on latency from user in Real-time)
 * Connection with Smart Dialing (Use getCountriesForSmartDialing() to get the Advanced VPN Dialing supported countries)
+* Connection with Smart Connect (Tags based dialing)
 
 ## Compatibility
 
 * Compatible with Android 4.0/API Level: 14 (ICE_CREAM_SANDWICH) and later
-* Compatible with ATOM SDK Version 2.0 and onwards
+* Compatible with ATOM SDK Version 3.0.0 and onwards
 
 ## Supported Protocols
 * TCP
 * UDP
-* IKEV
 
 ## SDK Installation
 To use this library you should add **jitpack** repository.
@@ -36,7 +37,7 @@ Add this to root **build.gradle**
 And then add dependencies in build.gradle of your app module.
 ```groovy
 dependencies {
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:2.3.1'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.0.0'
 }
 ```
 >To successfully build ATOM SDK, developer must migrate their project to AndroidX. Developer can use **Refactor** -> **Migrate to AndroidX** option in Android Studio.
@@ -101,6 +102,7 @@ ATOM SDK offers five callbacks to register for the ease of the developer.
 * onDisconnected
 * onDialError
 * onRedialing
+* onUnableToAccessInternet
 
 Details of these callbacks can be seen in the inline documentation or method summaries. You need to register these callback to get notified about what’s happening behind the scenes
 
@@ -150,6 +152,11 @@ Callbacks will be registered for the ease of the developer.
 
     @Override
     public void onRedialing(AtomException exception, ConnectionDetails connectionDetails) {
+
+    }
+    
+    @Override
+    public void onUnableToAccessInternet(AtomException atomException, ConnectionDetails connectionDetails) {
 
     }
 ```
@@ -278,6 +285,8 @@ VPNProperties vpnProperties = vpnPropertiesBuilder.build();
 atomManager.connect(this, vpnProperties);
 ```
 
+From version 3.0.0 onwards, Atom has introduced connection with Cities and Channels. You can found their corresponding VPNProperties constructors in the Demo Application.
+
 ### Connection with Pre-Shared Key (PSK)
 
 In this way of connection, it is pre-assumed that you have your own backend server which communicates with ATOM Backend APIs directly and creates a Pre-Shared Key (usually called as PSK) which you can then provide to the SDK for dialing. While providing PSK, no VPN Property other than PSK is required to make the connection. ATOM SDK will handle the rest.
@@ -313,6 +322,18 @@ VPNProperties vpnProperties = vpnPropertiesBuilder.build();
 
 atomManager.connect(this, vpnProperties);
 ```
+
+### Connection with Smart Connect
+If you want us to connect your user with what's best for him, you can now do it using SmartConnect feature. Atom has introduced an enum list of feature a.k.a Tags you want to apply over those smart connections which can be found under Atom.Core.Enums.SmartConnectTag namespace. An example usage of SmartConnect is depicted below.
+```
+List<SmartConnectTag> smartConnectTags = new ArrayList<>();
+smartConnectTags.add(SmartConnectTag.FILE_SHARING);
+VPNProperties.Builder vpnPropertiesBuilder = new VPNProperties.Builder(primaryProtocol, smartConnectTags);
+VPNProperties vpnProperties = vpnPropertiesBuilder.build();
+
+atomManager.connect(this, vpnProperties);
+```
+Tags aren't mandatory and is a nullable parameter. You can only provide Protocol to connect and rest Atom will manage.
 
 ### Connection with Multiple Protocols (Auto-Retry Functionality)
 You can provide THREE Protocols at max so ATOM SDK can attempt automatically on your behalf to get your user connected with the Secondary or Tertiary Protocol if your base Protocol fails to connect.
@@ -359,4 +380,9 @@ android{
 }
 ```
 
+# Resolve issues when building an Android App Bundle:
+When building an Android App Bundle, APKs generated from that app bundle that target Android 6.0 (API level 23) or higher now include uncompressed versions of your native libraries by default. This optimization avoids the need for the device to make a copy of the library and thus reduces the on-disk size of your app. If you'd rather disable this optimization, add the following to your gradle.properties file:
 
+```
+android.bundle.enableUncompressedNativeLibs = false
+```

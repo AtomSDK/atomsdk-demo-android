@@ -22,24 +22,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.atom.core.exceptions.AtomAPIException;
+import com.atom.core.exceptions.AtomException;
+import com.atom.core.exceptions.AtomValidationException;
 import com.atom.sdk.android.AtomManager;
 import com.atom.sdk.android.ConnectionDetails;
 import com.atom.sdk.android.Errors;
 import com.atom.sdk.android.VPNCredentials;
 import com.atom.sdk.android.VPNProperties;
 import com.atom.sdk.android.VPNStateListener;
-import com.atom.sdk.android.exceptions.AtomException;
-import com.atom.sdk.android.exceptions.AtomValidationException;
 import com.atom.vpn.demo.AtomDemoApplicationController;
 import com.atom.vpn.demo.R;
 import com.atom.vpn.demo.activity.ConnectActivity;
 import com.atom.vpn.demo.common.Constants;
 import com.atom.vpn.demo.common.logger.Log;
 import com.tooltip.Tooltip;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 
 import static com.atom.vpn.demo.common.Utilities.changeButtonState;
@@ -75,18 +72,12 @@ public class ConnectWithPSKFragment extends Fragment implements VPNStateListener
             if (extras.containsKey("vpnPassword")) {
                 vpnPassword =  extras.getString("vpnPassword");
             }
-
         }
-
 
         AtomManager.addVPNStateListener(this);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                AtomDemoApplicationController.getInstance().getAtomManager().bindIKEVStateService(getActivity());
-            }
-        },500);
+        if(getActivity()!=null)
+        new Handler().postDelayed(() -> AtomDemoApplicationController.getInstance().getAtomManager().bindIKEVStateService(getActivity()),500);
 
     }
 
@@ -107,24 +98,16 @@ public class ConnectWithPSKFragment extends Fragment implements VPNStateListener
         Tooltip.Builder pskHintTipBuilder = new Tooltip.Builder(pskHint, R.style.TooltipStyle);
         Tooltip pskHintTip = pskHintTipBuilder.setText(Constants.TooltipPSK).setDismissOnClick(true).build();
 
-        pskHint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        pskHint.setOnClickListener(v -> {
 
-                if (!pskHintTip.isShowing()) {
-                    pskHintTip.show();
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            pskHintTip.dismiss();
-                        }
-                    }, 3000);
-                } else {
-                    pskHintTip.dismiss();
-                }
-
+            if (!pskHintTip.isShowing()) {
+                pskHintTip.show();
+                final Handler handler = new Handler();
+                handler.postDelayed(pskHintTip::dismiss, 3000);
+            } else {
+                pskHintTip.dismiss();
             }
+
         });
 
         btnConnect =  view.findViewById(R.id.btnConnect);
@@ -145,25 +128,27 @@ public class ConnectWithPSKFragment extends Fragment implements VPNStateListener
                             btnConnect.setText("Cancel");
 
                             ConnectActivity connectActivity = (ConnectActivity)getActivity();
-                            connectActivity.logWrapper.clear();
+                            if(connectActivity!=null) {
+                                connectActivity.logWrapper.clear();
 
-                            etPSK.setError(null);
-                            try {
-                                // Put PSK here
-                                VPNProperties.Builder vpnProperties = new VPNProperties.Builder(etPSK.getText().toString());
+                                etPSK.setError(null);
+                                try {
+                                    // Put PSK here
+                                    VPNProperties.Builder vpnProperties = new VPNProperties.Builder(etPSK.getText().toString());
 
-                                if(!TextUtils.isEmpty(vpnUsername) && !TextUtils.isEmpty(vpnPassword)) {
-                                    AtomDemoApplicationController.getInstance().getAtomManager().setVPNCredentials(new VPNCredentials(vpnUsername,vpnPassword));
-                                }else if(!TextUtils.isEmpty(uuid)){
-                                    AtomDemoApplicationController.getInstance().getAtomManager().setUUID(uuid);
+                                    if (!TextUtils.isEmpty(vpnUsername) && !TextUtils.isEmpty(vpnPassword)) {
+                                        AtomDemoApplicationController.getInstance().getAtomManager().setVPNCredentials(new VPNCredentials(vpnUsername, vpnPassword));
+                                    } else if (!TextUtils.isEmpty(uuid)) {
+                                        AtomDemoApplicationController.getInstance().getAtomManager().setUUID(uuid);
+                                    }
+
+                                    VPNProperties vpnProperties1 = vpnProperties.build();
+
+                                    AtomDemoApplicationController.getInstance().getAtomManager().connect(getActivity(), vpnProperties1);
+
+                                } catch (AtomValidationException e) {
+                                    e.printStackTrace();
                                 }
-
-                                VPNProperties vpnProperties1 = vpnProperties.build();
-
-                                AtomDemoApplicationController.getInstance().getAtomManager().connect(getActivity(), vpnProperties1);
-
-                            } catch (AtomValidationException e) {
-                                e.printStackTrace();
                             }
                         } else {
                             etPSK.setError(Constants.PSKRequired);
@@ -193,15 +178,9 @@ public class ConnectWithPSKFragment extends Fragment implements VPNStateListener
 
     @Override
     public void onConnected(ConnectionDetails connectionDetails) {
-        Log.d("connected",   "Connected");
+        Log.d(TAG,   "Connected");
         changeButtonState(btnConnect, "Disconnect");
-        Log.d("ip",AtomDemoApplicationController.getInstance().getAtomManager().getConnectedIp(getActivity()));
-        Date date = AtomDemoApplicationController.getInstance().getAtomManager().getConnectedTime(getActivity());
 
-        if(date!=null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-            Log.d("date", sdf.format(date));
-        }
     }
 
     @Override
@@ -212,33 +191,31 @@ public class ConnectWithPSKFragment extends Fragment implements VPNStateListener
 
     @Override
     public void onRedialing(AtomException atomException, ConnectionDetails connectionDetails) {
-        Log.d("onRedialing", atomException.getMessage());
+        //Log.d(TAG, atomException.getMessage());
     }
 
     @Override
     public void onDialError(AtomException atomException, ConnectionDetails connectionDetails) {
 
         if(!AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(getActivity()).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTED)) {
-            Log.d("onDialError", atomException.getMessage());
+            Log.d(TAG, atomException.getMessage());
             if (atomException.getCode() != Errors._5039)
                 changeButtonState(btnConnect, "Connect");
         }
 
-        if(atomException!=null) {
-            Log.d("Code", atomException.getCode() + "");
-            if (atomException.getMessage() != null)
-                Log.d("Message", atomException.getMessage());
-            if (atomException.getCause() != null)
-                Log.d("Cause", atomException.getCause() + "");
-        }
+        Log.d(TAG, atomException.getCode() + "");
+        Log.d(TAG, atomException.getMessage() + "");
 
+        if (atomException.getException() instanceof AtomAPIException) {
+            AtomAPIException atomAPIException = (AtomAPIException) atomException.getException();
+            Log.d(TAG, atomAPIException.getErrorMessage()  + " - " +atomAPIException.getCode());
+        }
     }
 
 
     @Override
     public void onStateChange(String state) {
-
-        Log.e("state",  state);
+        Log.d(TAG,  state);
 
         if (state.equalsIgnoreCase(AtomManager.VPNStatus.CONNECTING) || state.equalsIgnoreCase(VPNState.RECONNECTING)) {
             changeButtonState(btnConnect, "Cancel");
@@ -249,18 +226,24 @@ public class ConnectWithPSKFragment extends Fragment implements VPNStateListener
     @Override
     public void onDisconnected(boolean isCancelled) {
 
+
     }
 
 
     @Override
     public void onDisconnected(ConnectionDetails connectionDetails) {
         if (connectionDetails.isCancelled()) {
-            Log.d("onCancelled",   "Cancelled");
+            Log.d(TAG,   "Cancelled");
         } else {
-            Log.d("onDisconnected",   "Disconnected");
+            Log.d(TAG,   "Disconnected");
         }
 
         changeButtonState(btnConnect, "Connect");
+    }
+
+    @Override
+    public void onUnableToAccessInternet(AtomException atomException, ConnectionDetails connectionDetails) {
+        Log.d(TAG, atomException.getMessage() + "");
 
     }
 

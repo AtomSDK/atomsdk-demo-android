@@ -18,11 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.atom.vpn.demo.R;
 
-
-
 public class LoggingFragment extends Fragment {
-
-    private static final String TAG = "LoggingFragment";
 
     public LoggingFragment() {
         // Required empty public constructor

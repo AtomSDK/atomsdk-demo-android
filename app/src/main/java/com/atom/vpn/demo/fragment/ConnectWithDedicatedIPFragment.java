@@ -5,6 +5,7 @@
 
 package com.atom.vpn.demo.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -18,6 +19,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.atom.core.exceptions.AtomAPIException;
+import com.atom.core.exceptions.AtomException;
+import com.atom.core.exceptions.AtomValidationException;
 import com.atom.core.models.Protocol;
 import com.atom.sdk.android.AtomManager;
 import com.atom.sdk.android.ConnectionDetails;
@@ -27,8 +31,7 @@ import com.atom.sdk.android.ProtocolType;
 import com.atom.sdk.android.VPNCredentials;
 import com.atom.sdk.android.VPNProperties;
 import com.atom.sdk.android.VPNStateListener;
-import com.atom.sdk.android.exceptions.AtomException;
-import com.atom.sdk.android.exceptions.AtomValidationException;
+import com.atom.sdk.android.common.Common;
 import com.atom.vpn.demo.AtomDemoApplicationController;
 import com.atom.vpn.demo.R;
 import com.atom.vpn.demo.activity.ConnectActivity;
@@ -37,7 +40,6 @@ import com.atom.vpn.demo.common.logger.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import static com.atom.vpn.demo.common.Utilities.changeButtonState;
@@ -48,8 +50,6 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
 
     private static final String TAG = "ConnectWithDedicatedIPFragment";
     private EditText etDedicatedIP;
-    private EditText etProtocol;
-    private List<Protocol> protocolList;
     //IKEV is only supported protocol for dedicated ip
     private Protocol supportedProtocol;
     private Button btnConnect;
@@ -83,12 +83,8 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
 
         AtomManager.addVPNStateListener(this);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                AtomDemoApplicationController.getInstance().getAtomManager().bindIKEVStateService(getActivity());
-            }
-        },500);
+        if(getActivity()!=null)
+        new Handler().postDelayed(() -> AtomDemoApplicationController.getInstance().getAtomManager().bindIKEVStateService(getActivity()),500);
 
     }
 
@@ -99,6 +95,7 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
         return inflater.inflate(R.layout.fragment_connect_with_dedicatedip, container, false);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -106,7 +103,7 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
 
         etDedicatedIP =  view.findViewById(R.id.etDedicatedIP);
 
-        etProtocol = view.findViewById(R.id.etProtocol);
+        EditText etProtocol = view.findViewById(R.id.etProtocol);
         etProtocol.setClickable(false);
 
         btnConnect = view.findViewById(R.id.btnConnect);
@@ -190,14 +187,6 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
     public void onConnected(ConnectionDetails connectionDetails) {
         Log.d("connected",   "Connected");
         changeButtonState(btnConnect, "Disconnect");
-        Log.d("ip",AtomDemoApplicationController.getInstance().getAtomManager().getConnectedIp(getActivity()));
-        Date date = AtomDemoApplicationController.getInstance().getAtomManager().getConnectedTime(getActivity());
-
-        if(date!=null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-            Log.d("date", sdf.format(date));
-        }
-
     }
 
     @Override
@@ -207,7 +196,7 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
 
     @Override
     public void onRedialing(AtomException atomException, ConnectionDetails connectionDetails) {
-        Log.d("onRedialing", atomException.getMessage());
+        Log.d(TAG, atomException.getMessage());
     }
 
     @Override
@@ -219,12 +208,12 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
                 changeButtonState(btnConnect, "Connect");
         }
 
-        if(atomException!=null) {
-            Log.d("Code", atomException.getCode() + "");
-            if (atomException.getMessage() != null)
-                Log.d("Message", atomException.getMessage());
-            if (atomException.getCause() != null)
-                Log.d("Cause", atomException.getCause() + "");
+        Log.d(TAG, atomException.getCode() + "");
+        Log.d(TAG, atomException.getMessage() + "");
+
+        if (atomException.getException() instanceof AtomAPIException) {
+            AtomAPIException atomAPIException = (AtomAPIException) atomException.getException();
+            Log.d(TAG, atomAPIException.getErrorMessage()  + " - " +atomAPIException.getCode());
         }
 
     }
@@ -233,7 +222,7 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
     @Override
     public void onStateChange(String state) {
 
-        Log.d("state",  state );
+        Log.d(TAG,  state );
 
         if (state.equalsIgnoreCase(AtomManager.VPNStatus.CONNECTING) || state.equalsIgnoreCase(VPNState.RECONNECTING)) {
             changeButtonState(btnConnect, "Cancel");
@@ -249,12 +238,17 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
     @Override
     public void onDisconnected(ConnectionDetails connectionDetails) {
         if (connectionDetails.isCancelled()) {
-            Log.d("onCancelled",   "Cancelled");
+            Log.d(TAG,   "Cancelled");
         } else {
-            Log.d("onDisconnected",   "Disconnected");
+            Log.d(TAG,   "Disconnected");
         }
 
         changeButtonState(btnConnect, "Connect");
+
+    }
+
+    @Override
+    public void onUnableToAccessInternet(AtomException atomException, ConnectionDetails connectionDetails) {
 
     }
 

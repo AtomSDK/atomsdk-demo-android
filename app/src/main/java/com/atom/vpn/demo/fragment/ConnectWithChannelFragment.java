@@ -5,6 +5,7 @@
 
 package com.atom.vpn.demo.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -13,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,8 +23,7 @@ import androidx.fragment.app.Fragment;
 import com.atom.core.exceptions.AtomAPIException;
 import com.atom.core.exceptions.AtomException;
 import com.atom.core.exceptions.AtomValidationException;
-import com.atom.core.models.City;
-import com.atom.core.models.Country;
+import com.atom.core.models.Channel;
 import com.atom.core.models.Protocol;
 import com.atom.sdk.android.AtomManager;
 import com.atom.sdk.android.ConnectionDetails;
@@ -33,38 +31,29 @@ import com.atom.sdk.android.Errors;
 import com.atom.sdk.android.VPNCredentials;
 import com.atom.sdk.android.VPNProperties;
 import com.atom.sdk.android.VPNStateListener;
-import com.atom.sdk.android.common.Common;
 import com.atom.sdk.android.data.callbacks.CollectionCallback;
 import com.atom.vpn.demo.AtomDemoApplicationController;
 import com.atom.vpn.demo.R;
 import com.atom.vpn.demo.activity.ConnectActivity;
-import com.atom.vpn.demo.adapter.CityAdapter;
-import com.atom.vpn.demo.adapter.CountryAdapter;
+import com.atom.vpn.demo.adapter.ChannelAdapter;
 import com.atom.vpn.demo.adapter.ProtocolAdapter;
-import com.atom.vpn.demo.common.Constants;
 import com.atom.vpn.demo.common.logger.Log;
-import com.tooltip.Tooltip;
-
-
 import java.util.ArrayList;
 import java.util.List;
+
 
 import static br.com.zbra.androidlinq.Linq.stream;
 import static com.atom.vpn.demo.common.Utilities.changeButtonState;
 import static com.atom.vpn.demo.common.Utilities.changeButtonText;
 
 
-public class ConnectWithParamsFragment extends Fragment implements VPNStateListener {
+public class ConnectWithChannelFragment extends Fragment implements VPNStateListener {
 
-    private static final String TAG = "ConnectWithParamsFragment";
-    private AppCompatSpinner primaryProtocolSpinner, secondaryProtocolSpinner, tertiaryProtocolSpinner, countrySpinner,citySpinner;
+    private static final String TAG = "ConnectWithChannelFragment";
+    private AppCompatSpinner primaryProtocolSpinner, secondaryProtocolSpinner, tertiaryProtocolSpinner, channelSpinner;
     private List<Protocol> protocolList;
-    private List<Country> countriesList;
-    private List<City> citiesList;
+    private List<Channel> channelsList;
 
-    private List<Country> countriesForSmartDialing;
-
-    private Switch switchOptimizedConnection,switchSmartDialing;
     private Button btnConnect;
 
     private String uuid,vpnUsername,vpnPassword;
@@ -73,7 +62,9 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
     private Protocol secondaryProtocol = null;
     private Protocol tertiaryProtocol = null;
 
-    public ConnectWithParamsFragment() {
+    VPNProperties vpnProperties = null;
+
+    public ConnectWithChannelFragment() {
         // Required empty public constructor
     }
 
@@ -100,8 +91,7 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
         AtomManager.addVPNStateListener(this);
 
         if(getActivity()!=null)
-            new Handler().postDelayed(() -> AtomDemoApplicationController.getInstance().getAtomManager().bindIKEVStateService(getActivity()),500);
-
+        new Handler().postDelayed(() -> AtomDemoApplicationController.getInstance().getAtomManager().bindIKEVStateService(getActivity()),500);
 
     }
 
@@ -110,44 +100,13 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_connect_with_params, container, false);
+        return inflater.inflate(R.layout.fragment_connect_with_channels, container, false);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        ImageView smartDialingHint =  view.findViewById(R.id.smartDialingHint);
-        Tooltip.Builder smartDialingHintTipBuilder = new Tooltip.Builder(smartDialingHint, R.style.TooltipStyle);
-        Tooltip smartCountriesHintTip = smartDialingHintTipBuilder.setText(Constants.TooltipSmartDialing).setDismissOnClick(true).build();
-        smartDialingHint.setOnClickListener(v -> {
-
-            if (!smartCountriesHintTip.isShowing()) {
-                smartCountriesHintTip.show();
-                final Handler handler = new Handler();
-                handler.postDelayed(smartCountriesHintTip::dismiss, 3000);
-            } else {
-                smartCountriesHintTip.dismiss();
-            }
-
-        });
-
-
-        ImageView optConnectionHint =  view.findViewById(R.id.optConnectionHint);
-        Tooltip.Builder optConnectionHintTipBuilder = new Tooltip.Builder(optConnectionHint, R.style.TooltipStyle);
-        Tooltip optConnectionHintTip = optConnectionHintTipBuilder.setText(Constants.TooltipOptimization).setDismissOnClick(true).build();
-
-        optConnectionHint.setOnClickListener(v -> {
-
-            if (!optConnectionHintTip.isShowing()) {
-                optConnectionHintTip.show();
-                final Handler handler = new Handler();
-                handler.postDelayed(optConnectionHintTip::dismiss, 3000);
-            } else {
-                optConnectionHintTip.dismiss();
-            }
-
-        });
 
         primaryProtocolSpinner = view.findViewById(R.id.primaryProtocolSpinner);
         primaryProtocolSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -170,23 +129,8 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
                     tertiaryProtocol = null;
                 }
 
-                if(switchSmartDialing.isChecked()){
-                    List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesForSmartDialing, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                    displayCountries(filteredCountry);
-                }else {
-                    List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                    displayCountries(filteredCountry);
-                }
-
-
-                if(countrySpinner.getSelectedItem()!=null){
-                    Country country  = (Country)countrySpinner.getSelectedItem();
-                    if(country!=null){
-                        List<City> filteredCities = getCitiesByAllSelectedProtocolByCountry(citiesList, primaryProtocol, secondaryProtocol, tertiaryProtocol,country);
-                        displayCities(filteredCities);
-
-                    }
-                }
+                List<Channel> filteredChannels = getChannelsByAllSelectedProtocol(channelsList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
+                displayChannels(filteredChannels);
 
             }
 
@@ -218,35 +162,15 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
                         tertiaryProtocol = null;
                     }
 
-                    if(switchSmartDialing.isChecked()){
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesForSmartDialing, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }else {
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }
+                    List<Channel> filteredChannels = getChannelsByAllSelectedProtocol(channelsList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
+                    displayChannels(filteredChannels);
 
                 }else{
                     secondaryProtocol = null;
-
-                    if(switchSmartDialing.isChecked()){
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesForSmartDialing, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }else {
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }
                 }
 
-                if(countrySpinner.getSelectedItem()!=null){
-                    Country country  = (Country)countrySpinner.getSelectedItem();
-                    if(country!=null){
-                        List<City> filteredCities = getCitiesByAllSelectedProtocolByCountry(citiesList, primaryProtocol, secondaryProtocol, tertiaryProtocol,country);
-                        displayCities(filteredCities);
-
-                    }
-                }
-
+                List<Channel> filteredChannels = getChannelsByAllSelectedProtocol(channelsList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
+                displayChannels(filteredChannels);
             }
 
             @Override
@@ -277,32 +201,14 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
                         tertiaryProtocol = null;
                     }
 
-                    if(switchSmartDialing.isChecked()){
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesForSmartDialing, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }else {
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }
+                    List<Channel> filteredChannels = getChannelsByAllSelectedProtocol(channelsList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
+                    displayChannels(filteredChannels);
                 }else{
                     tertiaryProtocol = null;
-                    if(switchSmartDialing.isChecked()){
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesForSmartDialing, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }else {
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }
+                    List<Channel> filteredChannels = getChannelsByAllSelectedProtocol(channelsList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
+                    displayChannels(filteredChannels);
                 }
 
-                if(countrySpinner.getSelectedItem()!=null){
-                    Country country  = (Country)countrySpinner.getSelectedItem();
-                    if(country!=null){
-                        List<City> filteredCities = getCitiesByAllSelectedProtocolByCountry(citiesList, primaryProtocol, secondaryProtocol, tertiaryProtocol,country);
-                        displayCities(filteredCities);
-
-                    }
-                }
             }
 
             @Override
@@ -311,71 +217,7 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
             }
         });
 
-        countrySpinner =  view.findViewById(R.id.countrySpinner);
-
-        citySpinner =  view.findViewById(R.id.citySpinner);
-
-        switchOptimizedConnection =  view.findViewById(R.id.switchOptConnection);
-        switchOptimizedConnection.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked){
-                switchSmartDialing.setChecked(false);
-                List<Country> countryList = getCountriesByAllSelectedProtocol(countriesList,primaryProtocol,secondaryProtocol,tertiaryProtocol);
-                displayCountries(countryList);
-            }
-
-        });
-
-        switchSmartDialing =  view.findViewById(R.id.switchSmartDialing);
-        switchSmartDialing.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked){
-                switchOptimizedConnection.setChecked(false);
-                AtomDemoApplicationController.getInstance().getAtomManager().getCountriesForSmartDialing(new CollectionCallback<Country>() {
-                    @Override
-                    public void onSuccess(List<Country> list) {
-                        if (list != null) {
-                            countriesForSmartDialing = list;
-                            List<Country> countryList = getCountriesByAllSelectedProtocol(countriesForSmartDialing,primaryProtocol,secondaryProtocol,tertiaryProtocol);
-                            displayCountries(countryList);
-                        }
-                    }
-
-                    @Override
-                    public void onError(AtomException exception) {
-
-                    }
-
-                    @Override
-                    public void onNetworkError(AtomException exception) {
-
-                    }
-                });
-
-            }else{
-                List<Country> countryList = getCountriesByAllSelectedProtocol(countriesList,primaryProtocol,secondaryProtocol,tertiaryProtocol);
-                displayCountries(countryList);
-            }
-
-        });
-
-
-        countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(countrySpinner.getSelectedItem()!=null){
-                    Country country  = (Country)countrySpinner.getSelectedItem();
-                    if(country!=null){
-                        List<City> filteredCities = getCitiesByAllSelectedProtocolByCountry(citiesList, primaryProtocol, secondaryProtocol, tertiaryProtocol,country);
-                        displayCities(filteredCities);
-
-                    }
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        channelSpinner =  view.findViewById(R.id.channelsSpinner);
 
         btnConnect = view.findViewById(R.id.btnConnect);
         btnConnect.setOnClickListener(v -> {
@@ -394,31 +236,21 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
                     // Put username and password here
                     Protocol primaryProtocol = (Protocol) primaryProtocolSpinner.getSelectedItem();
 
-                    Country country = (Country) countrySpinner.getSelectedItem();
+                    Channel channel = (Channel) channelSpinner.getSelectedItem();
 
-                    City city = null;
-
-                    if(citySpinner.getSelectedItemPosition()>0) {
-                        city = (City) citySpinner.getSelectedItem();
-                    }
-
-                    if (primaryProtocol != null && (country!=null || city!=null)) {
+                    if (primaryProtocol != null && channel!=null) {
 
                         btnConnect.setText("Cancel");
 
                         ConnectActivity connectActivity = (ConnectActivity)getActivity();
                         if(connectActivity!=null)
-                        connectActivity.logWrapper.clear();
+                            connectActivity.logWrapper.clear();
 
                         // Dedicated Host here
-                        VPNProperties.Builder vpnPropertiesBuilder=null;
+                        VPNProperties.Builder vpnPropertiesBuilder;
                         try {
 
-                            if(city!=null){
-                                vpnPropertiesBuilder = new VPNProperties.Builder(city, primaryProtocol);
-                            }else if(country!=null) {
-                                vpnPropertiesBuilder = new VPNProperties.Builder(country, primaryProtocol);
-                            }
+                            vpnPropertiesBuilder = new VPNProperties.Builder(channel, primaryProtocol);
 
                             if (secondaryProtocolSpinner.getSelectedItemPosition() >= 1) {
                                 Protocol secondaryProtocol = (Protocol) secondaryProtocolSpinner.getSelectedItem();
@@ -430,21 +262,13 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
                                 vpnPropertiesBuilder.withTertiaryProtocol(tertiaryProtocol);
                             }
 
-
-                            if (switchOptimizedConnection.isChecked()) {
-                                vpnPropertiesBuilder.withOptimization();
-                            }
-
-                            if (switchSmartDialing.isChecked()) {
-                                vpnPropertiesBuilder.withSmartDialing();
-                            }
-
                             if(!TextUtils.isEmpty(vpnUsername) && !TextUtils.isEmpty(vpnPassword)) {
                                 AtomDemoApplicationController.getInstance().getAtomManager().setVPNCredentials(new VPNCredentials(vpnUsername,vpnPassword));
                             }else if(!TextUtils.isEmpty(uuid)){
                                 AtomDemoApplicationController.getInstance().getAtomManager().setUUID(uuid);
                             }
 
+                            vpnProperties = vpnPropertiesBuilder.build();
                             AtomDemoApplicationController.getInstance().getAtomManager().connect(getActivity(), vpnPropertiesBuilder.build());
 
                         } catch (AtomValidationException e) {
@@ -511,8 +335,6 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
                 public void onError(AtomException atomException) {
                     Log.e(TAG, atomException.getMessage() + " : " + atomException.getCode());
 
-
-
                 }
 
                 @Override
@@ -523,18 +345,17 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
             });
         }
 
-        // get Countries from ATOM SDK
+        // get Channels from ATOM SDK
         if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-            AtomDemoApplicationController.getInstance().getAtomManager().getCountries(new CollectionCallback<Country>() {
+            AtomDemoApplicationController.getInstance().getAtomManager().getChannels(new CollectionCallback<Channel>() {
                 @Override
-                public void onSuccess(List<Country> countries) {
+                public void onSuccess(List<Channel> channels) {
 
-                    if(countries!=null) {
-                        countriesList = countries;
+                    if(channels!=null) {
+                        channelsList = channels;
 
-                        List<Country> countryList = getCountriesByAllSelectedProtocol(countriesList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(countryList);
-
+                        List<Channel> countryList = getChannelsByAllSelectedProtocol(channelsList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
+                        displayChannels(countryList);
                     }
                 }
 
@@ -547,33 +368,6 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
                 @Override
                 public void onNetworkError(AtomException atomException) {
                     Log.e(TAG, atomException.getMessage() + " : " + atomException.getCode());
-
-                }
-
-            });
-
-        }
-
-        // get Cities from ATOM SDK
-        if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-            AtomDemoApplicationController.getInstance().getAtomManager().getCities(new CollectionCallback<City>() {
-                @Override
-                public void onSuccess(List<City> cities) {
-
-                    if(cities!=null) {
-                        citiesList = cities;
-                    }
-                }
-
-                @Override
-                public void onError(AtomException atomException) {
-                    Log.d(TAG, atomException.getMessage() + " : " + atomException.getCode());
-
-                }
-
-                @Override
-                public void onNetworkError(AtomException atomException) {
-                    Log.d(TAG, atomException.getMessage() + " : " + atomException.getCode());
 
                 }
 
@@ -590,52 +384,9 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
 
     }
 
-    private List<Country> getCountriesByAllSelectedProtocol(List<Country> countries, Protocol primaryProtocol, Protocol secondaryProtocol, Protocol tertiaryProtocol) {
+    private List<Channel> getChannelsByAllSelectedProtocol(List<Channel> channels, Protocol primaryProtocol, Protocol secondaryProtocol, Protocol tertiaryProtocol) {
 
-        if (countries != null) {
-
-                if (primaryProtocol != null && secondaryProtocol != null && tertiaryProtocol != null) {
-
-                    List<Protocol> protocolList = new ArrayList<>();
-                    protocolList.add(primaryProtocol);
-                    protocolList.add(secondaryProtocol);
-                    protocolList.add(tertiaryProtocol);
-                    return stream(countries)
-                                    .where(c ->c.getProtocols()!=null && c.getProtocols().containsAll(protocolList)).toList();
-
-                } else if (primaryProtocol != null && secondaryProtocol != null) {
-
-
-                    List<Protocol> protocolList = new ArrayList<>();
-                    protocolList.add(primaryProtocol);
-                    protocolList.add(secondaryProtocol);
-                    return stream(countries)
-                            .where(c -> c.getProtocols()!=null && c.getProtocols().containsAll(protocolList)).toList();
-
-                }else if (primaryProtocol != null && tertiaryProtocol != null) {
-
-
-                    List<Protocol> protocolList = new ArrayList<>();
-                    protocolList.add(primaryProtocol);
-                    protocolList.add(tertiaryProtocol);
-                    return stream(countries)
-                            .where(c -> c.getProtocols()!=null && c.getProtocols().containsAll(protocolList)).toList();
-
-                } else if (primaryProtocol != null) {
-
-                    return stream(countries)
-                            .where(c ->c.getProtocols()!=null && c.getProtocols().contains(primaryProtocol)).toList();
-
-                }
-        }
-
-        return null;
-    }
-
-
-    private List<City> getCitiesByAllSelectedProtocolByCountry(List<City> cities, Protocol primaryProtocol, Protocol secondaryProtocol, Protocol tertiaryProtocol,Country country) {
-
-        if (cities != null) {
+        if (channels != null) {
 
             if (primaryProtocol != null && secondaryProtocol != null && tertiaryProtocol != null) {
 
@@ -643,8 +394,8 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
                 protocolList.add(primaryProtocol);
                 protocolList.add(secondaryProtocol);
                 protocolList.add(tertiaryProtocol);
-                return stream(cities)
-                        .where(c -> c.getProtocols() != null && c.getProtocols().containsAll(protocolList) && c.getCountry().equalsIgnoreCase(country.getCountry())).toList();
+                return stream(channels)
+                        .where(c ->c.getProtocols()!=null && c.getProtocols().containsAll(protocolList)).toList();
 
             } else if (primaryProtocol != null && secondaryProtocol != null) {
 
@@ -652,22 +403,22 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
                 List<Protocol> protocolList = new ArrayList<>();
                 protocolList.add(primaryProtocol);
                 protocolList.add(secondaryProtocol);
-                return stream(cities)
-                        .where(c -> c.getProtocols() != null && c.getProtocols().containsAll(protocolList) && c.getCountry().equalsIgnoreCase(country.getCountry())).toList();
+                return stream(channels)
+                        .where(c -> c.getProtocols()!=null && c.getProtocols().containsAll(protocolList)).toList();
 
-            } else if (primaryProtocol != null && tertiaryProtocol != null) {
+            }else if (primaryProtocol != null && tertiaryProtocol != null) {
 
 
                 List<Protocol> protocolList = new ArrayList<>();
                 protocolList.add(primaryProtocol);
                 protocolList.add(tertiaryProtocol);
-                return stream(cities)
-                        .where(c -> c.getProtocols() != null && c.getProtocols().containsAll(protocolList)  && c.getCountry().equalsIgnoreCase(country.getCountry())).toList();
+                return stream(channels)
+                        .where(c -> c.getProtocols()!=null && c.getProtocols().containsAll(protocolList)).toList();
 
             } else if (primaryProtocol != null) {
 
-                return stream(cities)
-                        .where(c -> c.getProtocols() != null && c.getProtocols().contains(primaryProtocol)  && c.getCountry().equalsIgnoreCase(country.getCountry())).toList();
+                return stream(channels)
+                        .where(c ->c.getProtocols()!=null && c.getProtocols().contains(primaryProtocol)).toList();
 
             }
         }
@@ -676,33 +427,15 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
     }
 
 
-    private void displayCountries(List<Country> countries) {
-        if (countries != null) {
-            Country[] countryArray = countries.toArray(new Country[0]);
+    private void displayChannels(List<Channel> channels) {
+        if (channels != null) {
+            Channel[] channelArray = channels.toArray(new Channel[0]);
             if(getActivity()!=null) {
-                CountryAdapter countryAdapter = new CountryAdapter(getActivity(), android.R.layout.simple_spinner_item,
-                        countryArray);
-                countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                countrySpinner.setAdapter(countryAdapter);
-                countryAdapter.notifyDataSetChanged();
-            }
-        }
-    }
-
-
-    private void displayCities(List<City> cities) {
-        if (cities != null) {
-            City dummyCity = new City();
-            dummyCity.setName("Select City");
-            dummyCity.setId(0);
-            cities.add(0,dummyCity);
-            City[] cityArray = cities.toArray(new City[0]);
-            if (getActivity() != null) {
-                CityAdapter cityAdapter = new CityAdapter(getActivity(), android.R.layout.simple_spinner_item,
-                        cityArray);
-                cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                citySpinner.setAdapter(cityAdapter);
-                cityAdapter.notifyDataSetChanged();
+                ChannelAdapter channelAdapter = new ChannelAdapter(getActivity(), android.R.layout.simple_spinner_item,
+                        channelArray);
+                channelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                channelSpinner.setAdapter(channelAdapter);
+                channelAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -716,9 +449,6 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
     public void onConnected(ConnectionDetails connectionDetails) {
         Log.d(TAG,   "Connected");
         changeButtonState(btnConnect, "Disconnect");
-
-
-        Log.e("connection",Common.objectToString(connectionDetails));
     }
 
     @Override
@@ -749,12 +479,12 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
             AtomAPIException atomAPIException = (AtomAPIException) atomException.getException();
             Log.d(TAG, atomAPIException.getErrorMessage()  + " - " +atomAPIException.getCode());
         }
+
     }
 
 
     @Override
     public void onStateChange(String state) {
-
         Log.e(TAG,  state );
         if (state.equalsIgnoreCase(AtomManager.VPNStatus.CONNECTING) || state.equalsIgnoreCase(VPNState.RECONNECTING)) {
             changeButtonState(btnConnect, "Cancel");
@@ -776,6 +506,7 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
         }
 
         changeButtonState(btnConnect, "Connect");
+
     }
 
     @Override
