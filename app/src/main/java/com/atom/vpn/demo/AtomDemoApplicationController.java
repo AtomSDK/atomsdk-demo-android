@@ -60,9 +60,6 @@ public class AtomDemoApplicationController extends Application {
                     public void onInitialized(AtomManager mAtomManager) {
 
                         atomManager = mAtomManager;
-
-                        ConnectionDetails connectionDetails =  atomManager.getConnectionDetails();
-                        Log.e("connectionDetails", Common.objectToString(connectionDetails));
                     }
                 });
             } catch (AtomValidationException e) {
