@@ -113,19 +113,6 @@ Remove the callback using
 ```
 AtomManager.removeVPNStateListener(VPNStateListener this);
 ```
-### Listening to IKEV Callbacks
-
-While connecting to IKEV protocol callbacks must be registered using bind service
-
-```
-atomManager.bindIKEVStateService(this);
-```
-
-and unbind using
-
-```
-atomManager.unBindIKEVStateService(this);
-```
 
 Callbacks will be registered for the ease of the developer.
 
