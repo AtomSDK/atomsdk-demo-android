@@ -113,19 +113,6 @@ Remove the callback using
 ```
 AtomManager.removeVPNStateListener(VPNStateListener this);
 ```
-### Listening to IKEV Callbacks
-
-While connecting to IKEV protocol callbacks must be registered using bind service
-
-```
-atomManager.bindIKEVStateService(this);
-```
-
-and unbind using
-
-```
-atomManager.unBindIKEVStateService(this);
-```
 
 Callbacks will be registered for the ease of the developer.
 
@@ -324,7 +311,7 @@ atomManager.connect(this, vpnProperties);
 ```
 
 ### Connection with Smart Connect
-If you want us to connect your user with what's best for him, you can now do it using SmartConnect feature. Atom has introduced an enum list of feature a.k.a Tags you want to apply over those smart connections which can be found under Atom.Core.Enums.SmartConnectTag namespace. An example usage of SmartConnect is depicted below.
+If you want us to connect your user with what's best for him, you can now do it using SmartConnect feature. Atom has introduced an enum list of feature a.k.a Tags you want to apply over those smart connections which can be found under com.atom.core.models.SmartConnectTag package. An example usage of SmartConnect is depicted below.
 ```
 List<SmartConnectTag> smartConnectTags = new ArrayList<>();
 smartConnectTags.add(SmartConnectTag.FILE_SHARING);
