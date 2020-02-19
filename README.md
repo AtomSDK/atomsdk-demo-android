@@ -12,8 +12,8 @@ This is a demo application for Android Application with basic usage of ATOM VPN 
 
 ## Compatibility
 
-* Compatible with Android 4.0/API Level: 14 (ICE_CREAM_SANDWICH) and later
-* Compatible with ATOM SDK Version 3.0.0 and onwards
+* Compatible with Android 4.2/API Level: 17 (Jelly Bean) and later
+* Compatible with ATOM SDK Version 3.0.1 and onwards
 
 ## Supported Protocols
 * TCP
@@ -37,7 +37,7 @@ Add this to root **build.gradle**
 And then add dependencies in build.gradle of your app module.
 ```groovy
 dependencies {
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.0.0'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.0.1'
 }
 ```
 >To successfully build ATOM SDK, developer must migrate their project to AndroidX. Developer can use **Refactor** -> **Migrate to AndroidX** option in Android Studio.
