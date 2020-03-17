@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-
 android {
 
     lintOptions {
@@ -15,9 +14,10 @@ android {
         applicationId "com.atom.vpn.demo"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 11
-        versionName "3.0.1"
+        versionCode 12
+        versionName "3.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
 
     }
 
@@ -43,6 +43,8 @@ android {
 
 }
 
+
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -50,7 +52,7 @@ dependencies {
     implementation 'com.github.vihtarb:tooltip:0.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.0.1'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.1.0'
 
 }
 
