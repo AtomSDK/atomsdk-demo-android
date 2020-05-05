@@ -8,14 +8,14 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.3'
     defaultConfig {
         applicationId "com.atom.vpn.demo"
-        minSdkVersion 17
-        targetSdkVersion 28
-        versionCode 12
-        versionName "3.1.0"
+        minSdkVersion 15
+        targetSdkVersion 29
+        versionCode 13
+        versionName "3.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
@@ -52,7 +52,7 @@ dependencies {
     implementation 'com.github.vihtarb:tooltip:0.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.1.0'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.2.0'
 
 }
 
