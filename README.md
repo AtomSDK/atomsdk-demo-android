@@ -37,7 +37,7 @@ Add this to root **build.gradle**
 And then add dependencies in build.gradle of your app module.
 ```groovy
 dependencies {
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.1.0'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.2.0'
 }
 ```
 >To successfully build ATOM SDK, developer must migrate their project to AndroidX. Developer can use **Refactor** -> **Migrate to AndroidX** option in Android Studio.
@@ -48,7 +48,7 @@ dependencies {
 
 Add Kotlin gradle plugin to project build.gradle
 ```
-classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.31"
+classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.71"
 ```
 
 Add Kotlin Android Extension plugin to app build.gradle
@@ -58,7 +58,7 @@ apply plugin: 'kotlin-android-extensions'
 ```
 Add Kotlin support to app build.gradle in dependencies
 ```
-implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.31"
+implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.71"
 ```
 
 # Getting Started with the Code
