@@ -48,7 +48,7 @@ dependencies {
 
 Add Kotlin gradle plugin to project build.gradle
 ```
-classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.31"
+classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.71"
 ```
 
 Add Kotlin Android Extension plugin to app build.gradle
@@ -58,7 +58,7 @@ apply plugin: 'kotlin-android-extensions'
 ```
 Add Kotlin support to app build.gradle in dependencies
 ```
-implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.31"
+implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.71"
 ```
 
 # Getting Started with the Code
