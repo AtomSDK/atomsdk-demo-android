@@ -14,8 +14,8 @@ android {
         applicationId "com.atom.vpn.demo"
         minSdkVersion 15
         targetSdkVersion 29
-        versionCode 13
-        versionName "3.2.0"
+        versionCode 14
+        versionName "3.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
@@ -52,7 +52,7 @@ dependencies {
     implementation 'com.github.vihtarb:tooltip:0.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.2.0'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.2.1'
 
 }
 
