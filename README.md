@@ -37,7 +37,7 @@ Add this to root **build.gradle**
 And then add dependencies in build.gradle of your app module.
 ```groovy
 dependencies {
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.2.1'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.3.0'
 }
 ```
 >To successfully build ATOM SDK, developer must migrate their project to AndroidX. Developer can use **Refactor** -> **Migrate to AndroidX** option in Android Studio.
@@ -254,7 +254,29 @@ atomManager.getProtocols(new CollectionCallback<Protocol>() {
             }
         });
 ```
+## Protocol switch
 
+You can enable or disable protocol switch from VPNProperties class. By default its value is set to true.
+```
+    vpnPropertiesBuilder.enableProtocolSwitch(false);
+```
+or
+```
+    vpnPropertiesBuilder.enableProtocolSwitch(true);
+```
+## Recommanded protocol
+If you didn't specify the protocol in case of Country, City and Channel dailing then Atom SDK dialed with recommanded protocol according to the specified country, city and channel. It did not work in PSK, Smart connect dialing and dedicated IP.
+
+## Use Failover
+Failover is a mechanism in which Atom dialed with nearest server if requested server is busy or not found for any reason. You can control this mechanism from VPNPorperties class. By default its value is set to true.
+
+```
+    vpnPropertiesBuilder.withUseFailoverEnabled(false);
+```
+or
+```
+    vpnPropertiesBuilder.withUseFailoverEnabled(true);
+```
 ## How to Connect
 
 As soon as you call Connect method, the callbacks you were listening to will get the updates about the states being changed and Dial Error (if any occurs) as well.
@@ -355,6 +377,17 @@ atomManager.disconnect(Context context);
 -dontwarn com.atom.core.**
 -keep class com.atom.core.models.** { *; }
 -keep interface com.atom.core.** { *; }
+
+-keep class org.codehaus.jettison.** { *; }
+-keep class com.thoughtworks.xstream.** { *; }
+-keep class com.thoughtworks.xstream.converters.** { *; }
+
+-keep class com.thoughtworks.xstream.annotations.** { *; }
+-keep class com.thoughtworks.xstream.*
+-keep class com.thoughtworks.xstream.* {
+public protected <methods>;
+public protected <fields>;
+}
 ```
 
 # Resolve dependencies conflicts if any :
