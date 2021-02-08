@@ -52,7 +52,7 @@ dependencies {
     implementation 'com.github.vihtarb:tooltip:0.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.3.2'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.3.3'
 
 }
 
