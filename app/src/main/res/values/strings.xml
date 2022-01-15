@@ -74,4 +74,8 @@
         <item>NATTED_FILE_SHARING</item>
         <item>PAID</item>
     </string-array>
+
+    <string name="ok">OK</string>
+    <string name="vpn_permission_screen_content">Your device will ask permission to complete the configuration.</string>
+    <string name="vpn_permission_screen_heading">Set Up Your VPN</string>
 </resources>
