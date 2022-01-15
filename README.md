@@ -12,32 +12,36 @@ This is a demo application for Android Application with basic usage of ATOM VPN 
 
 ## Compatibility
 
-* Compatible with Android 4.2/API Level: 17 (Jelly Bean) and later
-* Compatible with ATOM SDK Version 3.0.1 and onwards
+* Compatible with Android 5.0/API Level: 21 (Lollipop) and later
+* Compatible with ATOM SDK Version 4.0.0 and onwards
 
 ## Supported Protocols
 * TCP
 * UDP
+* IKEV
 
 ## SDK Installation
 To use this library you should add **jitpack** repository.
 
 Add **authToken=jp_l1hv3212tltdau845qago2l4e** in gradle.properties of your root project
 
-Add this to root **build.gradle** 
+Add this to root **build.gradle**
 
     allprojects {
         repositories {
+            mavenCentral()
             maven { url 'https://jitpack.io'
                 credentials { username authToken }
             }
+            
+            maven { url "https://bitbucket.org/purevpn/atom-android-releases/raw/master" }
         }
     }
 
 And then add dependencies in build.gradle of your app module.
 ```groovy
 dependencies {
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:3.3.3'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:4.0.0'
 }
 ```
 >To successfully build ATOM SDK, developer must migrate their project to AndroidX. Developer can use **Refactor** -> **Migrate to AndroidX** option in Android Studio.
@@ -62,7 +66,7 @@ implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.71"
 ```
 
 # Getting Started with the Code
- ATOM SDK needs to be initialized with a “SecretKey” provided to you after you buy the subscription which is typically a hex-numeric literal.
+ATOM SDK needs to be initialized with a “SecretKey” provided to you after you buy the subscription which is typically a hex-numeric literal.
 
 Don’t forget to change the following entry with your SECRET KEY.
 
@@ -98,6 +102,7 @@ ATOM SDK offers a feature to enable the local inventory support. This can help A
 ATOM SDK offers five callbacks to register for the ease of the developer.
 
 * onStateChange
+* onConnecting
 * onConnected
 * onDisconnected
 * onDialError
@@ -119,6 +124,11 @@ Callbacks will be registered for the ease of the developer.
 ```
     @Override
     public void onStateChange(String state) {
+
+    }
+    
+     @Override
+    public void onConnecting(VPNProperties vpnProperties, AtomConfiguration atomConfiguration) {
 
     }
 
@@ -154,7 +164,7 @@ ATOM SDK offers an additional callback onPacketTransmitted only trigger while co
 
 ```
     @Override
-    public void onPacketsTransmitted(String in, String out) {
+    public void onPacketsTransmitted(String in, String out, String inSpeed, String outSpeed) {
 
     }
 ```
@@ -205,6 +215,27 @@ atomManager.getCountries(new CollectionCallback<Country>() {
 
             }
         });
+```
+## Fetch Recommended Location
+You can get the Recommended Location for user's location through ATOM SDK.
+
+```
+atomManager.getRecommendedLocation(new Callback<Location>() {
+                @Override
+                public void onSuccess(Location recommendedLocation) {
+                    
+                }
+
+                @Override
+                public void onError(AtomException exception) {
+
+                }
+
+                @Override
+                public void onNetworkError(AtomException exception) {
+
+                }
+            });
 ```
 
 ## Fetch Countries For Smart Dialing
@@ -296,6 +327,24 @@ atomManager.connect(this, vpnProperties);
 
 From version 3.0.0 onwards, Atom has introduced connection with Cities and Channels. You can found their corresponding VPNProperties constructors in the Demo Application.
 
+### Include or Exclude Server with Nas Identifier
+When connecting with parameters, a server can be included or excluded with its Nas Identifier
+```
+List<ServerFilter> serverFilterList = new ArrayList<>();
+
+ServerFilter serverFilterInclude = new ServerFilter("nas-identifier-here", ServerFilterType.INCLUDE);
+ServerFilter serverFilterExclude = new ServerFilter("nas-identifier-here",, ServerFilterType.EXCLUDE);
+
+serverFilterList.add(serverFilterInclude);
+serverFilterList.add(serverFilterExclude);
+
+vpnPropertiesBuilder.withServerFilter(serverFilterList);
+
+atomManager.connect(this, vpnProperties);
+
+```
+
+
 ### Connection with Pre-Shared Key (PSK)
 
 In this way of connection, it is pre-assumed that you have your own backend server which communicates with ATOM Backend APIs directly and creates a Pre-Shared Key (usually called as PSK) which you can then provide to the SDK for dialing. While providing PSK, no VPN Property other than PSK is required to make the connection. ATOM SDK will handle the rest.
@@ -363,7 +412,7 @@ You can Cancel connection between dialing process by calling following method.
 atomManager.cancel(Context context);
 ```
 # Disconnect VPN Connection
- To disconnect, simply call the Disconnect method of AtomManager.
+To disconnect, simply call the Disconnect method of AtomManager.
 ```
 atomManager.disconnect(Context context);
 ```
