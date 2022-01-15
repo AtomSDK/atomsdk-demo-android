@@ -7,6 +7,7 @@ package com.atom.vpn.demo.activity;
 
 import android.os.Bundle;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.atom.sdk.android.AtomManager;
@@ -14,6 +15,7 @@ import com.atom.vpn.demo.AtomDemoApplicationController;
 import com.atom.vpn.demo.R;
 import com.atom.vpn.demo.common.base.BaseSampleActivity;
 import com.atom.vpn.demo.fragment.MainFragment;
+import com.atom.vpn.demo.fragment.VpnSetupFragment;
 
 public class SampleMainActivity extends BaseSampleActivity {
 
@@ -24,7 +26,13 @@ public class SampleMainActivity extends BaseSampleActivity {
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            MainFragment fragment = new MainFragment();
+            Fragment fragment;
+            if (AtomManager.getInstance() != null && !AtomManager.getInstance().isVPNServicePrepared(this)) {
+                fragment = new VpnSetupFragment();
+            } else {
+                fragment = new MainFragment();
+            }
+
             transaction.replace(R.id.sample_content_fragment, fragment);
             transaction.commit();
         }

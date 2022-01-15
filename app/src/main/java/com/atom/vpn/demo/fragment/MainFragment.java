@@ -5,12 +5,14 @@
 package com.atom.vpn.demo.fragment;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,12 +24,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.atom.core.exceptions.AtomException;
+import com.atom.sdk.android.AtomManager;
+import com.atom.sdk.android.common.Common;
+import com.atom.sdk.android.data.callbacks.Callback;
+import com.atom.sdk.android.data.model.ping.DedicatedIPServerPing;
 import com.atom.vpn.demo.AtomDemoApplicationController;
 import com.atom.vpn.demo.R;
 import com.atom.vpn.demo.activity.ConnectActivity;
 import com.atom.vpn.demo.common.Constants;
 import com.tooltip.Tooltip;
-
 
 import static com.atom.vpn.demo.common.Utilities.setViewAndChildrenEnabled;
 
@@ -63,7 +69,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         LinearLayout secretKeyLay = view.findViewById(R.id.secretKeyLay);
         Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
@@ -114,7 +119,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-
         autoGenerateSwitch = view.findViewById(R.id.autoGenerateSwitch);
         autoGenerateSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // do something, the isChecked will be
@@ -146,278 +150,79 @@ public class MainFragment extends Fragment {
 
         // Connect with Pre-Shared Key
         view.findViewById(R.id.btnConnectPsk).setOnClickListener(v -> {
-
-            if (!autoGenerateSwitch.isChecked()) {
-                etUUID.setError(null);
-                if (TextUtils.isEmpty(etUsername.getText().toString().trim())) {
-                    etUsername.setError(Constants.UsernameRequired);
-
-                }
-                else if (TextUtils.isEmpty(etPassword.getText().toString().trim())) {
-                    etUsername.setError(null);
-                    etPassword.setError(Constants.PasswordRequired);
-                } else {
-
-                    etUsername.setError(null);
-                    etPassword.setError(null);
-
-                    if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-
-                        Intent intent = new Intent(getActivity(), ConnectActivity.class);
-                        intent.putExtra("connection_type", 1);
-                        intent.putExtra("vpnUsername", etUsername.getText().toString());
-                        intent.putExtra("vpnPassword", etPassword.getText().toString());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-            } else {
-                etUsername.setError(null);
-                etPassword.setError(null);
-
-                if (TextUtils.isEmpty(etUUID.getText().toString().trim())) {
-                    etUUID.setError(Constants.UUIDRequired);
-                } else {
-                    etUUID.setError(null);
-
-                    if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-
-                        Intent intent = new Intent(getActivity(), ConnectActivity.class);
-                        intent.putExtra("connection_type", 1);
-                        intent.putExtra("uuid",etUUID.getText().toString().trim());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-            }
-
+            launchActivityForConnectionMethod(1);
         });
 
 
 
         // Connect with Params
         view.findViewById(R.id.btnConnectParams).setOnClickListener(v -> {
-
-            if (!autoGenerateSwitch.isChecked()) {
-                etUUID.setError(null);
-                if (TextUtils.isEmpty(etUsername.getText().toString().trim())) {
-                    etUsername.setError(Constants.UsernameRequired);
-
-                }
-                else if (TextUtils.isEmpty(etPassword.getText().toString().trim())) {
-                    etUsername.setError(null);
-                    etPassword.setError(Constants.PasswordRequired);
-                } else {
-
-                    etUsername.setError(null);
-                    etPassword.setError(null);
-
-                    if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-                        Intent intent = new Intent(getActivity(), ConnectActivity.class);
-                        intent.putExtra("connection_type", 2);
-                        intent.putExtra("vpnUsername", etUsername.getText().toString());
-                        intent.putExtra("vpnPassword", etPassword.getText().toString());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
-                    }
-
-                }
-
-            } else {
-                etUsername.setError(null);
-                etPassword.setError(null);
-
-                if (TextUtils.isEmpty(etUUID.getText().toString().trim())) {
-                    etUUID.setError(Constants.UUIDRequired);
-                } else {
-                    etUUID.setError(null);
-
-                    if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-
-                        Intent intent = new Intent(getActivity(), ConnectActivity.class);
-                        intent.putExtra("connection_type", 2);
-                        intent.putExtra("uuid",etUUID.getText().toString().trim());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
-                    }
-
-
-                }
-            }
-
+            launchActivityForConnectionMethod(2);
         });
 
 
         // Connect with Dedicated IP
         view.findViewById(R.id.btnConnectDedicatedIp).setOnClickListener(v -> {
-
-            if (!autoGenerateSwitch.isChecked()) {
-                etUUID.setError(null);
-                if (TextUtils.isEmpty(etUsername.getText().toString().trim())) {
-                    etUsername.setError(Constants.UsernameRequired);
-
-                }
-                else if (TextUtils.isEmpty(etPassword.getText().toString().trim())) {
-                    etUsername.setError(null);
-                    etPassword.setError(Constants.PasswordRequired);
-                } else {
-
-                    etUsername.setError(null);
-                    etPassword.setError(null);
-
-                    if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-                        Intent intent = new Intent(getActivity(), ConnectActivity.class);
-                        intent.putExtra("connection_type", 3);
-                        intent.putExtra("vpnUsername", etUsername.getText().toString());
-                        intent.putExtra("vpnPassword", etPassword.getText().toString());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-            } else {
-                etUsername.setError(null);
-                etPassword.setError(null);
-
-                if (TextUtils.isEmpty(etUUID.getText().toString().trim())) {
-                    etUUID.setError(Constants.UUIDRequired);
-                } else {
-                    etUUID.setError(null);
-
-                    if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-
-                        Intent intent = new Intent(getActivity(), ConnectActivity.class);
-                        intent.putExtra("connection_type", 3);
-                        intent.putExtra("uuid",etUUID.getText().toString().trim());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-
+            launchActivityForConnectionMethod(3);
         });
 
 
         // Connect with Channel
         view.findViewById(R.id.btnConnectChannel).setOnClickListener(v -> {
+            launchActivityForConnectionMethod(4);
+        });
+    }
 
-            if (!autoGenerateSwitch.isChecked()) {
-                etUUID.setError(null);
-                if (TextUtils.isEmpty(etUsername.getText().toString().trim())) {
-                    etUsername.setError(Constants.UsernameRequired);
+    private void launchActivityForConnectionMethod(int connectionMethodType){
+        if (!autoGenerateSwitch.isChecked()) {
+            etUUID.setError(null);
+            if (TextUtils.isEmpty(etUsername.getText().toString().trim())) {
+                etUsername.setError(Constants.UsernameRequired);
 
-                }
-                else if (TextUtils.isEmpty(etPassword.getText().toString().trim())) {
-                    etUsername.setError(null);
-                    etPassword.setError(Constants.PasswordRequired);
-                } else {
-
-                    etUsername.setError(null);
-                    etPassword.setError(null);
-
-                    if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-                        Intent intent = new Intent(getActivity(), ConnectActivity.class);
-                        intent.putExtra("connection_type", 4);
-                        intent.putExtra("vpnUsername", etUsername.getText().toString());
-                        intent.putExtra("vpnPassword", etPassword.getText().toString());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
-                    }
-                }
-
+            }
+            else if (TextUtils.isEmpty(etPassword.getText().toString().trim())) {
+                etUsername.setError(null);
+                etPassword.setError(Constants.PasswordRequired);
             } else {
+
                 etUsername.setError(null);
                 etPassword.setError(null);
 
-                if (TextUtils.isEmpty(etUUID.getText().toString().trim())) {
-                    etUUID.setError(Constants.UUIDRequired);
+                if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
+
+                    Intent intent = new Intent(getActivity(), ConnectActivity.class);
+                    intent.putExtra("connection_type", connectionMethodType);
+                    intent.putExtra("vpnUsername", etUsername.getText().toString());
+                    intent.putExtra("vpnPassword", etPassword.getText().toString());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
                 } else {
-                    etUUID.setError(null);
-
-                    if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-
-                        Intent intent = new Intent(getActivity(), ConnectActivity.class);
-                        intent.putExtra("connection_type", 4);
-                        intent.putExtra("uuid",etUUID.getText().toString().trim());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
-                    }
+                    Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
                 }
             }
 
-        });
+        } else {
+            etUsername.setError(null);
+            etPassword.setError(null);
 
-
-        // Connect with SmartConnect
-        view.findViewById(R.id.btnConnectSmartConnect).setOnClickListener(v -> {
-
-            if (!autoGenerateSwitch.isChecked()) {
-                etUUID.setError(null);
-                if (TextUtils.isEmpty(etUsername.getText().toString().trim())) {
-                    etUsername.setError(Constants.UsernameRequired);
-
-                }
-                else if (TextUtils.isEmpty(etPassword.getText().toString().trim())) {
-                    etUsername.setError(null);
-                    etPassword.setError(Constants.PasswordRequired);
-                } else {
-
-                    etUsername.setError(null);
-                    etPassword.setError(null);
-
-                    if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-                        Intent intent = new Intent(getActivity(), ConnectActivity.class);
-                        intent.putExtra("connection_type", 5);
-                        intent.putExtra("vpnUsername", etUsername.getText().toString());
-                        intent.putExtra("vpnPassword", etPassword.getText().toString());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
-                    }
-                }
-
+            if (TextUtils.isEmpty(etUUID.getText().toString().trim())) {
+                etUUID.setError(Constants.UUIDRequired);
             } else {
-                etUsername.setError(null);
-                etPassword.setError(null);
+                etUUID.setError(null);
 
-                if (TextUtils.isEmpty(etUUID.getText().toString().trim())) {
-                    etUUID.setError(Constants.UUIDRequired);
+                if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
+
+                    Intent intent = new Intent(getActivity(), ConnectActivity.class);
+                    intent.putExtra("connection_type", connectionMethodType);
+                    intent.putExtra("uuid",etUUID.getText().toString().trim());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
                 } else {
-                    etUUID.setError(null);
-
-                    if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-
-                        Intent intent = new Intent(getActivity(), ConnectActivity.class);
-                        intent.putExtra("connection_type", 5);
-                        intent.putExtra("uuid",etUUID.getText().toString().trim());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
-                    }
+                    Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
                 }
             }
 
-        });
+        }
     }
 
 }

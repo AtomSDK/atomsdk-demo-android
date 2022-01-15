@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import com.atom.core.exceptions.AtomAPIException;
 import com.atom.core.exceptions.AtomException;
 import com.atom.core.exceptions.AtomValidationException;
+import com.atom.core.models.AtomConfiguration;
 import com.atom.core.models.City;
 import com.atom.core.models.Country;
 import com.atom.core.models.Protocol;
@@ -726,6 +727,11 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
 
     }
 
+    @Override
+    public void onConnecting(VPNProperties vpnProperties, AtomConfiguration atomConfiguration) {
+
+    }
+
 
     @Override
     public void onRedialing(AtomException atomException, ConnectionDetails connectionDetails) {
@@ -784,7 +790,7 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
     }
 
     @Override
-    public void onPacketsTransmitted(String in, String out) {
+    public void onPacketsTransmitted(String s, String s1, String s2, String s3) {
 
     }
 
