@@ -8,14 +8,14 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
-    compileSdkVersion 29
-    buildToolsVersion '29.0.3'
+    compileSdkVersion 31
+    buildToolsVersion '31.0.0'
     defaultConfig {
         applicationId "com.atom.vpn.demo"
         minSdkVersion 22
-        targetSdkVersion 29
-        versionCode 25
-        versionName "4.2.0"
+        targetSdkVersion 31
+        versionCode 26
+        versionName "4.3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
@@ -41,6 +41,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
     }
 
+    configurations {
+            all { // You should exclude one of them not both of them
+                exclude group: "xpp3", module: "xpp3_min"
+            }
+    }
 }
 
 
@@ -56,7 +61,7 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:4.2.0'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:4.3.0'
 
 }
 
