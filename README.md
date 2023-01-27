@@ -12,13 +12,14 @@ This is a demo application for Android Application with basic usage of ATOM VPN 
 
 ## Compatibility
 
-* Compatible with Android 5.0/API Level: 21 (Lollipop) and later
+* Compatible with Android 5.1/API Level: 22 (Lollipop) and later
 * Compatible with ATOM SDK Version 4.0.0 and onwards
 
 ## Supported Protocols
 * TCP
 * UDP
 * IKEV
+* WIREGUARD
 
 ## SDK Installation
 To use this library you should add **jitpack** repository.
@@ -77,7 +78,14 @@ Don’t forget to change the following entry with your SECRET KEY.
 ATOM SDK should be initialize in Application's onCreate method.
 
 ```
-AtomConfiguration.Builder atomConfigurationBuilder = new AtomConfiguration.Builder(getString(R.string.atom_secret_key));
+// Configure ATOM Notification
+AtomNotification.Builder atomNotificationBuilder = new AtomNotification.Builder(NOTIFICATION_ID,"Atom SDK Demo","You are now secured with Atom",R.drawable.ic_stat_icn_connected, Color.BLUE);
+
+// Configure ATOM SDK
+AtomConfiguration.Builder atomConfigurationBuilder = new AtomConfiguration.Builder(R.string.atom_secret_key);
+atomConfigurationBuilder.setVpnInterfaceName("Atom SDK Demo");
+atomConfigurationBuilder.setNotification(atomNotificationBuilder.build());
+
 AtomConfiguration atomConfiguration = atomConfigurationBuilder.build();
 
 AtomManager.initialize(this, atomConfiguration, new AtomManager.InitializeCallback() {
@@ -99,24 +107,30 @@ ATOM SDK offers a feature to enable the local inventory support. This can help A
 
 ## Callbacks to Register
 
-ATOM SDK offers five callbacks to register for the ease of the developer.
+ATOM SDK offers few callbacks to register for the ease of the developer.
 
 * onStateChange
 * onConnecting
 * onConnected
 * onDisconnected
-* onDialError
 * onRedialing
+* onDialError
 * onUnableToAccessInternet
 
 Details of these callbacks can be seen in the inline documentation or method summaries. You need to register these callback to get notified about what’s happening behind the scenes
 
 ```
 AtomManager.addVPNStateListener(VPNStateListener this);
+
+//For IKEV protocol bind IKEV Service
+atomManager.bindIKEVStateService(activity);
 ```
 Remove the callback using
 ```
 AtomManager.removeVPNStateListener(VPNStateListener this);
+
+//For IKEV protocol unbind it
+atomManager.unBindIKEVStateService(activity);
 ```
 
 Callbacks will be registered for the ease of the developer.
@@ -143,15 +157,15 @@ Callbacks will be registered for the ease of the developer.
     }
 
     @Override
-    public void onDialError(AtomException exception, ConnectionDetails connectionDetails) {
-
-    }
-
-    @Override
     public void onRedialing(AtomException exception, ConnectionDetails connectionDetails) {
 
     }
     
+    @Override
+    public void onDialError(AtomException exception, ConnectionDetails connectionDetails) {
+
+    }
+
     @Override
     public void onUnableToAccessInternet(AtomException atomException, ConnectionDetails connectionDetails) {
 
@@ -214,7 +228,7 @@ atomManager.getCountries(new CollectionCallback<Country>() {
             public void onNetworkError(AtomException exception) {
 
             }
-        });
+        },DialingType.VPN);
 ```
 ## Fetch Recommended Location
 You can get the Recommended Location for user's location through ATOM SDK.
@@ -440,7 +454,7 @@ public protected <fields>;
 ```
 
 # Resolve dependencies conflicts if any :
-In case any dependency conflict is faced while building ATOM SDK with your application e.g. “Duplicate jar entry”, exclude that dependency from app build.gradle configuration.
+In case any dependency conflict is faced while building ATOM SDK with your application e.g. “Duplicate jar entry”, exclude that dependency from app build.gradle configuration. See SDK Demo Application for reference.
 ```
 android{
     configurations {
