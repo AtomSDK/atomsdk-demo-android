@@ -15,6 +15,7 @@
         tools:replace="icon,name,logo,allowBackup">
 
         <activity
+            android:exported="true"
             android:name=".activity.SampleMainActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:screenOrientation="portrait">
