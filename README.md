@@ -42,7 +42,7 @@ Add this to root **build.gradle**
 And then add dependencies in build.gradle of your app module.
 ```groovy
 dependencies {
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:4.3.1'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:4.4.0'
 }
 ```
 >To successfully build ATOM SDK, developer must migrate their project to AndroidX. Developer can use **Refactor** -> **Migrate to AndroidX** option in Android Studio.
@@ -441,6 +441,19 @@ atomManager.disconnect(Context context);
 -keep class com.atom.core.models.** { *; }
 -keep interface com.atom.core.** { *; }
 
+-dontwarn com.atom.proxy.**
+-keep class com.atom.proxy.** { *; }
+-keep interface com.atom.proxy.** { *; }
+-keep interface com.purevpn.proxy.core.** { *; }
+
+-keep class com.atom.sdk.android.** { *; }
+
+-keep class com.pingchecker.** { *; }
+
+-keep class de.blinkt.openvpn.** { *; }
+-keep class org.spongycastle.util.** { *; }
+-keep class org.strongswan.android.** { *; }
+
 -keep class org.codehaus.jettison.** { *; }
 -keep class com.thoughtworks.xstream.** { *; }
 -keep class com.thoughtworks.xstream.converters.** { *; }
@@ -448,9 +461,18 @@ atomManager.disconnect(Context context);
 -keep class com.thoughtworks.xstream.annotations.** { *; }
 -keep class com.thoughtworks.xstream.*
 -keep class com.thoughtworks.xstream.* {
-public protected <methods>;
-public protected <fields>;
+    public protected <methods>;
+    public protected <fields>;
 }
+
+-dontwarn org.jetbrains.annotations.**
+-keep class com.jakewharton.timber.** { *; }
+
+#Crash cause: /lib/x86/libgojni.so (Java_lantern_Lantern__1init+190)
+#Resolution: adding below rules
+-keep class org.lantern.mobilesdk.**
+-keep class lantern.** {*;}
+-keep class go.** {*;}
 ```
 
 # Resolve dependencies conflicts if any :
