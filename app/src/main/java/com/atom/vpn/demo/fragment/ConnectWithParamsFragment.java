@@ -34,7 +34,7 @@ import com.atom.sdk.android.Errors;
 import com.atom.sdk.android.VPNCredentials;
 import com.atom.sdk.android.VPNProperties;
 import com.atom.sdk.android.VPNStateListener;
-import com.atom.sdk.android.common.Common;
+import com.atom.sdk.android.common.Utils;
 import com.atom.sdk.android.data.callbacks.CollectionCallback;
 import com.atom.vpn.demo.AtomDemoApplicationController;
 import com.atom.vpn.demo.R;
@@ -719,7 +719,10 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
         changeButtonState(btnConnect, "Disconnect");
 
 
-        Log.e("connection",Common.objectToString(connectionDetails));
+        Utils.INSTANCE.objectToString(connectionDetails, result -> {
+            Log.e("connection", result);
+           return null;
+        });
     }
 
     @Override

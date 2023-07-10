@@ -100,4 +100,26 @@
 -keep class com.atom.core.models.** { *; }
 -keep interface com.atom.core.** { *; }
 
+-keep class de.blinkt.openvpn.** { *; }
+-keep class org.spongycastle.util.** { *; }
+-keep class org.strongswan.android.** { *; }
+
+-dontwarn org.jetbrains.annotations.**
+-keep class com.jakewharton.timber.** { *; }
+
+-dontwarn com.atom.proxy.**
+-keep class com.atom.proxy.** { *; }
+-keep interface com.atom.proxy.** { *; }
+-keep interface com.purevpn.proxy.core.** { *; }
+
+-keep class com.atom.sdk.android.** { *; }
+
+-keep class com.pingchecker.** { *; }
+
+#Crash cause: /lib/x86/libgojni.so (Java_lantern_Lantern__1init+190)
+#Resolution: adding below rules
+-keep class org.lantern.mobilesdk.**
+-keep class lantern.** {*;}
+-keep class go.** {*;}
+
 
