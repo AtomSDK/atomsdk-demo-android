@@ -235,6 +235,11 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
         }
     }
 
+    @Override
+    public void onDisconnecting(ConnectionDetails connectionDetails) {
+
+    }
+
 
     @Override
     public void onDisconnected(boolean isCancelled) {
