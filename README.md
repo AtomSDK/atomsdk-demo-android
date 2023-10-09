@@ -42,7 +42,7 @@ Add this to root **build.gradle**
 And then add dependencies in build.gradle of your app module.
 ```groovy
 dependencies {
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:4.4.1'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:4.4.2'
 }
 ```
 >To successfully build ATOM SDK, developer must migrate their project to AndroidX. Developer can use **Refactor** -> **Migrate to AndroidX** option in Android Studio.
@@ -113,6 +113,7 @@ ATOM SDK offers few callbacks to register for the ease of the developer.
 * onConnecting
 * onConnected
 * onDisconnected
+* onDisconnecting
 * onRedialing
 * onDialError
 * onUnableToAccessInternet
@@ -168,6 +169,11 @@ Callbacks will be registered for the ease of the developer.
 
     @Override
     public void onUnableToAccessInternet(AtomException atomException, ConnectionDetails connectionDetails) {
+
+    }
+    
+     @Override
+    public void onDisconnecting(ConnectionDetails connectionDetails) {
 
     }
 ```
