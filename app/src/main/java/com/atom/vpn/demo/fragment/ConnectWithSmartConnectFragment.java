@@ -298,6 +298,11 @@ public class ConnectWithSmartConnectFragment extends Fragment implements VPNStat
         }
     }
 
+    @Override
+    public void onDisconnecting(ConnectionDetails connectionDetails) {
+
+    }
+
 
     @Override
     public void onDisconnected(boolean isCancelled) {

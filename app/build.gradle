@@ -14,8 +14,8 @@ android {
         applicationId "com.atom.vpn.demo"
         minSdkVersion 22
         targetSdkVersion 33
-        versionCode 29
-        versionName "4.4.1"
+        versionCode 30
+        versionName "4.4.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
@@ -61,7 +61,7 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:4.4.1'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:4.6.0-beta16'
 
 }
 

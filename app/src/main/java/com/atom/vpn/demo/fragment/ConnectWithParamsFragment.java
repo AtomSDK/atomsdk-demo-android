@@ -770,6 +770,11 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
         }
     }
 
+    @Override
+    public void onDisconnecting(ConnectionDetails connectionDetails) {
+
+    }
+
 
     @Override
     public void onDisconnected(boolean isCancelled) {

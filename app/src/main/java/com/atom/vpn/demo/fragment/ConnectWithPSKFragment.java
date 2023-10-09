@@ -228,6 +228,11 @@ public class ConnectWithPSKFragment extends Fragment implements VPNStateListener
         }
     }
 
+    @Override
+    public void onDisconnecting(ConnectionDetails connectionDetails) {
+
+    }
+
 
     @Override
     public void onDisconnected(boolean isCancelled) {
