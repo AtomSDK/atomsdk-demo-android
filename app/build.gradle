@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 
 android {
 
@@ -14,8 +14,8 @@ android {
         applicationId "com.atom.vpn.demo"
         minSdkVersion 22
         targetSdkVersion 33
-        versionCode 30
-        versionName "4.4.2"
+        versionCode 31
+        versionName "4.5.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
@@ -46,22 +46,26 @@ android {
                 exclude group: "xpp3", module: "xpp3_min"
             }
     }
+
+    packagingOptions {
+        exclude("META-INF/*.kotlin_module")
+    }
 }
 
 
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
-    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.annotation:annotation:1.7.1'
     implementation 'com.github.vihtarb:tooltip:0.2.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.github.vihtarb:tooltip:0.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:4.4.2'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:4.5.0'
 
 }
 
