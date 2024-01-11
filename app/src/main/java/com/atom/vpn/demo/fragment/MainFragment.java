@@ -5,14 +5,12 @@
 package com.atom.vpn.demo.fragment;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,11 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.atom.core.exceptions.AtomException;
-import com.atom.sdk.android.AtomManager;
-import com.atom.sdk.android.common.Common;
-import com.atom.sdk.android.data.callbacks.Callback;
-import com.atom.sdk.android.data.model.ping.DedicatedIPServerPing;
 import com.atom.vpn.demo.AtomDemoApplicationController;
 import com.atom.vpn.demo.R;
 import com.atom.vpn.demo.activity.ConnectActivity;

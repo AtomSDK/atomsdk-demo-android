@@ -479,7 +479,7 @@ public class ConnectWithChannelFragment extends Fragment implements VPNStateList
 
 
         Log.d(TAG, atomException.getCode() + "");
-        Log.d(TAG, atomException.getMessage() + "");
+        Log.d(TAG, atomException.getMessage());
 
         if (atomException.getException() instanceof AtomAPIException) {
             AtomAPIException atomAPIException = (AtomAPIException) atomException.getException();

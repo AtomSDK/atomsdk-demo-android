@@ -16,7 +16,6 @@ public class Constants {
     public static final String UUIDRequired = "UUID is required";
     public static final String UsernameRequired = "Username is required";
     public static final String PasswordRequired = "Password is required";
-
     public static final String TooltipAutoGenCred = "If enabled, a unique user identifier (UUID) is required to generate username and password.";
     public static final String TooltipUUID = "A unique user identifier such as an email, to generate username and password";
     public static final String TooltipCred = "Credentials required for connection when &quot;Auto Generate user credentials&quot; is not checked.";
