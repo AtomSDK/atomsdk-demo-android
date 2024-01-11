@@ -440,6 +440,10 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
                                 vpnPropertiesBuilder.withSmartDialing();
                             }
 
+                            vpnPropertiesBuilder.withAutomaticPort();
+
+                            vpnPropertiesBuilder.withManualPort(5500);
+
                             if(!TextUtils.isEmpty(vpnUsername) && !TextUtils.isEmpty(vpnPassword)) {
                                 AtomDemoApplicationController.getInstance().getAtomManager().setVPNCredentials(new VPNCredentials(vpnUsername,vpnPassword));
                             }else if(!TextUtils.isEmpty(uuid)){
@@ -751,8 +755,8 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
         }
 
 
-        Log.d(TAG, atomException.getCode() + "");
-        Log.d(TAG, atomException.getMessage() + "");
+        Log.d(TAG, atomException.getCode() +"");
+        Log.d(TAG, atomException.getMessage());
 
         if (atomException.getException() instanceof AtomAPIException) {
             AtomAPIException atomAPIException = (AtomAPIException) atomException.getException();

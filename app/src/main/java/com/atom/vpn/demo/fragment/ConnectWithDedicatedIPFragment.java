@@ -215,7 +215,7 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
         }
 
         Log.d(TAG, atomException.getCode() + "");
-        Log.d(TAG, atomException.getMessage() + "");
+        Log.d(TAG, atomException.getMessage());
 
         if (atomException.getException() instanceof AtomAPIException) {
             AtomAPIException atomAPIException = (AtomAPIException) atomException.getException();

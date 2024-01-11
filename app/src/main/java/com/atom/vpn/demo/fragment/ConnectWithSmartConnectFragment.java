@@ -303,7 +303,6 @@ public class ConnectWithSmartConnectFragment extends Fragment implements VPNStat
 
     }
 
-
     @Override
     public void onDisconnected(boolean isCancelled) {
 

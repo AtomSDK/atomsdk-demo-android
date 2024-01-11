@@ -26,7 +26,6 @@ import com.atom.vpn.demo.common.logger.Log;
 public class VpnSetupFragment extends Fragment {
 
     private static final String TAG = "VpnSetupFragment";
-    private Button btnGivePermission;
 
     public VpnSetupFragment() {
         // Required empty public constructor
@@ -48,16 +47,13 @@ public class VpnSetupFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        btnGivePermission = view.findViewById(R.id.btnGivePermission);
+        Button btnGivePermission = view.findViewById(R.id.btnGivePermission);
 
-        btnGivePermission.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (AtomManager.getInstance() != null) {
-                    AtomManager.getInstance().getVPNServicePermission(VpnSetupFragment.this);
-                } else {
-                    Log.e(TAG, "Atom Manager is null");
-                }
+        btnGivePermission.setOnClickListener(v -> {
+            if (AtomManager.getInstance() != null) {
+                AtomManager.getInstance().getVPNServicePermission(VpnSetupFragment.this);
+            } else {
+                Log.e(TAG, "Atom Manager is null");
             }
         });
     }

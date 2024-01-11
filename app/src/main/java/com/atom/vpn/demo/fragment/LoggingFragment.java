@@ -2,7 +2,6 @@
  * Copyright (c) 2018 ATOM SDK Demo.
  * All rights reserved.
  */
-
 package com.atom.vpn.demo.fragment;
 
 import android.os.Bundle;
