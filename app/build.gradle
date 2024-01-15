@@ -14,8 +14,8 @@ android {
         applicationId "com.atom.vpn.demo"
         minSdkVersion 22
         targetSdkVersion 33
-        versionCode 32
-        versionName "4.6.0"
+        versionCode 33
+        versionName "4.6.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
