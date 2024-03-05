@@ -12,8 +12,9 @@ This is a demo application for Android Application with basic usage of ATOM VPN 
 
 ## Compatibility
 
-* Compatible with Android 5.1/API Level: 22 (Lollipop) and later
-* Compatible with ATOM SDK Version 4.0.0 and onwards
+* Compatible with Android 5.1/API Level: 22 (Lollipop) and later (Supports Android API Level 34)
+* Compatible with ATOM SDK Version 5.0.0 and onwards
+* Compatible with Java 17 & Kotlin 1.9.22
 
 ## Supported Protocols
 * TCP
@@ -42,7 +43,7 @@ Add this to root **build.gradle**
 And then add dependencies in build.gradle of your app module.
 ```groovy
 dependencies {
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:4.6.1'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:5.0.0'
 }
 ```
 >To successfully build ATOM SDK, developer must migrate their project to AndroidX. Developer can use **Refactor** -> **Migrate to AndroidX** option in Android Studio.
@@ -53,7 +54,7 @@ dependencies {
 
 Add Kotlin gradle plugin to project build.gradle
 ```
-classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.21"
+classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22"
 ```
 
 Add Kotlin Android Extension plugin to app build.gradle
@@ -63,7 +64,7 @@ apply plugin: 'kotlin-parcelize'
 ```
 Add Kotlin support to app build.gradle in dependencies
 ```
-implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.21"
+implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.22"
 ```
 
 # Getting Started with the Code
