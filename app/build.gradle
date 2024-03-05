@@ -4,18 +4,17 @@ apply plugin: 'kotlin-parcelize'
 
 android {
 
+    namespace = "com.atom.vpn.demo"
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
     }
-    compileSdkVersion 33
-    buildToolsVersion '30.0.3'
+    compileSdk 34
     defaultConfig {
         applicationId "com.atom.vpn.demo"
         minSdkVersion 22
-        targetSdkVersion 33
-        versionCode 33
-        versionName "4.6.1"
+        versionCode 34
+        versionName "5.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
@@ -37,21 +36,22 @@ android {
         }
     }
     compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_8
-        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_17
     }
 
+    kotlinOptions { jvmTarget = JavaVersion.VERSION_17.toString() }
+
     configurations {
-            all { // You should exclude one of them not both of them
-                exclude group: "xpp3", module: "xpp3_min"
-            }
+        all { // You should exclude one of them not both of them
+            exclude group: "xpp3", module: "xpp3_min"
+        }
     }
 
     packagingOptions {
         exclude("META-INF/*.kotlin_module")
     }
 }
-
 
 
 dependencies {
@@ -61,11 +61,11 @@ dependencies {
     implementation 'com.github.vihtarb:tooltip:0.2.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.github.vihtarb:tooltip:0.2.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.22"
 
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:4.6.1'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:5.0.0'
 
 }
 
