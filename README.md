@@ -50,6 +50,50 @@ dependencies {
 
 >Developer must enable Kotlin support in Android Studio using Kotlin Extension.
 
+If your application supports a minimum SDK version of 23 or higher, you **must** include one of the following configurations:
+
+Add the following property in your application's `AndroidManifest.xml` file:
+```
+<application
+    ...
+    android:extractNativeLibs="true" 
+    ...
+    >
+```
+
+**OR**
+
+Alternatively, add this configuration to your app's `build.gradle` (Groovy) file:
+```
+android {
+    ...
+    
+    packagingOptions {
+       jniLibs {
+            useLegacyPackaging true
+       }
+    }
+    
+}
+```
+
+**OR**
+
+If you are using Kotlin DSL, add the following configuration to your app's `build.gradle.kts` file:
+
+```
+android {
+    ...
+    
+    packaging {
+        jniLibs { 
+            useLegacyPackaging = true
+        }
+    }
+}
+```
+
+
 ### Setup Kotlin Extension in Android Studio
 
 Add Kotlin gradle plugin to project build.gradle
@@ -498,3 +542,5 @@ When building an Android App Bundle, APKs generated from that app bundle that ta
 ```
 android.bundle.enableUncompressedNativeLibs = false
 ```
+
+**NOTE:** `android.bundle.enableUncompressedNativeLibs` has been removed from **AGP 8.1** and its default value marked as `true`
