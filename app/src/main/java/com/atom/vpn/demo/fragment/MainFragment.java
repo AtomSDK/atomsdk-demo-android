@@ -30,6 +30,8 @@ import com.tooltip.Tooltip;
 
 import static com.atom.vpn.demo.common.Utilities.setViewAndChildrenEnabled;
 
+import de.blinkt.openvpn.BuildConfig;
+
 
 public class MainFragment extends Fragment {
 
@@ -79,6 +81,8 @@ public class MainFragment extends Fragment {
         } else {
             secretKey.setText(getString(R.string.atom_secret_key));
         }
+
+        ((TextView) view.findViewById(R.id.sdkVersion)).setText("Version: "+ BuildConfig.SDKVersion);
 
         usernameLay = view.findViewById(R.id.usernameLay);
         passwordLay =  view.findViewById(R.id.passwordLay);
