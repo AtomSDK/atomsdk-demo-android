@@ -3,12 +3,10 @@ This is a demo application for Android Application with basic usage of ATOM VPN 
 
 ## SDK Features covered in this Demo
 * Connection with Parameters
-* Connection with Pre-Shared Key (PSK)
 * Connection with Dedicated IP
 * Connection with Multiple Protocols (Auto-Retry Functionality)
 * Connection with Real-time Optimized Servers (Countries based on latency from user in Real-time)
 * Connection with Smart Dialing (Use getCountriesForSmartDialing() to get the Advanced VPN Dialing supported countries)
-* Connection with Smart Connect (Tags based dialing)
 
 ## Compatibility
 
@@ -43,7 +41,7 @@ Add this to root **build.gradle**
 And then add dependencies in build.gradle of your app module.
 ```groovy
 dependencies {
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:5.0.5'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:6.0.0'
 }
 ```
 >To successfully build ATOM SDK, developer must migrate their project to AndroidX. Developer can use **Refactor** -> **Migrate to AndroidX** option in Android Studio.
@@ -157,6 +155,7 @@ ATOM SDK offers few callbacks to register for the ease of the developer.
 * onStateChange
 * onConnecting
 * onConnected
+* onPaused
 * onDisconnected
 * onDisconnecting
 * onRedialing
@@ -195,6 +194,11 @@ Callbacks will be registered for the ease of the developer.
     @Override
     public void onConnected(ConnectionDetails connectionDetails) {
 
+    }
+
+    @Override
+    public void onPaused(AtomException exception, ConnectionDetails connectionDetails) {
+                
     }
 
     @Override
@@ -242,13 +246,6 @@ First one is to offer VPN Credentials directly to the SDK which you may create t
 ```
 atomManager.setVPNCredentials(new VPNCredentials(String VPNUsername,String VPNPassword));
 ```
-Alternatively, if you don’t want to take hassle of creating users yourself, leave it on us and we will do the rest for you!
-
-```
-atomManager.setUUID(String UniqueUserID);
-```
-
-You just need to provide a Unique User ID for your user e.g. any unique hash or even user’s email which you think remains consistent and unique for your user. ATOM SDK will generate VPN Account behind the scenes automatically and gets your user connected! Easy isn’t it?
 
 # VPN Connection
 You need to declare an object of “VPNProperties” Class to define your connection preferences. Details of all the available properties can be seen in the inline documentation of “VPNProperties” Class. For the least, you need to give Country and Protocol with which you want to connect.
@@ -409,16 +406,6 @@ atomManager.connect(this, vpnProperties);
 
 ```
 
-
-### Connection with Pre-Shared Key (PSK)
-
-In this way of connection, it is pre-assumed that you have your own backend server which communicates with ATOM Backend APIs directly and creates a Pre-Shared Key (usually called as PSK) which you can then provide to the SDK for dialing. While providing PSK, no VPN Property other than PSK is required to make the connection. ATOM SDK will handle the rest.
-```
-VPNProperties vpnProperties = new VPNProperties.Builder(String PSK).build();
-
-atomManager.connect(this, vpnProperties);
-```
-
 ### Connection with Dedicated IP
 You can also make your user comfortable with this type of connection by just providing them with a Dedicated DNS Host and they will always connect to a dedicated server! For this purpose, ATOM SDK provides you with the following constructor.
 ```
@@ -446,18 +433,6 @@ VPNProperties vpnProperties = vpnPropertiesBuilder.build();
 atomManager.connect(this, vpnProperties);
 ```
 
-### Connection with Smart Connect
-If you want us to connect your user with what's best for him, you can now do it using SmartConnect feature. Atom has introduced an enum list of feature a.k.a Tags you want to apply over those smart connections which can be found under com.atom.core.models.SmartConnectTag package. An example usage of SmartConnect is depicted below.
-```
-List<SmartConnectTag> smartConnectTags = new ArrayList<>();
-smartConnectTags.add(SmartConnectTag.FILE_SHARING);
-VPNProperties.Builder vpnPropertiesBuilder = new VPNProperties.Builder(primaryProtocol, smartConnectTags);
-VPNProperties vpnProperties = vpnPropertiesBuilder.build();
-
-atomManager.connect(this, vpnProperties);
-```
-Tags aren't mandatory and is a nullable parameter. You can only provide Protocol to connect and rest Atom will manage.
-
 ### Connection with Multiple Protocols (Auto-Retry Functionality)
 You can provide THREE Protocols at max so ATOM SDK can attempt automatically on your behalf to get your user connected with the Secondary or Tertiary Protocol if your base Protocol fails to connect.
 
@@ -481,6 +456,209 @@ To disconnect, simply call the Disconnect method of AtomManager.
 ```
 atomManager.disconnect(Context context);
 ```
+# Pause / Resume VPN Connection
+This section provides details about the VPN Pause and Resume feature in the Atom SDK, allowing users to temporarily pause VPN connections either manually or for a specified duration. This feature is useful when users need to suspend VPN activity without fully disconnecting.
+
+### Feature Overview
+The VPN Pause feature enables pausing a VPN connection under specific conditions and supports two modes:
+- **Manual Pause:** Pauses the VPN connection indefinitely until it is manually resumed by the user.
+- **Timed Pause:** Pauses the VPN connection for a predefined duration, automatically resuming once the timer expires. Users also have the option to manually resume the connection before the timer completes.
+
+#### Key Rules and Conditions:
+1. VPN can be paused only when it is in Connected state.
+2. VPN can be resumed only when it is in Paused state.
+3. A paused VPN can still be disconnected using the SDK's Disconnect method.
+4. During a timed pause, users can manually resume the VPN at any time using the Resume method.
+
+### Integration Guide:
+
+#### Enabling the Pause VPN Feature:
+To enable the Pause VPN functionality, call the `enableVPNPause()` method within the AtomConfiguration, as shown below:
+```
+atomConfigurationBuilder.enableVPNPause()
+```
+By default, Pause VPN functionality is **diabled**.
+
+#### Pause VPN delegation:
+After enabling the Pause VPN functionality, you can observe pause events through the delegation method in the `VPNStateListener`, as shown below:
+```
+@Override
+public void onPaused(AtomException exception, ConnectionDetails connectionDetails) {
+                
+}
+
+```
+The `onPaused` delegate provides two arguments:
+- **ConnectionDetails:** Contains information related to the current VPN connection.
+- **AtomException:** If an error occurs while pausing the VPN, this will contain the corresponding error code and message; otherwise, it will be null.
+
+#### Pause / Resume VPN Connection
+To pause the VPN connection for a specified interval, use the following method:
+```
+atomManager.pause(@NonNull PauseVPNTimer)
+```
+To resume the VPN connection, invoke:
+```
+atomManager.resume()
+```
+The `resume()` method will resume the VPN connection if it is currently in the paused state, On a successful resume, the onConnected delegate will be triggered. If an error occurs during the resume process, the onDialError delegate will be invoked.
+```
+@Override
+public void onDialError(AtomException atomException, ConnectionDetails connectionDetails) {
+                
+}
+
+@Override
+public void onConnected(ConnectionDetails connectionDetails) {
+
+}
+```
+The available options for `PauseVPNTimer` include both manual and various predefined timed durations (e.g., 5, 10, 15, 30, and 60 minutes), as defined in the enum shown below.
+```
+- MANUAL 
+- MINUTES_5 
+- MINUTES_10 
+- MINUTES_15 
+- MINUTES_30 
+- MINUTES_60
+```
+- When the Pause VPN feature is enabled, the notification will display the following action buttons:
+    - `Disconnect` and `Pause for 5 minutes` (when the VPN is in the connected state), or
+    - `Resume` (when the VPN is in the paused state).
+- When the Pause VPN feature is disabled, the notification will display only the `Disconnect` action button.
+#### VPN State Management:
+The SDK provides additional VPN statuses
+
+- **PAUSING**
+- **PAUSED**
+
+You can request the current VPN state using the following method:
+
+```
+atomManager.getCurrentVpnStatus(context)
+```
+
+#### Handle State Changes:
+SDK also provides all VPN states via `AtomManager.addVPNStateListener()` as below
+```
+@Override
+public void onStateChange(String state) {
+ 
+}
+```
+
+#### Pause/Resume Informations in Connection Details:
+The following methods are available in the connection details related to this feature:
+- `getPauseVPNTimer()`: Returns a `PauseVPNTimer`, indicating the duration for which the VPN is paused.
+- `isVPNAutoResume()`: Returns a boolean indicating whether the VPN was resumed manually or automatically after the pause timer expired.
+
+#### Error Handling:
+Following are the error details for this feature:
+
+| Error Code | Error Message | Description |
+| :----------: | ------------- | ----------- |
+| 5194 | Unable to resume, the VPN connection is not in a paused state. | If VPN is not PAUSED and try to resume vpn, the error occurs and is notified via onDialError delegates. |
+| 5195 | Unable to pause, the VPN connection is not in a connected state. |If VPN is NOT connected and try to pause vpn, the error occurs and is notified via onPaused delegates. |
+| 5196 | Unable to pause while Always-On is active. | If Always-On is active and try to pause vpn, the error occurs and is notified via onPaused delegates. |
+| 5198 | Please enable Pause VPN feature via AtomConfiguration. | When try to pause/resume VPN without enabling the feature. |
+
+#### Conclusion
+The VPN Pause feature in the Atom SDK offers flexible control over VPN connections, allowing for both manual and timed pausing. By following the integration steps outlined, you can implement this feature in your application and efficiently manage VPN state transitions.
+
+---
+
+# Tracker / Ad Blocker
+This section provides details about the Tracker and Ad Blocker feature in the Atom VPN SDK. This feature enables VPN applications built with the Atom SDK to block tracking scripts and advertisements, enhancing both privacy and performance.
+
+### About This Feature
+As a VPN service provider, we offer a robust SDK that allows our clients to build custom VPN applications. In our latest release, we’ve introduced support for Tracker and Ad Blocker functionality. When enabled, this feature will actively block trackers and advertisements during a VPN session. It is supported across all connection types provided by the SDK:
+
+1. Connect with Param
+2. Connect with Dedicated IP
+3. Connect with Multiple Dedicated IPs
+4. Connect with Dedicated VPS
+
+### Integration Guide:
+
+#### Enabling Tracker / Ad Blocker
+To enable the Tracker or Ad Blocker while the VPN is connected, you can configure the feature through `VPNProperties` as shown below:
+```
+vpnPropertiesBuilder.withAtomShield(@NonNull List<AtomShieldFeature>)
+```
+The supported options for `AtomShieldFeature` are:
+```
+AtomShieldFeature.TRACKER
+AtomShieldFeature.AD_BLOCKER
+```
+#### Observe Connection Status and Data
+To monitor status and data updates, add a listener as follows:
+```
+atomManager.addAtomShieldListener(AtomShieldListener)
+```
+To remove the listener, use the following:
+```
+atomManager.removeAtomShieldListener(AtomShieldListener)
+```
+The `AtomShieldListener` interface includes two methods for observing Tracker / Ad Blocker connection status and stats:
+
+- **Status Updates:** `onAtomShieldStatusChange(AtomShieldStatus)`
+- **Data Updates:** `onAtomShieldDataReceived(@Nullable AtomShieldData)`
+
+**Status Updates (AtomShieldStatus)**
+| Status | Status Params | Description |
+| ------ | ------------- |----------- |
+| **Establishing(String)** | [String] Provide the Tracker/Ad Blocker establishing message. | Connecting the Tracker/Ad Blocker. |
+| **Established(String)** | [String] Provide the Tracker/Ad Blocker established message. | Tracker/Ad Blocker successfully connected. |
+| **Disconnected(String)** | [String] Provide the Tracker/Ad Blocker disconnected message. | Tracker/Ad Blocker disconnected. |
+| **Error(AtomException)** | [AtomException] Provide the Tracker/Ad Blocker exception information. | An error occurred. See error codes below for details. |
+
+#### Error Handling:
+Following are the error details for this feature:
+
+| Error Code | Error Message | Description |
+| :----------: | ------------- | ----------- |
+| 5177 | AtomShield can not be null or empty | When try to use tracker/ad blocker service and provide null OR empty in argument in VPNProperties. |
+| 5178 | AtomShield is not available on PROXY protocol | When attempts to activate the tracker/ad blocker while utilizing the proxy protocol. |
+| 5179 | Connection type does not support AtomShield | When the VPN connection other than Params, Dedicated Server and Dedicated IP. |
+| 5180 | Unable to establish AtomShield connection | When the specified retry count has been attempted to the tracker blocker socket connection. |
+| 5181 | Unable to make request to AtomShield server | When sending request to socket server but socket connection lost/not established OR socket connection closed OR When unexpectedly fails the request Or When VPN disconnected gracefully. |
+| 5182 | Unable to enable AtomShield connection | When request to enable tracker/ad blocker service returns failure from server. |
+| 5183 | Unable to get AtomShield stats | When requested to get the stats of tracker/ad blocker service from the server. |
+| 5190 | Connection to AtomShield server disrupted.  | When the socket connection is disrupted due to internet availability or any other reason and a request cannot be made, retry the connection until the maximum retry count is reached. If the socket still fails to connect, throw the error |
+
+**Data Updates (AtomShieldData)**
+
+The `AtomShieldData` data class (contains a variable `counter`) that uses to track the number of blocked trackers or ads. It provides a cumulative count for both Trackers / Ads.
+```
+counter: Int // Number of trackers/ads blocked
+```
+#### Tracker / Ad Blocker Informations in Connection Details:
+The following methods are available in the connection details related to this feature:
+- `isTrackerBlockerRequested()`: Returns a boolean indicating whether the Tracker Blocker is requested.
+- `isAdBlockerRequested()`: Returns a boolean indicating whether the Ad Blocker is requested.
+
+**NOTE:** The Tracker/Ad blocker connection will be established upon successful VPN Connection.
+
+#### Conclusion:
+The Tracker and Ad Blocker feature in the Atom SDK allows clients to offer users enhanced privacy and an improved browsing experience. This feature seamlessly integrates with all supported VPN connection types, ensuring consistent functionality across various configurations.
+
+---
+
+# LAN Access Feature
+Our VPN SDK now includes a new feature that enables users to access their locally connected devices over the internet while maintaining an active VPN connection. This functionality ensures seamless connectivity to local resources without compromising security.
+
+### How it works:
+By default, VPN connections restrict access to locally connected devices. However, our SDK introduces the `allowLocalNetworkTraffic()` method within the `VPNProperties` class, allowing users to toggle this capability on or off. You can enable this feature as shown below:
+```
+vpnPropertiesBuilder.allowLocalNetworkTraffic()
+```
+Our `VPNProperties` class offers a method `isAllowedLocalNetworkTraffic()` indicates whether the feature is requested.
+
+---
+
+# Freemium Offering
+
+
 
 ## Proguard rules:
 ```
