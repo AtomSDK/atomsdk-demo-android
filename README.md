@@ -358,7 +358,7 @@ or
     vpnPropertiesBuilder.enableProtocolSwitch(true);
 ```
 ## Recommanded protocol
-If you didn't specify the protocol in case of Country, City and Channel dailing then Atom SDK dialed with recommanded protocol according to the specified country, city and channel. It did not work in PSK, Smart connect dialing and dedicated IP.
+If you didn't specify the protocol in case of Country, City and Channel dailing then Atom SDK dialed with recommanded protocol according to the specified country, city and channel. It will not work for dedicated IP.
 
 ## Use Failover
 Failover is a mechanism in which Atom dialed with nearest server if requested server is busy or not found for any reason. You can control this mechanism from VPNPorperties class. By default its value is set to true.
@@ -653,12 +653,6 @@ By default, VPN connections restrict access to locally connected devices. Howeve
 vpnPropertiesBuilder.allowLocalNetworkTraffic()
 ```
 Our `VPNProperties` class offers a method `isAllowedLocalNetworkTraffic()` indicates whether the feature is requested.
-
----
-
-# Freemium Offering
-
-
 
 ## Proguard rules:
 ```
