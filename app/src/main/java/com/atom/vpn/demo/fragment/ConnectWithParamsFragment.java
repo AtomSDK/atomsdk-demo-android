@@ -43,6 +43,7 @@ import com.atom.vpn.demo.adapter.CityAdapter;
 import com.atom.vpn.demo.adapter.CountryAdapter;
 import com.atom.vpn.demo.adapter.ProtocolAdapter;
 import com.atom.vpn.demo.common.Constants;
+import com.atom.vpn.demo.common.Utilities;
 import com.atom.vpn.demo.common.logger.Log;
 import com.tooltip.Tooltip;
 
@@ -66,7 +67,7 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
     private List<Country> countriesForSmartDialing;
 
     private Switch switchOptimizedConnection,switchSmartDialing;
-    private Button btnConnect;
+    private Button btnConnect, btnPause;
 
     private String uuid,vpnUsername,vpnPassword;
 
@@ -117,6 +118,9 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        btnPause = view.findViewById(R.id.btnPause);
+        togglePauseBtn(false);
 
         ImageView smartDialingHint =  view.findViewById(R.id.smartDialingHint);
         Tooltip.Builder smartDialingHintTipBuilder = new Tooltip.Builder(smartDialingHint, R.style.TooltipStyle);
@@ -375,6 +379,17 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+
+        btnPause.setOnClickListener(v -> {
+            String vpnStatus = AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(getActivity());
+            if (AtomManager.VPNStatus.PAUSED.equalsIgnoreCase(vpnStatus)) {
+                AtomDemoApplicationController.getInstance().getAtomManager().resume();
+            } else {
+                Utilities.getPauseTimerList(getActivity(), timer -> {
+                    AtomDemoApplicationController.getInstance().getAtomManager().pause(timer);
+                });
             }
         });
 
@@ -712,6 +727,10 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
         }
     }
 
+    private void togglePauseBtn(boolean enable) {
+        requireActivity().runOnUiThread(() -> btnPause.setEnabled(enable));
+    }
+
     @Override
     public void onConnected() {
 
@@ -772,6 +791,22 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
         if (state.equalsIgnoreCase(AtomManager.VPNStatus.CONNECTING) || state.equalsIgnoreCase(VPNState.RECONNECTING)) {
             changeButtonState(btnConnect, "Cancel");
         }
+
+        if (AtomManager.VPNStatus.CONNECTED.equalsIgnoreCase(state)) {
+            changeButtonState(btnPause, "Pause");
+            togglePauseBtn(true);
+        } else  if (AtomManager.VPNStatus.PAUSED.equalsIgnoreCase(state)) {
+            changeButtonState(btnPause, "Resume");
+            togglePauseBtn(true);
+        } else {
+            changeButtonState(btnPause, "Pause");
+            togglePauseBtn(false);
+        }
+    }
+
+    @Override
+    public void onPaused(AtomException e, ConnectionDetails connectionDetails) {
+
     }
 
     @Override

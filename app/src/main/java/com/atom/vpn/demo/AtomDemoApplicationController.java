@@ -57,6 +57,7 @@ public class AtomDemoApplicationController extends MultiDexApplication {
             atomConfigurationBuilder.setVpnInterfaceName("Atom SDK Demo");
             AtomNotification.Builder atomNotificationBuilder = new AtomNotification.Builder(NOTIFICATION_ID,"Atom SDK Demo","You are now secured with Atom",R.drawable.ic_stat_icn_connected, Color.BLUE);
             atomConfigurationBuilder.setNotification(atomNotificationBuilder.build());
+            atomConfigurationBuilder.enableVPNPause();
             AtomConfiguration atomConfiguration = atomConfigurationBuilder.build();
             try {
                 AtomManager.initialize(this, atomConfiguration, new AtomManager.InitializeCallback() {

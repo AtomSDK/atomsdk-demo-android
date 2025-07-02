@@ -194,10 +194,19 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
         android:padding="10dp">
+
+        <Button
+            android:id="@+id/btnPause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/lbl_pause" />
 
         <Button
             android:id="@+id/btnConnect"
@@ -206,7 +215,7 @@
             android:layout_centerHorizontal="true"
             android:text="@string/lbl_connect" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
     <FrameLayout
