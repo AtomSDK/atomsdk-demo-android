@@ -236,6 +236,11 @@ public class ConnectWithDedicatedIPFragment extends Fragment implements VPNState
     }
 
     @Override
+    public void onPaused(AtomException e, ConnectionDetails connectionDetails) {
+
+    }
+
+    @Override
     public void onDisconnecting(ConnectionDetails connectionDetails) {
 
     }

@@ -498,6 +498,11 @@ public class ConnectWithChannelFragment extends Fragment implements VPNStateList
     }
 
     @Override
+    public void onPaused(AtomException e, ConnectionDetails connectionDetails) {
+
+    }
+
+    @Override
     public void onDisconnecting(ConnectionDetails connectionDetails) {
 
     }

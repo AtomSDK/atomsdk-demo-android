@@ -18,9 +18,7 @@ import com.atom.vpn.demo.common.logger.LogWrapper;
 import com.atom.vpn.demo.common.logger.MessageOnlyLogFilter;
 import com.atom.vpn.demo.fragment.ConnectWithChannelFragment;
 import com.atom.vpn.demo.fragment.ConnectWithDedicatedIPFragment;
-import com.atom.vpn.demo.fragment.ConnectWithPSKFragment;
 import com.atom.vpn.demo.fragment.ConnectWithParamsFragment;
-import com.atom.vpn.demo.fragment.ConnectWithSmartConnectFragment;
 
 /**
  * ConnectActivity
@@ -51,31 +49,19 @@ public class ConnectActivity extends BaseSampleActivity {
 
             if(connection_type == 1) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                ConnectWithPSKFragment fragment = new ConnectWithPSKFragment();
+                ConnectWithParamsFragment fragment = new ConnectWithParamsFragment();
                 fragment.setArguments(extras);
                 transaction.replace(R.id.connect_fragment, fragment);
                 transaction.commit();
             }else if(connection_type == 2) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                ConnectWithParamsFragment fragment = new ConnectWithParamsFragment();
+                ConnectWithDedicatedIPFragment fragment = new ConnectWithDedicatedIPFragment();
                 fragment.setArguments(extras);
                 transaction.replace(R.id.connect_fragment, fragment);
                 transaction.commit();
             }else if(connection_type == 3) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                ConnectWithDedicatedIPFragment fragment = new ConnectWithDedicatedIPFragment();
-                fragment.setArguments(extras);
-                transaction.replace(R.id.connect_fragment, fragment);
-                transaction.commit();
-            }else if(connection_type == 4) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 ConnectWithChannelFragment fragment = new ConnectWithChannelFragment();
-                fragment.setArguments(extras);
-                transaction.replace(R.id.connect_fragment, fragment);
-                transaction.commit();
-            }else if(connection_type == 5){
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                ConnectWithSmartConnectFragment fragment = new ConnectWithSmartConnectFragment();
                 fragment.setArguments(extras);
                 transaction.replace(R.id.connect_fragment, fragment);
                 transaction.commit();

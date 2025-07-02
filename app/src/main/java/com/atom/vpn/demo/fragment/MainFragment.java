@@ -36,13 +36,10 @@ import de.blinkt.openvpn.BuildConfig;
 public class MainFragment extends Fragment {
 
     private static final String TAG = "MainFragment";
-    private Switch autoGenerateSwitch;
     private LinearLayout usernameLay;
     private LinearLayout passwordLay;
-    private LinearLayout uuidLay;
     private EditText etUsername;
     private EditText etPassword;
-    private EditText etUUID;
 
     public MainFragment() {
         // Required empty public constructor
@@ -66,13 +63,7 @@ public class MainFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         LinearLayout secretKeyLay = view.findViewById(R.id.secretKeyLay);
         Handler mHandler = new Handler();
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                secretKeyLay.setAlpha(0.5f);
-
-            }
-        }, 500);
+        mHandler.postDelayed(() -> secretKeyLay.setAlpha(0.5f), 500);
 
 
         TextView secretKey =  view.findViewById(R.id.secretKey);
@@ -86,139 +77,53 @@ public class MainFragment extends Fragment {
 
         usernameLay = view.findViewById(R.id.usernameLay);
         passwordLay =  view.findViewById(R.id.passwordLay);
-        uuidLay =  view.findViewById(R.id.uuidLay);
 
         setViewAndChildrenEnabled(usernameLay, true);
         setViewAndChildrenEnabled(passwordLay, true);
-        setViewAndChildrenEnabled(uuidLay, false);
-
-        ImageView autoGenerateHint =  view.findViewById(R.id.autoGenerateHint);
-        Tooltip.Builder autoGenerateTipBuilder = new Tooltip.Builder(autoGenerateHint, R.style.TooltipStyle);
-        Tooltip autoGenerateTip = autoGenerateTipBuilder.setText(Constants.TooltipAutoGenCred).setDismissOnClick(true).build();
-
-        autoGenerateHint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (!autoGenerateTip.isShowing()) {
-                    autoGenerateTip.show();
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            autoGenerateTip.dismiss();
-                        }
-                    }, 3000);
-                } else {
-                    autoGenerateTip.dismiss();
-                }
-
-            }
-        });
-
-        autoGenerateSwitch = view.findViewById(R.id.autoGenerateSwitch);
-        autoGenerateSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // do something, the isChecked will be
-            // true if the switch is in the On position
-            etUsername.setError(null);
-            etPassword.setError(null);
-            etUUID.setError(null);
-
-            if (isChecked) {
-                setViewAndChildrenEnabled(usernameLay, false);
-                setViewAndChildrenEnabled(passwordLay, false);
-                setViewAndChildrenEnabled(uuidLay, true);
-
-            } else {
-
-                setViewAndChildrenEnabled(usernameLay, true);
-                setViewAndChildrenEnabled(passwordLay, true);
-                setViewAndChildrenEnabled(uuidLay, false);
-            }
-        });
-
-
 
         etUsername =  view.findViewById(R.id.etUsername);
         etPassword =  view.findViewById(R.id.etPassword);
-        etUUID =  view.findViewById(R.id.etUUID);
-
-        autoGenerateSwitch.setChecked(false);
-
-        // Connect with Pre-Shared Key
-        view.findViewById(R.id.btnConnectPsk).setOnClickListener(v -> {
-            launchActivityForConnectionMethod(1);
-        });
-
-
 
         // Connect with Params
         view.findViewById(R.id.btnConnectParams).setOnClickListener(v -> {
-            launchActivityForConnectionMethod(2);
+            launchActivityForConnectionMethod(1);
         });
 
 
         // Connect with Dedicated IP
         view.findViewById(R.id.btnConnectDedicatedIp).setOnClickListener(v -> {
-            launchActivityForConnectionMethod(3);
+            launchActivityForConnectionMethod(2);
         });
 
 
         // Connect with Channel
         view.findViewById(R.id.btnConnectChannel).setOnClickListener(v -> {
-            launchActivityForConnectionMethod(4);
+            launchActivityForConnectionMethod(3);
         });
     }
 
     private void launchActivityForConnectionMethod(int connectionMethodType){
-        if (!autoGenerateSwitch.isChecked()) {
-            etUUID.setError(null);
-            if (TextUtils.isEmpty(etUsername.getText().toString().trim())) {
-                etUsername.setError(Constants.UsernameRequired);
-
-            }
-            else if (TextUtils.isEmpty(etPassword.getText().toString().trim())) {
-                etUsername.setError(null);
-                etPassword.setError(Constants.PasswordRequired);
-            } else {
-
-                etUsername.setError(null);
-                etPassword.setError(null);
-
-                if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-
-                    Intent intent = new Intent(getActivity(), ConnectActivity.class);
-                    intent.putExtra("connection_type", connectionMethodType);
-                    intent.putExtra("vpnUsername", etUsername.getText().toString());
-                    intent.putExtra("vpnPassword", etPassword.getText().toString());
-                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
-                }
-            }
-
+        if (TextUtils.isEmpty(etUsername.getText().toString().trim())) {
+            etUsername.setError(Constants.UsernameRequired);
+        } else if (TextUtils.isEmpty(etPassword.getText().toString().trim())) {
+            etUsername.setError(null);
+            etPassword.setError(Constants.PasswordRequired);
         } else {
+
             etUsername.setError(null);
             etPassword.setError(null);
 
-            if (TextUtils.isEmpty(etUUID.getText().toString().trim())) {
-                etUUID.setError(Constants.UUIDRequired);
+            if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
+
+                Intent intent = new Intent(getActivity(), ConnectActivity.class);
+                intent.putExtra("connection_type", connectionMethodType);
+                intent.putExtra("vpnUsername", etUsername.getText().toString());
+                intent.putExtra("vpnPassword", etPassword.getText().toString());
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
             } else {
-                etUUID.setError(null);
-
-                if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-
-                    Intent intent = new Intent(getActivity(), ConnectActivity.class);
-                    intent.putExtra("connection_type", connectionMethodType);
-                    intent.putExtra("uuid",etUUID.getText().toString().trim());
-                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
-                }
+                Toast.makeText(getActivity(), "Atom Manager is not initialized", Toast.LENGTH_LONG).show();
             }
-
         }
     }
 
