@@ -43,6 +43,8 @@
     <string name="label_connect_with_channel">Connect with Channel</string>
     <string name="label_connect_with_smart_connect">Connect with SmartConnect Tags</string>
     <string name="lbl_optimize_connection">Optimize Connection</string>
+    <string name="lbl_pause">Pause</string>
+    <string name="lbl_resume">Resume</string>
     <string name="lbl_connect">Connect</string>
     <string name="lbl_reconnect">Reconnect</string>
     <string name="lbl_select_protocol">Select Protocol</string>

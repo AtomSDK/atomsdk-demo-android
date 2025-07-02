@@ -41,7 +41,7 @@ Add this to root **build.gradle**
 And then add dependencies in build.gradle of your app module.
 ```groovy
 dependencies {
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:6.0.0'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:6.0.1'
 }
 ```
 >To successfully build ATOM SDK, developer must migrate their project to AndroidX. Developer can use **Refactor** -> **Migrate to AndroidX** option in Android Studio.
@@ -240,8 +240,7 @@ ATOM SDK offers an additional callback onPacketTransmitted only trigger while co
 
 ## VPN Authentication
 
-ATOM SDK provided two ways to authenticate your vpn user.
-First one is to offer VPN Credentials directly to the SDK which you may create through the Admin Panel provided by ATOM.
+ATOM SDK provides VPN Credentials to authenticate your vpn user which you may create through the Admin Panel provided by ATOM.
 
 ```
 atomManager.setVPNCredentials(new VPNCredentials(String VPNUsername,String VPNPassword));
