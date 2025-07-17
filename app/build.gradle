@@ -13,8 +13,8 @@ android {
     defaultConfig {
         applicationId "com.atom.vpn.demo"
         minSdkVersion 22
-        versionCode 41
-        versionName "6.0.1"
+        versionCode 42
+        versionName "6.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
@@ -65,7 +65,7 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:6.0.1'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:6.0.2'
 
 }
 
