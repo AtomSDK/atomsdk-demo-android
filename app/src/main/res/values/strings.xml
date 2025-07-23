@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Atom SDK Demo</string>
 
-    <string name="atom_secret_key"></string>
+    <string name="atom_secret_key">uYuG2BvndedQsCViJme158EOMFvlusLb1FDWpm2P</string>
 
     <string name="intro_message">
       <![CDATA[
