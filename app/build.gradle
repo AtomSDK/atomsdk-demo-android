@@ -5,16 +5,13 @@ apply plugin: 'kotlin-parcelize'
 android {
 
     namespace = "com.atom.vpn.demo"
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
-    }
-    compileSdk 34
+    compileSdk 36
     defaultConfig {
         applicationId "com.atom.vpn.demo"
-        minSdkVersion 22
-        versionCode 45
-        versionName "6.0.5"
+        minSdkVersion 24
+        targetSdkVersion 36
+        versionCode 46
+        versionName "7.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
@@ -43,29 +40,38 @@ android {
     kotlinOptions { jvmTarget = JavaVersion.VERSION_17.toString() }
 
     configurations {
-        all { // You should exclude one of them not both of them
+        configureEach {
             exclude group: "xpp3", module: "xpp3_min"
         }
     }
 
     packagingOptions {
-        exclude("META-INF/*.kotlin_module")
+        jniLibs {
+            useLegacyPackaging true
+        }
+        resources {
+            excludes += ['META-INF/*.kotlin_module']
+        }
+    }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
     }
 }
 
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.annotation:annotation:1.7.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.annotation:annotation:1.9.1'
     implementation 'com.github.vihtarb:tooltip:0.2.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'com.github.vihtarb:tooltip:0.2.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.22"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:6.0.5'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:7.0.0'
 
 }
 
