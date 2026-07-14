@@ -634,7 +634,7 @@ The VPN Pause feature in the Atom SDK offers flexible control over VPN connectio
 This section provides details about the Tracker and Ad Blocker feature in the Atom VPN SDK. This feature enables VPN applications built with the Atom SDK to block tracking scripts and advertisements, enhancing both privacy and performance.
 
 ### About This Feature
-As a VPN service provider, we offer a robust SDK that allows our clients to build custom VPN applications. In our latest release, we’ve introduced support for Tracker and Ad Blocker functionality. When enabled, this feature will actively block trackers and advertisements during a VPN session. It is supported across all connection types provided by the SDK:
+As a VPN service provider, we offer a robust SDK that allows our clients to build custom VPN applications. We have introduced support for Tracker and Ad Blocker functionality. When enabled, this feature will actively block trackers and advertisements during a VPN session. It is supported across all connection types provided by the SDK:
 
 1. Connect with Param
 2. Connect with Dedicated IP
@@ -653,6 +653,11 @@ The supported options for `AtomShieldFeature` are:
 AtomShieldFeature.TRACKER
 AtomShieldFeature.AD_BLOCKER
 ```
+**NOTE:** Since Atom SDK version **7.1.0**, we have combined these offering to ensure maximizing the privacy during VPN session and can be opted as:
+```
+AtomShieldFeature.TRACKER_AND_AD_BLOCKER
+```
+
 #### Observe Connection Status and Data
 To monitor status and data updates, add a listener as follows:
 ```
@@ -681,7 +686,6 @@ Following are the error details for this feature:
 | Error Code | Error Message | Description |
 | :----------: | ------------- | ----------- |
 | 5177 | AtomShield can not be null or empty | When try to use tracker/ad blocker service and provide null OR empty in argument in VPNProperties. |
-| 5178 | AtomShield is not available on PROXY protocol | When attempts to activate the tracker/ad blocker while utilizing the proxy protocol. |
 | 5179 | Connection type does not support AtomShield | When the VPN connection other than Params, Dedicated Server and Dedicated IP. |
 | 5180 | Unable to establish AtomShield connection | When the specified retry count has been attempted to the tracker blocker socket connection. |
 | 5181 | Unable to make request to AtomShield server | When sending request to socket server but socket connection lost/not established OR socket connection closed OR When unexpectedly fails the request Or When VPN disconnected gracefully. |
@@ -699,6 +703,9 @@ counter: Int // Number of trackers/ads blocked
 The following methods are available in the connection details related to this feature:
 - `isTrackerBlockerRequested()`: Returns a boolean indicating whether the Tracker Blocker is requested.
 - `isAdBlockerRequested()`: Returns a boolean indicating whether the Ad Blocker is requested.
+
+**NOTE:** From Atom SDK version **7.1.0**, the above methods have been combined and will be available as below:
+- `isTrackerAndAdBlockerRequested()`: Returns a boolean indicating whether the Tracker and Ad Blocker is requested.
 
 **NOTE:** The Tracker/Ad blocker connection will be established upon successful VPN Connection.
 
@@ -726,11 +733,6 @@ Our `VPNProperties` class offers a method `isAllowedLocalNetworkTraffic()` indic
 -dontwarn com.atom.core.**
 -keep class com.atom.core.models.** { *; }
 -keep interface com.atom.core.** { *; }
-
--dontwarn com.atom.proxy.**
--keep class com.atom.proxy.** { *; }
--keep interface com.atom.proxy.** { *; }
--keep interface com.purevpn.proxy.core.** { *; }
 
 -keep class com.atom.sdk.android.** { *; }
 
