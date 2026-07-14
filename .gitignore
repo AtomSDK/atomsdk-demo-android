@@ -86,3 +86,6 @@ hs_err_pid*
 /purevpn-sdk/src/main/java/com/purevpn/sdk/android/latex/
 /purevpn-sdk/src/main/java/com/purevpn/sdk/android/html/
 /purevpn-sdk/src/main/java/com/purevpn/sdk/android/doxyconfig
+
+app/cert.jks
+app/release/
