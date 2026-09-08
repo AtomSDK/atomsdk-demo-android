@@ -5,7 +5,7 @@ package com.atom.vpn.demo
  *
  * @param T The type of result expected when the callback is invoked.
  */
-interface AtomDemoAppCallback<T> {
+fun interface AtomDemoAppCallback<T> {
 
     /**
      * Invokes the callback with a result.
