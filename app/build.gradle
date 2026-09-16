@@ -40,9 +40,7 @@ android {
     kotlinOptions { jvmTarget = JavaVersion.VERSION_17.toString() }
 
     configurations {
-        configureEach {
-            exclude group: "xpp3", module: "xpp3_min"
-        }
+        all*.exclude module: 'xpp3_min'
     }
 
     packagingOptions {
