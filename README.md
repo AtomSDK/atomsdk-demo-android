@@ -102,12 +102,49 @@ Add this to root **build.gradle**
         }
     }
 
+**OR**
+
+If you are using Kotlin DSL, Add this to root **build.gradle.kts**
+
+    allprojects {
+        repositories {
+            mavenCentral()
+            google()
+
+            maven {
+                url = uri("https://jitpack.io")
+                credentials {
+                    username = providers.gradleProperty("authToken").orNull
+                }
+            }
+
+            maven { url = uri("https://bitbucket.org/purevpn/atom-android-releases/raw/master") }
+        }
+
+        tasks.withType<Javadoc>().configureEach {
+            (options as StandardJavadocDocletOptions).apply {
+                addStringOption("Xdoclint:none", "-quiet")
+                addStringOption("encoding", "UTF-8")
+            }
+        }
+}
+
 And then add dependencies in build.gradle of your app module.
 ```groovy
 dependencies {
     implementation 'org.bitbucket.purevpn:purevpn-sdk-android:7.1.1'
 }
 ```
+
+**OR**
+
+If you are using Kotlin DSL, add the following configuration to your app's build.gradle.kts file
+```gradle
+dependencies {
+    implementation("org.bitbucket.purevpn:purevpn-sdk-android:7.1.1")
+}
+```
+
 >To successfully build ATOM SDK, developer must migrate their project to AndroidX. Developer can use **Refactor** -> **Migrate to AndroidX** option in Android Studio.
 
 >Developer must enable Kotlin support in Android Studio using Kotlin Extension.
