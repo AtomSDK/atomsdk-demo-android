@@ -166,10 +166,10 @@ implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.20"
 * Connection with Multiple Protocols (Auto-Retry Functionality)
 
 ## Supported Protocols
-* TCP
-* UDP
-* IKEV
-* WIREGUARD
+* **WireGuard:** Fast, modern VPN protocol. (Recommended by SDK)
+* **OpenVPN - UDP:** Fast VPN connection for lower latency and better performance.
+* **IKEV:** Secure VPN protocol designed for fast and stable connections.
+* **OpenVPN - TCP:** Reliable VPN connection for better stability on restrictive networks.
 
 ## Getting started with the code
 ATOM SDK needs to be initialized with a “SecretKey” provided to you after you buy the subscription which is typically a hex-numeric literal.
