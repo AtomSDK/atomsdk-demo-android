@@ -10,8 +10,8 @@ android {
         applicationId "com.atom.vpn.demo"
         minSdkVersion 24
         targetSdkVersion 36
-        versionCode 55
-        versionName "7.1.1"
+        versionCode 56
+        versionName "7.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
@@ -40,9 +40,7 @@ android {
     kotlinOptions { jvmTarget = JavaVersion.VERSION_17.toString() }
 
     configurations {
-        configureEach {
-            exclude group: "xpp3", module: "xpp3_min"
-        }
+        all*.exclude module: 'xpp3_min'
     }
 
     packagingOptions {
@@ -71,7 +69,7 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:7.1.1'
+    implementation 'org.bitbucket.purevpn:purevpn-sdk-android:7.2.0'
 
 }
 
