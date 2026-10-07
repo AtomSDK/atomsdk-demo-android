@@ -3,6 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.atom.vpn.demo">
 
+    <!-- The SDK posts an ongoing notification while connected; Android 13+ needs this granted. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Split Tunneling lists launchable apps; Android 11+ hides them without this query. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
     <application
         android:name="com.atom.vpn.demo.AtomDemoApplicationController"
         android:allowBackup="false"

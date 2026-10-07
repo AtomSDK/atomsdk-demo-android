@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  btnPause is a Button with no text in ConnectWithParamsFragment, and a Button's compound drawable
+  hugs its edge - so the icon is layered into the background, where gravity can centre it.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/bg_outlined_button_touch" />
+    <item
+        android:drawable="@drawable/pause"
+        android:gravity="center" />
+</layer-list>

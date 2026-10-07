@@ -1,228 +1,450 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp">
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="6"
-            android:text="@string/lbl_primary_protocol" />
-
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/primaryProtocolSpinner"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:minHeight="40dp"
-            android:spinnerMode="dropdown"
-            android:theme="@style/BrandedSpinner.control"/>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/laySecondaryProtocol"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="6"
-            android:text="@string/lbl_secondary_protocol" />
-
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/secondaryProtocolSpinner"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:minHeight="40dp"
-            android:spinnerMode="dropdown"
-            android:theme="@style/BrandedSpinner.control"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layTertiaryProtocol"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="6"
-            android:text="@string/lbl_tertiary_protocol" />
-
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/tertiaryProtocolSpinner"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:minHeight="40dp"
-            android:spinnerMode="dropdown"
-            android:theme="@style/BrandedSpinner.control"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="6"
-            android:text="@string/lbl_select_country" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/countrySpinner"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:minHeight="40dp"
-            android:spinnerMode="dropdown"
-            android:theme="@style/BrandedSpinner.control"/>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="6"
-            android:text="@string/lbl_select_city" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/citySpinner"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:minHeight="40dp"
-            android:spinnerMode="dropdown"
-            android:theme="@style/BrandedSpinner.control"/>
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        >
-
-        <Switch
-            android:id="@+id/switchOptConnection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_optimize_connection"
-            android:layout_centerVertical="true"
-            android:theme="@style/BrandedSwitch.control"
-            />
-
-
-        <ImageView
-            android:id="@+id/optConnectionHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="125dp"
-            android:background="@drawable/ic_info"
-            android:gravity="center_horizontal"
-             />
-
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        >
-
-        <Switch
-            android:id="@+id/switchSmartDialing"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_smart_dialing"
-            android:layout_centerVertical="true"
-            android:theme="@style/BrandedSwitch.control"
-            />
-
-
-        <ImageView
-            android:id="@+id/smartDialingHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="125dp"
-            android:background="@drawable/ic_info"
-            android:gravity="center_horizontal"
-            />
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="10dp">
-
-        <Button
-            android:id="@+id/btnPause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="@string/lbl_pause" />
-
-        <Button
-            android:id="@+id/btnConnect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="@string/lbl_connect" />
-
-    </LinearLayout>
-
+    android:background="@color/background"
+    android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/console"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:elevation="10dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
+
+        <!-- Opens SDK Logs. 40dp touch target; the padding keeps the 24dp icon where it was. -->
+        <ImageView
+            android:id="@+id/btnSdkLogs"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="8dp"
+            android:padding="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/terminal_icon"
+            android:contentDescription="@string/sdk_logs" />
+
+        <include layout="@layout/view_theme_toggle" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:fontFamily="@font/hanken_grotesk_regular"
+            android:text="@string/atom_vpn_sdk"
+            android:textColor="@color/buttonColor"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
     </FrameLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/connection_with_params"
+                    android:fontFamily="@font/hanken_grotesk_regular"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/title_font_color"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_info_container"
+                android:orientation="vertical">
+
+                <include layout="@layout/view_connect_state" />
+
+                <!--
+                  Location to dial. Tapping either selector opens a picker; the country list is
+                  narrowed to the selected protocols and the city list to the selected country.
+                -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/country"
+                            android:textColor="@color/hint_font_color"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/inter_regular"
+                            android:textSize="11sp" />
+
+                        <LinearLayout
+                            android:id="@+id/btnSelectCountry"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/bg_main_bordered_container"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp">
+
+                            <TextView
+                                android:id="@+id/tvSelectedCountry"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="@string/lbl_select_country"
+                                android:textColor="@color/title_font_color"
+                                android:fontFamily="@font/mono_regular"
+                                android:textSize="12sp" />
+
+                            <ImageView
+                                android:layout_width="12dp"
+                                android:layout_height="12dp"
+                                android:layout_marginStart="4dp"
+                                android:rotation="90"
+                                android:scaleType="center"
+                                android:src="@drawable/forward_arrow"
+                                tools:ignore="ContentDescription" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="4dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/city"
+                            android:textColor="@color/hint_font_color"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/inter_regular"
+                            android:textSize="11sp" />
+
+                        <LinearLayout
+                            android:id="@+id/btnSelectCity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/bg_main_bordered_container"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp">
+
+                            <TextView
+                                android:id="@+id/tvSelectedCity"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="@string/any_city"
+                                android:textColor="@color/title_font_color"
+                                android:fontFamily="@font/mono_regular"
+                                android:textSize="12sp" />
+
+                            <ImageView
+                                android:layout_width="12dp"
+                                android:layout_height="12dp"
+                                android:layout_marginStart="4dp"
+                                android:rotation="90"
+                                android:scaleType="center"
+                                android:src="@drawable/forward_arrow"
+                                tools:ignore="ContentDescription" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <include layout="@layout/view_connect_protocols" />
+
+
+            </LinearLayout>
+
+            <include layout="@layout/view_connect_actions" />
+
+        </LinearLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal">-->
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:layout_weight="6"-->
+<!--            android:text="@string/lbl_primary_protocol" />-->
+
+
+<!--        <androidx.appcompat.widget.AppCompatSpinner-->
+<!--            android:id="@+id/primaryProtocolSpinner"-->
+<!--            style="@style/Widget.AppCompat.Spinner.Underlined"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="2"-->
+<!--            android:minHeight="40dp"-->
+<!--            android:spinnerMode="dropdown"-->
+<!--            android:theme="@style/BrandedSpinner.control"/>-->
+
+<!--    </LinearLayout>-->
+
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/laySecondaryProtocol"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:orientation="horizontal">-->
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:layout_weight="6"-->
+<!--            android:text="@string/lbl_secondary_protocol" />-->
+
+
+<!--        <androidx.appcompat.widget.AppCompatSpinner-->
+<!--            android:id="@+id/secondaryProtocolSpinner"-->
+<!--            style="@style/Widget.AppCompat.Spinner.Underlined"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="2"-->
+<!--            android:minHeight="40dp"-->
+<!--            android:spinnerMode="dropdown"-->
+<!--            android:theme="@style/BrandedSpinner.control"-->
+<!--            />-->
+
+<!--    </LinearLayout>-->
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/layTertiaryProtocol"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:orientation="horizontal">-->
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:layout_weight="6"-->
+<!--            android:text="@string/lbl_tertiary_protocol" />-->
+
+
+<!--        <androidx.appcompat.widget.AppCompatSpinner-->
+<!--            android:id="@+id/tertiaryProtocolSpinner"-->
+<!--            style="@style/Widget.AppCompat.Spinner.Underlined"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="2"-->
+<!--            android:minHeight="40dp"-->
+<!--            android:spinnerMode="dropdown"-->
+<!--            android:theme="@style/BrandedSpinner.control"/>-->
+<!--    </LinearLayout>-->
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:orientation="horizontal">-->
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:layout_weight="6"-->
+<!--            android:text="@string/lbl_select_country" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatSpinner-->
+<!--            android:id="@+id/countrySpinner"-->
+<!--            style="@style/Widget.AppCompat.Spinner.Underlined"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="2"-->
+<!--            android:minHeight="40dp"-->
+<!--            android:spinnerMode="dropdown"-->
+<!--            android:theme="@style/BrandedSpinner.control"/>-->
+
+<!--    </LinearLayout>-->
+
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:orientation="horizontal">-->
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:layout_weight="6"-->
+<!--            android:text="@string/lbl_select_city" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatSpinner-->
+<!--            android:id="@+id/citySpinner"-->
+<!--            style="@style/Widget.AppCompat.Spinner.Underlined"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="2"-->
+<!--            android:minHeight="40dp"-->
+<!--            android:spinnerMode="dropdown"-->
+<!--            android:theme="@style/BrandedSpinner.control"/>-->
+
+<!--    </LinearLayout>-->
+
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        >-->
+
+<!--        <Switch-->
+<!--            android:id="@+id/switchOptConnection"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/lbl_optimize_connection"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:theme="@style/BrandedSwitch.control"-->
+<!--            />-->
+
+
+<!--        <ImageView-->
+<!--            android:id="@+id/optConnectionHint"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_marginLeft="125dp"-->
+<!--            android:background="@drawable/ic_info"-->
+<!--            android:gravity="center_horizontal"-->
+<!--             />-->
+
+<!--    </RelativeLayout>-->
+
+
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        >-->
+
+<!--        <Switch-->
+<!--            android:id="@+id/switchSmartDialing"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/lbl_smart_dialing"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:theme="@style/BrandedSwitch.control"-->
+<!--            />-->
+
+
+<!--        <ImageView-->
+<!--            android:id="@+id/smartDialingHint"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_marginLeft="125dp"-->
+<!--            android:background="@drawable/ic_info"-->
+<!--            android:gravity="center_horizontal"-->
+<!--            />-->
+
+<!--    </RelativeLayout>-->
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:gravity="center"-->
+<!--        android:padding="10dp">-->
+
+<!--        <Button-->
+<!--            android:id="@+id/btnPause"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:text="@string/lbl_pause" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/btnConnect"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:text="@string/lbl_connect" />-->
+
+<!--    </LinearLayout>-->
+
+
+<!--    <FrameLayout-->
+<!--        android:id="@+id/console"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+<!--    </FrameLayout>-->
 
 </LinearLayout>
 

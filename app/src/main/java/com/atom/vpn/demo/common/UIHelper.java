@@ -1,5 +1,7 @@
 package com.atom.vpn.demo.common;
 
+import com.atom.vpn.demo.R;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -89,7 +91,7 @@ public class UIHelper {
         builder.setMessage(message)
                 .setTitle(title)
                 .setCancelable(true)
-                .setNegativeButton("OK", (dialogInterface, i) -> {
+                .setNegativeButton(android.R.string.ok, (dialogInterface, i) -> {
                     dialogInterface.cancel();
                     onClickListener.onClick(dialogInterface, i);
                 });
@@ -105,9 +107,9 @@ public class UIHelper {
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setMessage(message)
-                        .setTitle("Alert")
+                        .setTitle(R.string.alert)
                         .setCancelable(true)
-                        .setNegativeButton("OK",
+                        .setNegativeButton(android.R.string.ok,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
@@ -127,7 +129,7 @@ public class UIHelper {
         builder.setMessage(message)
                 .setTitle(title)
                 .setCancelable(true)
-                .setNegativeButton("OK",
+                .setNegativeButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
@@ -144,13 +146,13 @@ public class UIHelper {
         builder
                 .setMessage(message)
                 .setCancelable(false)
-                .setNegativeButton("No",
+                .setNegativeButton(android.R.string.no,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         })
-                .setPositiveButton("Yes", onClickListener);
+                .setPositiveButton(android.R.string.yes, onClickListener);
 
         if (!title.isEmpty())
             builder.setTitle(title);
@@ -185,7 +187,7 @@ public class UIHelper {
                 .setMessage(message)
                 .setCancelable(true)
                 .setView(view)
-                .setNegativeButton("Cancel",
+                .setNegativeButton(android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
@@ -210,7 +212,7 @@ public class UIHelper {
         builder
                 .setMessage(message)
                 .setCancelable(true)
-                .setNegativeButton("Cancel",
+                .setNegativeButton(android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
@@ -255,8 +257,8 @@ public class UIHelper {
                 .setTitle(mTitle)
                 .setSingleChoiceItems(privacyArray,
                         selectedIndex, null)
-                .setPositiveButton("OK", onClickListener
-                ).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, onClickListener
+                ).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         //  Your code when user clicked on Cancel
@@ -278,8 +280,8 @@ public class UIHelper {
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton("OK", onClickListener
-                ).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, onClickListener
+                ).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         //  Your code when user clicked on Cancel

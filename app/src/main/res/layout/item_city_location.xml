@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One row of the available-servers list. Mirrors the recommended-location card in
+  fragment_locations.xml, so keep the two in step when the card design changes.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="64dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_info_container">
+
+    <!-- Takes the leftover width and ellipsizes, so a long name never pushes Connect off screen. -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvCountry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="14sp"
+            android:textColor="@color/title_font_color"
+            android:fontFamily="@font/inter_regular"
+            android:textStyle="bold"
+            tools:text="United States" />
+
+        <TextView
+            android:id="@+id/tvCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="13sp"
+            android:textColor="@color/font_color"
+            android:fontFamily="@font/inter_regular"
+            tools:text="New York" />
+
+    </LinearLayout>
+
+    <!-- Ping quality: dot shade runs bg_ping_high (best) -> bg_ping_low (worst). -->
+    <View
+        android:id="@+id/vPingDot"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginEnd="6dp"
+        android:background="@drawable/bg_ping_high" />
+
+    <TextView
+        android:id="@+id/tvPing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:maxLines="1"
+        android:textSize="13sp"
+        android:textColor="@color/font_color"
+        android:fontFamily="@font/inter_regular"
+        tools:text="24 ms" />
+
+    <!--
+      Not focusable: a focusable child stops ListView delivering item clicks, and the whole card
+      is meant to connect, not only this button.
+    -->
+    <TextView
+        android:id="@+id/btnConnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="32dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/bg_main_bordered_container"
+        android:clickable="true"
+        android:focusable="false"
+        android:gravity="center"
+        android:maxLines="1"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/connect"
+        android:textAllCaps="false"
+        android:textSize="13sp"
+        android:textColor="@color/font_color"
+        android:fontFamily="@font/inter_regular"
+        tools:ignore="KeyboardInaccessibleWidget" />
+
+</LinearLayout>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One DedicatedDNS in the Multiple Dedicated IPs screen: host name, IP, port and protocol. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/bg_details_secondary_container"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvHostTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/inter_regular"
+            android:textColor="@color/title_font_color"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:text="Host 1" />
+
+        <!-- Hidden on the first host: the list always keeps at least one. -->
+        <ImageView
+            android:id="@+id/btnRemoveHost"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:padding="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/remove_host"
+            android:src="@drawable/clear" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/dedicated_host_name"
+        android:textColor="@color/hint_font_color"
+        android:textStyle="bold"
+        android:fontFamily="@font/inter_regular"
+        android:textSize="11sp" />
+
+    <EditText
+        android:id="@+id/etHostName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:autofillHints="none"
+        android:hint="@string/dedicated_host_name_hint"
+        android:imeOptions="actionNext"
+        android:inputType="textUri|textNoSuggestions"
+        android:maxLines="1"
+        android:background="@drawable/bg_main_bordered_container"
+        android:fontFamily="@font/mono_regular"
+        android:minHeight="36dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:textColor="@color/title_font_color"
+        android:textColorHint="@color/hint_font_color"
+        android:textSize="12sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/dedicated_host_ip"
+        android:textColor="@color/hint_font_color"
+        android:textStyle="bold"
+        android:fontFamily="@font/inter_regular"
+        android:textSize="11sp" />
+
+    <EditText
+        android:id="@+id/etHostIp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:autofillHints="none"
+        android:hint="@string/dedicated_host_ip_hint"
+        android:imeOptions="actionNext"
+        android:inputType="textUri|textNoSuggestions"
+        android:maxLines="1"
+        android:background="@drawable/bg_main_bordered_container"
+        android:fontFamily="@font/mono_regular"
+        android:minHeight="36dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:textColor="@color/title_font_color"
+        android:textColorHint="@color/hint_font_color"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/port_optional"
+                android:textColor="@color/hint_font_color"
+                android:textStyle="bold"
+                android:fontFamily="@font/inter_regular"
+                android:textSize="11sp" />
+
+            <EditText
+                android:id="@+id/etHostPort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:autofillHints="none"
+                android:hint="@string/port_hint"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:maxLength="5"
+                android:maxLines="1"
+                android:background="@drawable/bg_main_bordered_container"
+                android:fontFamily="@font/mono_regular"
+                android:minHeight="36dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:textColor="@color/title_font_color"
+                android:textColorHint="@color/hint_font_color"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/protocol"
+                android:textColor="@color/hint_font_color"
+                android:textStyle="bold"
+                android:fontFamily="@font/inter_regular"
+                android:textSize="11sp" />
+
+            <LinearLayout
+                android:id="@+id/btnHostProtocol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_main_bordered_container"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/tvHostProtocol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/loading"
+                    android:textColor="@color/title_font_color"
+                    android:fontFamily="@font/mono_regular"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

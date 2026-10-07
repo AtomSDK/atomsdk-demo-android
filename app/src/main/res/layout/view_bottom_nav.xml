@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The bottom nav lives in the fragment layouts rather than in activity_sample_main, so it is on
+  screen only while a fragment that includes it is. Included by fragment_home, fragment_locations,
+  fragment_more, fragment_logs and activity_connect (once, under all three connect screens); the parent must be a vertical LinearLayout, since this is a <merge>.
+
+  Each item is a single TextView with a compound drawable: setSelected() on it drives both the
+  label colour and the icon tint through @color/bottom_nav_item.
+-->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorDetailsContainer" />
+
+    <LinearLayout
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/card_background"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/navDashboard"
+            style="@style/BottomNavItem"
+            app:drawableTopCompat="@drawable/nav_dashboard"
+            android:text="@string/nav_dashboard" />
+
+        <TextView
+            android:id="@+id/navConnection"
+            style="@style/BottomNavItem"
+            app:drawableTopCompat="@drawable/nav_connection"
+            android:text="@string/nav_connection" />
+
+        <TextView
+            android:id="@+id/navLocations"
+            style="@style/BottomNavItem"
+            app:drawableTopCompat="@drawable/nav_locations"
+            android:text="@string/nav_locations" />
+
+        <TextView
+            android:id="@+id/navMore"
+            style="@style/BottomNavItem"
+            app:drawableTopCompat="@drawable/nav_more"
+            android:text="@string/nav_more" />
+
+    </LinearLayout>
+
+</merge>

@@ -6,74 +6,61 @@
 package com.atom.vpn.demo.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.fragment.app.Fragment;
 
-import com.atom.core.exceptions.AtomAPIException;
 import com.atom.core.exceptions.AtomException;
 import com.atom.core.exceptions.AtomValidationException;
-import com.atom.core.models.AtomConfiguration;
 import com.atom.core.models.City;
 import com.atom.core.models.Country;
 import com.atom.core.models.Protocol;
 import com.atom.sdk.android.AtomManager;
-import com.atom.sdk.android.ConnectionDetails;
-import com.atom.sdk.android.Errors;
-import com.atom.sdk.android.VPNCredentials;
 import com.atom.sdk.android.VPNProperties;
-import com.atom.sdk.android.VPNStateListener;
-import com.atom.sdk.android.common.Utils;
 import com.atom.sdk.android.data.callbacks.CollectionCallback;
-import com.atom.vpn.demo.AtomDemoApplicationController;
 import com.atom.vpn.demo.R;
-import com.atom.vpn.demo.activity.ConnectActivity;
-import com.atom.vpn.demo.adapter.CityAdapter;
-import com.atom.vpn.demo.adapter.CountryAdapter;
-import com.atom.vpn.demo.adapter.ProtocolAdapter;
-import com.atom.vpn.demo.common.Constants;
-import com.atom.vpn.demo.common.Utilities;
-import com.atom.vpn.demo.common.logger.Log;
-import com.tooltip.Tooltip;
-
+import com.atom.vpn.demo.common.CoachMarks;
+import com.atom.vpn.demo.common.DemoSettings;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static br.com.zbra.androidlinq.Linq.stream;
-import static com.atom.vpn.demo.common.Utilities.changeButtonState;
-import static com.atom.vpn.demo.common.Utilities.changeButtonText;
+/**
+ * Connect by location: pick up to three protocols and a country (optionally a city). The country
+ * list only offers countries that support every selected protocol, and the city list only offers
+ * cities of the selected country that do too.
+ */
+public class ConnectWithParamsFragment extends BaseConnectFragment {
 
+    /**
+     * Optional preselection, used by the Locations screen: the country code
+     * ({@link Country#getCountry()}), the protocol slug ({@link Protocol#getProtocol()}) to use as
+     * primary, and whether to dial straight away when the VPN is idle.
+     */
+    public static final String ARG_COUNTRY = "preselect_country";
+    /** Optional city name within {@link #ARG_COUNTRY}, e.g. from the recommended location. */
+    public static final String ARG_CITY = "preselect_city";
+    public static final String ARG_PROTOCOL = "preselect_protocol";
+    public static final String ARG_AUTO_CONNECT = "auto_connect";
 
-public class ConnectWithParamsFragment extends Fragment implements VPNStateListener {
+    /** Pending preselection; cleared once applied so a recreated screen does not redo it. */
+    @Nullable private String pendingCountry;
+    @Nullable private String pendingCity;
+    @Nullable private String pendingProtocol;
+    private boolean pendingAutoConnect;
 
-    private static final String TAG = "ConnectWithParamsFragment";
-    private AppCompatSpinner primaryProtocolSpinner, secondaryProtocolSpinner, tertiaryProtocolSpinner, countrySpinner,citySpinner;
-    private List<Protocol> protocolList;
-    private List<Country> countriesList;
-    private List<City> citiesList;
+    // Inventory from the SDK; null until the matching call returns.
+    @Nullable private List<Country> countries;
+    @Nullable private List<City> cities;
 
-    private List<Country> countriesForSmartDialing;
+    @Nullable private Country selectedCountry;
+    @Nullable private City selectedCity;
 
-    private Switch switchOptimizedConnection,switchSmartDialing;
-    private Button btnConnect, btnPause;
-
-    private String uuid,vpnUsername,vpnPassword;
-
-    private Protocol primaryProtocol = null;
-    private Protocol secondaryProtocol = null;
-    private Protocol tertiaryProtocol = null;
+    private View btnSelectCountry, btnSelectCity;
+    private TextView tvSelectedCountry, tvSelectedCity;
 
     public ConnectWithParamsFragment() {
         // Required empty public constructor
@@ -82,774 +69,330 @@ public class ConnectWithParamsFragment extends Fragment implements VPNStateListe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Bundle extras  = this.getArguments();
-        if(extras!=null) {
-
-            if (extras.containsKey("uuid")) {
-                uuid =  extras.getString("uuid");
-            }
-
-            if (extras.containsKey("vpnUsername")) {
-                vpnUsername =  extras.getString("vpnUsername");
-            }
-
-            if (extras.containsKey("vpnPassword")) {
-                vpnPassword =  extras.getString("vpnPassword");
-            }
+        Bundle args = getArguments();
+        if (args != null) {
+            pendingCountry = args.getString(ARG_COUNTRY);
+            pendingCity = args.getString(ARG_CITY);
+            pendingProtocol = args.getString(ARG_PROTOCOL);
+            pendingAutoConnect = args.getBoolean(ARG_AUTO_CONNECT, false);
+            // Consumed: the arguments are restored on recreation, the selection is not re-applied.
+            args.remove(ARG_COUNTRY);
+            args.remove(ARG_CITY);
+            args.remove(ARG_PROTOCOL);
+            args.remove(ARG_AUTO_CONNECT);
         }
-
-        AtomManager.addVPNStateListener(this);
-
-        if(getActivity()!=null)
-            new Handler().postDelayed(() -> AtomDemoApplicationController.getInstance().getAtomManager().bindIKEVStateService(getActivity()),500);
-
-
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_connect_with_params, container, false);
+    protected int layoutRes() {
+        return R.layout.fragment_connect_with_params;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected void onBindTarget(@NonNull View root) {
+        btnSelectCountry = root.findViewById(R.id.btnSelectCountry);
+        btnSelectCity = root.findViewById(R.id.btnSelectCity);
+        tvSelectedCountry = root.findViewById(R.id.tvSelectedCountry);
+        tvSelectedCity = root.findViewById(R.id.tvSelectedCity);
 
-        btnPause = view.findViewById(R.id.btnPause);
-        togglePauseBtn(false);
+        btnSelectCountry.setOnClickListener(v -> pickCountry());
+        btnSelectCity.setOnClickListener(v -> pickCity());
 
-        ImageView smartDialingHint =  view.findViewById(R.id.smartDialingHint);
-        Tooltip.Builder smartDialingHintTipBuilder = new Tooltip.Builder(smartDialingHint, R.style.TooltipStyle);
-        Tooltip smartCountriesHintTip = smartDialingHintTipBuilder.setText(Constants.TooltipSmartDialing).setDismissOnClick(true).build();
-        smartDialingHint.setOnClickListener(v -> {
+        CoachMarks.set(btnSelectCountry, R.string.coach_select_country);
+        CoachMarks.set(btnSelectCity, R.string.coach_select_city);
 
-            if (!smartCountriesHintTip.isShowing()) {
-                smartCountriesHintTip.show();
-                final Handler handler = new Handler();
-                handler.postDelayed(smartCountriesHintTip::dismiss, 3000);
-            } else {
-                smartCountriesHintTip.dismiss();
-            }
+        renderSelection();
+    }
 
-        });
+    @Override
+    protected void onUnbindTarget() {
+        btnSelectCountry = null;
+        btnSelectCity = null;
+        tvSelectedCountry = null;
+        tvSelectedCity = null;
+    }
 
+    @NonNull
+    @Override
+    protected View[] targetSelectors() {
+        return new View[]{btnSelectCountry, btnSelectCity};
+    }
 
-        ImageView optConnectionHint =  view.findViewById(R.id.optConnectionHint);
-        Tooltip.Builder optConnectionHintTipBuilder = new Tooltip.Builder(optConnectionHint, R.style.TooltipStyle);
-        Tooltip optConnectionHintTip = optConnectionHintTipBuilder.setText(Constants.TooltipOptimization).setDismissOnClick(true).build();
+    @NonNull
+    @Override
+    protected DemoSettings.Dialing dialing() {
+        return DemoSettings.Dialing.PARAMS;
+    }
 
-        optConnectionHint.setOnClickListener(v -> {
+    @Override
+    protected boolean supportsRecommendedProtocol() {
+        return true;
+    }
 
-            if (!optConnectionHintTip.isShowing()) {
-                optConnectionHintTip.show();
-                final Handler handler = new Handler();
-                handler.postDelayed(optConnectionHintTip::dismiss, 3000);
-            } else {
-                optConnectionHintTip.dismiss();
-            }
-
-        });
-
-        primaryProtocolSpinner = view.findViewById(R.id.primaryProtocolSpinner);
-        primaryProtocolSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
+    @Override
+    protected void onLoadInventory(@NonNull AtomManager atomManager) {
+        atomManager.getCountries(new CollectionCallback<Country>() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view,
-                                       int position, long id) {
-                // Here you get the current item (a User object) that is selected by its position
-                primaryProtocol = (Protocol) primaryProtocolSpinner.getAdapter().getItem(position);
-
-                if (secondaryProtocolSpinner.getSelectedItemPosition() > 0) {
-                    secondaryProtocol = (Protocol) secondaryProtocolSpinner.getAdapter().getItem(position);
-                }else{
-                    secondaryProtocol = null;
-                }
-
-                if (tertiaryProtocolSpinner.getSelectedItemPosition() > 0) {
-                    tertiaryProtocol = (Protocol) tertiaryProtocolSpinner.getAdapter().getItem(position);
-                }else{
-                    tertiaryProtocol = null;
-                }
-
-                if(switchSmartDialing.isChecked()){
-                    List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesForSmartDialing, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                    displayCountries(filteredCountry);
-                }else {
-                    List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                    displayCountries(filteredCountry);
-                }
-
-
-                if(countrySpinner.getSelectedItem()!=null){
-                    Country country  = (Country)countrySpinner.getSelectedItem();
-                    if(country!=null){
-                        List<City> filteredCities = getCitiesByAllSelectedProtocolByCountry(citiesList, primaryProtocol, secondaryProtocol, tertiaryProtocol,country);
-                        displayCities(filteredCities);
-
-                    }
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapter) {
-
-            }
-        });
-
-        secondaryProtocolSpinner =  view.findViewById(R.id.secondaryProtocolSpinner);
-        secondaryProtocolSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view,
-                                       int position, long id) {
-                // Here you get the current item (a Protocol object) that is selected by its position
-                if (position > 0) {
-                    Protocol primaryProtocol = (Protocol) primaryProtocolSpinner.getSelectedItem();
-
-                    if (secondaryProtocolSpinner.getSelectedItemPosition() > 0) {
-                        secondaryProtocol = (Protocol) secondaryProtocolSpinner.getAdapter().getItem(position);
-                    }else{
-                        secondaryProtocol = null;
-                    }
-
-                    if (tertiaryProtocolSpinner.getSelectedItemPosition() > 0) {
-                        tertiaryProtocol = (Protocol) tertiaryProtocolSpinner.getAdapter().getItem(position);
-                    }else{
-                        tertiaryProtocol = null;
-                    }
-
-                    if(switchSmartDialing.isChecked()){
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesForSmartDialing, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }else {
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }
-
-                }else{
-                    secondaryProtocol = null;
-
-                    if(switchSmartDialing.isChecked()){
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesForSmartDialing, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }else {
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }
-                }
-
-                if(countrySpinner.getSelectedItem()!=null){
-                    Country country  = (Country)countrySpinner.getSelectedItem();
-                    if(country!=null){
-                        List<City> filteredCities = getCitiesByAllSelectedProtocolByCountry(citiesList, primaryProtocol, secondaryProtocol, tertiaryProtocol,country);
-                        displayCities(filteredCities);
-
-                    }
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapter) {
-
-            }
-        });
-
-        tertiaryProtocolSpinner = view.findViewById(R.id.tertiaryProtocolSpinner);
-        tertiaryProtocolSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view,
-                                       int position, long id) {
-                if (position > 0) {
-
-                    Protocol primaryProtocol = (Protocol) primaryProtocolSpinner.getSelectedItem();
-
-                    if (secondaryProtocolSpinner.getSelectedItemPosition() > 0) {
-                        secondaryProtocol = (Protocol) secondaryProtocolSpinner.getAdapter().getItem(position);
-                    }else{
-                        secondaryProtocol = null;
-                    }
-
-                    if (tertiaryProtocolSpinner.getSelectedItemPosition() > 0) {
-                        tertiaryProtocol = (Protocol) tertiaryProtocolSpinner.getAdapter().getItem(position);
-                    }else{
-                        tertiaryProtocol = null;
-                    }
-
-                    if(switchSmartDialing.isChecked()){
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesForSmartDialing, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }else {
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }
-                }else{
-                    tertiaryProtocol = null;
-                    if(switchSmartDialing.isChecked()){
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesForSmartDialing, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }else {
-                        List<Country> filteredCountry = getCountriesByAllSelectedProtocol(countriesList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(filteredCountry);
-                    }
-                }
-
-                if(countrySpinner.getSelectedItem()!=null){
-                    Country country  = (Country)countrySpinner.getSelectedItem();
-                    if(country!=null){
-                        List<City> filteredCities = getCitiesByAllSelectedProtocolByCountry(citiesList, primaryProtocol, secondaryProtocol, tertiaryProtocol,country);
-                        displayCities(filteredCities);
-
-                    }
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapter) {
-
-            }
-        });
-
-        countrySpinner =  view.findViewById(R.id.countrySpinner);
-
-        citySpinner =  view.findViewById(R.id.citySpinner);
-
-        switchOptimizedConnection =  view.findViewById(R.id.switchOptConnection);
-        switchOptimizedConnection.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked){
-                switchSmartDialing.setChecked(false);
-                List<Country> countryList = getCountriesByAllSelectedProtocol(countriesList,primaryProtocol,secondaryProtocol,tertiaryProtocol);
-                displayCountries(countryList);
-            }
-
-        });
-
-        switchSmartDialing =  view.findViewById(R.id.switchSmartDialing);
-        switchSmartDialing.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked){
-                switchOptimizedConnection.setChecked(false);
-                AtomDemoApplicationController.getInstance().getAtomManager().getCountriesForSmartDialing(new CollectionCallback<Country>() {
-                    @Override
-                    public void onSuccess(List<Country> list) {
-                        if (list != null) {
-                            countriesForSmartDialing = list;
-                            List<Country> countryList = getCountriesByAllSelectedProtocol(countriesForSmartDialing,primaryProtocol,secondaryProtocol,tertiaryProtocol);
-                            displayCountries(countryList);
-                        }
-                    }
-
-                    @Override
-                    public void onError(AtomException exception) {
-
-                    }
-
-                    @Override
-                    public void onNetworkError(AtomException exception) {
-
-                    }
-                });
-
-            }else{
-                List<Country> countryList = getCountriesByAllSelectedProtocol(countriesList,primaryProtocol,secondaryProtocol,tertiaryProtocol);
-                displayCountries(countryList);
-            }
-
-        });
-
-
-        countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(countrySpinner.getSelectedItem()!=null){
-                    Country country  = (Country)countrySpinner.getSelectedItem();
-                    if(country!=null){
-                        List<City> filteredCities = getCitiesByAllSelectedProtocolByCountry(citiesList, primaryProtocol, secondaryProtocol, tertiaryProtocol,country);
-                        displayCities(filteredCities);
-
-                    }
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        btnPause.setOnClickListener(v -> {
-            String vpnStatus = AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(getActivity());
-            if (AtomManager.VPNStatus.PAUSED.equalsIgnoreCase(vpnStatus)) {
-                AtomDemoApplicationController.getInstance().getAtomManager().resume();
-            } else {
-                Utilities.getPauseTimerList(getActivity(), timer -> {
-                    AtomDemoApplicationController.getInstance().getAtomManager().pause(timer);
+            public void onSuccess(List<Country> list) {
+                mainHandler.post(() -> {
+                    countries = list;
+                    applyPreselection();
                 });
             }
-        });
 
-        btnConnect = view.findViewById(R.id.btnConnect);
-        btnConnect.setOnClickListener(v -> {
-
-            if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-
-                if (AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(getActivity()).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTED)) {
-                    AtomDemoApplicationController.getInstance().getAtomManager().disconnect(getActivity());
-
-                } else if (AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(getActivity()).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTING)) {
-                    AtomDemoApplicationController.getInstance().getAtomManager().cancel(getActivity());
-                } else {
-
-                    changeButtonText(getActivity(), btnConnect);
-
-                    // Put username and password here
-                    Protocol primaryProtocol = (Protocol) primaryProtocolSpinner.getSelectedItem();
-
-                    Country country = (Country) countrySpinner.getSelectedItem();
-
-                    City city = null;
-
-                    if(citySpinner.getSelectedItemPosition()>0) {
-                        city = (City) citySpinner.getSelectedItem();
-                    }
-
-                    if (primaryProtocol != null && (country!=null || city!=null)) {
-
-                        btnConnect.setText("Cancel");
-
-                        ConnectActivity connectActivity = (ConnectActivity)getActivity();
-                        if(connectActivity!=null)
-                        connectActivity.logWrapper.clear();
-
-                        // Dedicated Host here
-                        VPNProperties.Builder vpnPropertiesBuilder=null;
-                        try {
-
-                            if(city!=null){
-                                vpnPropertiesBuilder = new VPNProperties.Builder(city, primaryProtocol);
-                            }else if(country!=null) {
-                                vpnPropertiesBuilder = new VPNProperties.Builder(country, primaryProtocol);
-                            }
-
-                            if (secondaryProtocolSpinner.getSelectedItemPosition() >= 1) {
-                                Protocol secondaryProtocol = (Protocol) secondaryProtocolSpinner.getSelectedItem();
-                                vpnPropertiesBuilder.withSecondaryProtocol(secondaryProtocol);
-                            }
-
-                            if (tertiaryProtocolSpinner.getSelectedItemPosition() >= 1) {
-                                Protocol tertiaryProtocol = (Protocol) tertiaryProtocolSpinner.getSelectedItem();
-                                vpnPropertiesBuilder.withTertiaryProtocol(tertiaryProtocol);
-                            }
-
-
-                            if (switchOptimizedConnection.isChecked()) {
-                                vpnPropertiesBuilder.withOptimization();
-                            }
-
-                            if (switchSmartDialing.isChecked()) {
-                                vpnPropertiesBuilder.withSmartDialing();
-                            }
-
-                            vpnPropertiesBuilder.withAutomaticPort();
-
-                            vpnPropertiesBuilder.withManualPort(5500);
-
-                            if(!TextUtils.isEmpty(vpnUsername) && !TextUtils.isEmpty(vpnPassword)) {
-                                AtomDemoApplicationController.getInstance().getAtomManager().setVPNCredentials(new VPNCredentials(vpnUsername,vpnPassword));
-                            }else if(!TextUtils.isEmpty(uuid)){
-                                AtomDemoApplicationController.getInstance().getAtomManager().setUUID(uuid);
-                            }
-
-                            AtomDemoApplicationController.getInstance().getAtomManager().connect(getActivity(), vpnPropertiesBuilder.build());
-
-                        } catch (AtomValidationException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+            @Override
+            public void onError(AtomException atomException) {
+                logError(atomException);
+                mainHandler.post(() -> onInventoryFailed());
             }
 
+            @Override
+            public void onNetworkError(AtomException atomException) {
+                logError(atomException);
+                mainHandler.post(() -> onInventoryFailed());
+            }
         });
 
-        // get Protocols from ATOM SDK
-        if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-            AtomDemoApplicationController.getInstance().getAtomManager().getProtocols(new CollectionCallback<Protocol>() {
-
-                @Override
-                public void onSuccess(List<Protocol> protocols) {
-                    protocolList = protocols;
-
-                    if (protocolList != null) {
-
-                        Protocol[] protocolArray = protocolList.toArray(new Protocol[0]);
-
-                        if(getActivity()!=null) {
-                            ProtocolAdapter protocolAdapter = new ProtocolAdapter(getActivity(), android.R.layout.simple_spinner_item,
-                                    protocolArray);
-                            protocolAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            primaryProtocolSpinner.setAdapter(protocolAdapter);
-
-
-                            // Preparing Secondary Protocol
-                            ArrayList<Protocol> secondaryProtocol = new ArrayList<>();
-                            Protocol dummySecondaryProtocol = new Protocol();
-                            dummySecondaryProtocol.setName("Secondary Protocol");
-                            secondaryProtocol.add(dummySecondaryProtocol);
-                            secondaryProtocol.addAll(protocolList);
-
-                            Protocol[] secondaryProtocolArray = secondaryProtocol.toArray(new Protocol[secondaryProtocol.size()]);
-                            ProtocolAdapter secondaryProtocolAdapter = new ProtocolAdapter(getActivity(), android.R.layout.simple_spinner_item,
-                                    secondaryProtocolArray);
-                            secondaryProtocolAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            secondaryProtocolSpinner.setAdapter(secondaryProtocolAdapter);
-
-
-                            // Preparing Secondary Protocol
-                            ArrayList<Protocol> tertiaryProtocol = new ArrayList<>();
-                            Protocol dummyTertiaryProtocol = new Protocol();
-                            dummyTertiaryProtocol.setName("Tertiary Protocol");
-                            tertiaryProtocol.add(dummyTertiaryProtocol);
-                            tertiaryProtocol.addAll(protocolList);
-
-                            Protocol[] tertiaryProtocolArray = tertiaryProtocol.toArray(new Protocol[tertiaryProtocol.size()]);
-                            ProtocolAdapter tertiaryProtocolAdapter = new ProtocolAdapter(getActivity(), android.R.layout.simple_spinner_item,
-                                    tertiaryProtocolArray);
-                            tertiaryProtocolAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            tertiaryProtocolSpinner.setAdapter(tertiaryProtocolAdapter);
-                        }
-
-                    }
-                }
-
-
-                @Override
-                public void onError(AtomException atomException) {
-                    Log.e(TAG, atomException.getMessage() + " : " + atomException.getCode());
-
-
-
-                }
-
-                @Override
-                public void onNetworkError(AtomException atomException) {
-                    Log.e(TAG, atomException.getMessage() + " : " + atomException.getCode());
-
-                }
-            });
-        }
-
-        // get Countries from ATOM SDK
-        if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-            AtomDemoApplicationController.getInstance().getAtomManager().getCountries(new CollectionCallback<Country>() {
-                @Override
-                public void onSuccess(List<Country> countries) {
-
-                    if(countries!=null) {
-                        countriesList = countries;
-
-                        List<Country> countryList = getCountriesByAllSelectedProtocol(countriesList, primaryProtocol, secondaryProtocol, tertiaryProtocol);
-                        displayCountries(countryList);
-
-                    }
-                }
-
-                @Override
-                public void onError(AtomException atomException) {
-                    Log.e(TAG, atomException.getMessage() + " : " + atomException.getCode());
-
-                }
-
-                @Override
-                public void onNetworkError(AtomException atomException) {
-                    Log.e(TAG, atomException.getMessage() + " : " + atomException.getCode());
-
-                }
-
-            });
-
-        }
-
-        // get Cities from ATOM SDK
-        if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-            AtomDemoApplicationController.getInstance().getAtomManager().getCities(new CollectionCallback<City>() {
-                @Override
-                public void onSuccess(List<City> cities) {
-
-                    if(cities!=null) {
-                        citiesList = cities;
-                    }
-                }
-
-                @Override
-                public void onError(AtomException atomException) {
-                    Log.d(TAG, atomException.getMessage() + " : " + atomException.getCode());
-
-                }
-
-                @Override
-                public void onNetworkError(AtomException atomException) {
-                    Log.d(TAG, atomException.getMessage() + " : " + atomException.getCode());
-
-                }
-
-            });
-
-        }
-
-
-        if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-            if (AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(getActivity()).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTED)) {
-                changeButtonState(btnConnect, "Disconnect");
+        atomManager.getCities(new CollectionCallback<City>() {
+            @Override
+            public void onSuccess(List<City> list) {
+                mainHandler.post(() -> cities = list);
             }
-        }
 
+            @Override
+            public void onError(AtomException atomException) {
+                logError(atomException);
+            }
+
+            @Override
+            public void onNetworkError(AtomException atomException) {
+                logError(atomException);
+            }
+        });
     }
 
-    private List<Country> getCountriesByAllSelectedProtocol(List<Country> countries, Protocol primaryProtocol, Protocol secondaryProtocol, Protocol tertiaryProtocol) {
+    /** A protocol change can leave the chosen country or city unable to dial it; drop those. */
+    @Override
+    protected void onProtocolsChanged() {
+        if (selectedCountry != null && !supportsSelectedProtocols(selectedCountry.getProtocols())) {
+            selectedCountry = null;
+            selectedCity = null;
+        }
+        if (selectedCity != null && !supportsSelectedProtocols(selectedCity.getProtocols())) {
+            selectedCity = null;
+        }
+        renderSelection();
+        applyPreselection();
+    }
 
+    /**
+     * Without protocols or countries the Locations screen's choice can never be applied; say so
+     * rather than leaving the user on an empty screen wondering why nothing dialled.
+     */
+    @Override
+    protected void onInventoryFailed() {
+        if (pendingCountry == null || !isAdded()) {
+            return;
+        }
+        pendingCountry = null;
+        pendingProtocol = null;
+        pendingAutoConnect = false;
+        toast(R.string.preselection_inventory_failed);
+    }
+
+    /**
+     * Applies the Locations screen's choice once both protocols and countries are in, then
+     * behaves exactly as if the user had picked them and tapped Connect.
+     */
+    private void applyPreselection() {
+        if (pendingCountry == null || protocols == null || countries == null
+                || tvSelectedCountry == null) {
+            return;
+        }
+        String countryCode = pendingCountry;
+        String cityName = pendingCity;
+        pendingCountry = null;
+        pendingCity = null;
+
+        if (pendingProtocol != null) {
+            boolean found = false;
+            for (Protocol protocol : protocols) {
+                if (pendingProtocol.equalsIgnoreCase(protocol.getProtocol())) {
+                    primaryProtocol = protocol;
+                    useRecommendedProtocol = false;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found && primaryProtocol != null) {
+                // Keeps the default protocol, but tells the user it is not the recommended one.
+                Toast.makeText(getActivity(), getString(R.string.preselection_protocol_unavailable,
+                        pendingProtocol, primaryProtocol.getName()), Toast.LENGTH_LONG).show();
+            }
+            pendingProtocol = null;
+            renderProtocols();
+        }
+
+        Country match = null;
+        for (Country country : countries) {
+            if (countryCode.equalsIgnoreCase(country.getCountry())) {
+                match = country;
+                break;
+            }
+        }
+        selectedCountry = match != null && supportsSelectedProtocols(match.getProtocols()) ? match : null;
+        selectedCity = null;
+        if (selectedCountry != null && cityName != null) {
+            // Unknown or unsupported city: dial the country, as "Any city" would.
+            for (City city : availableCities(selectedCountry)) {
+                if (cityName.equalsIgnoreCase(city.getName())) {
+                    selectedCity = city;
+                    break;
+                }
+            }
+        }
+        renderSelection();
+
+        if (selectedCountry == null) {
+            pendingAutoConnect = false;
+            toast(match == null ? R.string.preselection_country_unavailable
+                    : R.string.no_countries_for_protocols);
+            return;
+        }
+        // Over a live tunnel this would be a Connection over Connection; leave that to the user.
+        if (pendingAutoConnect && isVpnIdle()) {
+            connectWithSelection();
+        }
+        pendingAutoConnect = false;
+    }
+
+    @Nullable
+    @Override
+    protected VPNProperties.Builder newPropertiesBuilder() throws AtomValidationException {
+        if (selectedCountry == null) {
+            toast(R.string.select_protocol_and_country);
+            return null;
+        }
+        Protocol primary = selectedCity != null
+                ? primaryFor(selectedCity.getRecommendedProtocol(), selectedCity.getProtocols())
+                : primaryFor(selectedCountry.getRecommendedProtocol(), selectedCountry.getProtocols());
+        if (primary == null) {
+            toast(R.string.select_protocol_and_country);
+            return null;
+        }
+
+        VPNProperties.Builder builder = selectedCity != null
+                ? new VPNProperties.Builder(selectedCity, primary)
+                : new VPNProperties.Builder(selectedCountry, primary);
+
+        if (secondaryProtocol != null) {
+            builder.withSecondaryProtocol(secondaryProtocol);
+        }
+        if (tertiaryProtocol != null) {
+            builder.withTertiaryProtocol(tertiaryProtocol);
+        }
+
+        // Port (multiport) and the server filter come from
+        // DemoSettings, applied by BaseConnectFragment.dial().
+        return builder;
+    }
+
+    @NonNull
+    @Override
+    protected String targetDescription() {
+        if (selectedCountry == null) {
+            return getString(R.string.not_available);
+        }
+        return selectedCity != null
+                ? selectedCity.getName() + ", " + selectedCountry.getName()
+                : selectedCountry.getName();
+    }
+
+    // region Pickers
+
+    @NonNull
+    private List<Country> availableCountries() {
+        List<Country> available = new ArrayList<>();
         if (countries != null) {
-
-                if (primaryProtocol != null && secondaryProtocol != null && tertiaryProtocol != null) {
-
-                    List<Protocol> protocolList = new ArrayList<>();
-                    protocolList.add(primaryProtocol);
-                    protocolList.add(secondaryProtocol);
-                    protocolList.add(tertiaryProtocol);
-                    return stream(countries)
-                                    .where(c ->c.getProtocols()!=null && c.getProtocols().containsAll(protocolList)).toList();
-
-                } else if (primaryProtocol != null && secondaryProtocol != null) {
-
-
-                    List<Protocol> protocolList = new ArrayList<>();
-                    protocolList.add(primaryProtocol);
-                    protocolList.add(secondaryProtocol);
-                    return stream(countries)
-                            .where(c -> c.getProtocols()!=null && c.getProtocols().containsAll(protocolList)).toList();
-
-                }else if (primaryProtocol != null && tertiaryProtocol != null) {
-
-
-                    List<Protocol> protocolList = new ArrayList<>();
-                    protocolList.add(primaryProtocol);
-                    protocolList.add(tertiaryProtocol);
-                    return stream(countries)
-                            .where(c -> c.getProtocols()!=null && c.getProtocols().containsAll(protocolList)).toList();
-
-                } else if (primaryProtocol != null) {
-
-                    return stream(countries)
-                            .where(c ->c.getProtocols()!=null && c.getProtocols().contains(primaryProtocol)).toList();
-
+            for (Country country : countries) {
+                if (supportsSelectedProtocols(country.getProtocols())) {
+                    available.add(country);
                 }
+            }
         }
-
-        return null;
+        return available;
     }
 
-
-    private List<City> getCitiesByAllSelectedProtocolByCountry(List<City> cities, Protocol primaryProtocol, Protocol secondaryProtocol, Protocol tertiaryProtocol,Country country) {
-
+    @NonNull
+    private List<City> availableCities(@NonNull Country country) {
+        List<City> available = new ArrayList<>();
         if (cities != null) {
-
-            if (primaryProtocol != null && secondaryProtocol != null && tertiaryProtocol != null) {
-
-                List<Protocol> protocolList = new ArrayList<>();
-                protocolList.add(primaryProtocol);
-                protocolList.add(secondaryProtocol);
-                protocolList.add(tertiaryProtocol);
-                return stream(cities)
-                        .where(c -> c.getProtocols() != null && c.getProtocols().containsAll(protocolList) && c.getCountry().equalsIgnoreCase(country.getCountry())).toList();
-
-            } else if (primaryProtocol != null && secondaryProtocol != null) {
-
-
-                List<Protocol> protocolList = new ArrayList<>();
-                protocolList.add(primaryProtocol);
-                protocolList.add(secondaryProtocol);
-                return stream(cities)
-                        .where(c -> c.getProtocols() != null && c.getProtocols().containsAll(protocolList) && c.getCountry().equalsIgnoreCase(country.getCountry())).toList();
-
-            } else if (primaryProtocol != null && tertiaryProtocol != null) {
-
-
-                List<Protocol> protocolList = new ArrayList<>();
-                protocolList.add(primaryProtocol);
-                protocolList.add(tertiaryProtocol);
-                return stream(cities)
-                        .where(c -> c.getProtocols() != null && c.getProtocols().containsAll(protocolList)  && c.getCountry().equalsIgnoreCase(country.getCountry())).toList();
-
-            } else if (primaryProtocol != null) {
-
-                return stream(cities)
-                        .where(c -> c.getProtocols() != null && c.getProtocols().contains(primaryProtocol)  && c.getCountry().equalsIgnoreCase(country.getCountry())).toList();
-
+            for (City city : cities) {
+                if (country.getCountry().equalsIgnoreCase(city.getCountry())
+                        && supportsSelectedProtocols(city.getProtocols())) {
+                    available.add(city);
+                }
             }
         }
-
-        return null;
+        return available;
     }
 
-
-    private void displayCountries(List<Country> countries) {
-        if (countries != null) {
-            Country[] countryArray = countries.toArray(new Country[0]);
-            if(getActivity()!=null) {
-                CountryAdapter countryAdapter = new CountryAdapter(getActivity(), android.R.layout.simple_spinner_item,
-                        countryArray);
-                countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                countrySpinner.setAdapter(countryAdapter);
-                countryAdapter.notifyDataSetChanged();
-            }
+    private void pickCountry() {
+        if (countries == null) {
+            toast(R.string.loading);
+            return;
         }
-    }
-
-
-    private void displayCities(List<City> cities) {
-        if (cities != null) {
-            City dummyCity = new City();
-            dummyCity.setName("Select City");
-            dummyCity.setId(0);
-            cities.add(0,dummyCity);
-            City[] cityArray = cities.toArray(new City[0]);
-            if (getActivity() != null) {
-                CityAdapter cityAdapter = new CityAdapter(getActivity(), android.R.layout.simple_spinner_item,
-                        cityArray);
-                cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                citySpinner.setAdapter(cityAdapter);
-                cityAdapter.notifyDataSetChanged();
-            }
+        List<Country> available = availableCountries();
+        if (available.isEmpty()) {
+            toast(R.string.no_countries_for_protocols);
+            return;
         }
-    }
-
-    private void togglePauseBtn(boolean enable) {
-        requireActivity().runOnUiThread(() -> btnPause.setEnabled(enable));
-    }
-
-    @Override
-    public void onConnected() {
-
-    }
-
-    @Override
-    public void onConnected(ConnectionDetails connectionDetails) {
-        Log.d(TAG,   "Connected");
-        changeButtonState(btnConnect, "Disconnect");
-
-
-        Utils.INSTANCE.objectToString(connectionDetails, result -> {
-            Log.e("connection", result);
-           return null;
+        String[] names = new String[available.size()];
+        for (int i = 0; i < available.size(); i++) {
+            names[i] = available.get(i).getName();
+        }
+        showPicker(R.string.lbl_select_country, names, which -> {
+            Country country = available.get(which);
+            if (selectedCountry == null
+                    || !selectedCountry.getCountry().equalsIgnoreCase(country.getCountry())) {
+                selectedCity = null;
+            }
+            selectedCountry = country;
+            renderSelection();
         });
     }
 
-    @Override
-    public void onConnecting() {
-
-    }
-
-    @Override
-    public void onConnecting(VPNProperties vpnProperties, AtomConfiguration atomConfiguration) {
-
-    }
-
-
-    @Override
-    public void onRedialing(AtomException atomException, ConnectionDetails connectionDetails) {
-        Log.d(TAG, atomException.getMessage());
-    }
-
-    @Override
-    public void onDialError(AtomException atomException, ConnectionDetails connectionDetails) {
-
-        if(!AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(getActivity()).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTED)) {
-            Log.d(TAG, atomException.getMessage());
-            if (atomException.getCode() != Errors._5039)
-                changeButtonState(btnConnect, "Connect");
+    /** The city is optional: "Any city" dials the country itself. */
+    private void pickCity() {
+        if (selectedCountry == null) {
+            toast(R.string.select_country_first);
+            return;
         }
-
-
-        Log.d(TAG, atomException.getCode() +"");
-        Log.d(TAG, atomException.getMessage());
-
-        if (atomException.getException() instanceof AtomAPIException) {
-            AtomAPIException atomAPIException = (AtomAPIException) atomException.getException();
-            Log.d(TAG, atomAPIException.getErrorMessage()  + " - " +atomAPIException.getCode());
+        if (cities == null) {
+            toast(R.string.loading);
+            return;
         }
-    }
-
-
-    @Override
-    public void onStateChange(String state) {
-
-        Log.e(TAG,  state );
-        if (state.equalsIgnoreCase(AtomManager.VPNStatus.CONNECTING) || state.equalsIgnoreCase(VPNState.RECONNECTING)) {
-            changeButtonState(btnConnect, "Cancel");
+        List<City> available = availableCities(selectedCountry);
+        String[] names = new String[available.size() + 1];
+        names[0] = getString(R.string.any_city);
+        for (int i = 0; i < available.size(); i++) {
+            names[i + 1] = available.get(i).getName();
         }
+        showPicker(R.string.lbl_select_city, names, which -> {
+            selectedCity = which == 0 ? null : available.get(which - 1);
+            renderSelection();
+        });
+    }
 
-        if (AtomManager.VPNStatus.CONNECTED.equalsIgnoreCase(state)) {
-            changeButtonState(btnPause, "Pause");
-            togglePauseBtn(true);
-        } else  if (AtomManager.VPNStatus.PAUSED.equalsIgnoreCase(state)) {
-            changeButtonState(btnPause, "Resume");
-            togglePauseBtn(true);
-        } else {
-            changeButtonState(btnPause, "Pause");
-            togglePauseBtn(false);
+    private void renderSelection() {
+        if (tvSelectedCountry == null) {
+            return;
         }
+        tvSelectedCountry.setText(selectedCountry == null
+                ? getString(R.string.lbl_select_country) : selectedCountry.getName());
+        tvSelectedCity.setText(selectedCity == null
+                ? getString(R.string.any_city) : selectedCity.getName());
     }
 
-    @Override
-    public void onPaused(AtomException e, ConnectionDetails connectionDetails) {
-
-    }
-
-    @Override
-    public void onDisconnecting(ConnectionDetails connectionDetails) {
-
-    }
-
-
-    @Override
-    public void onDisconnected(boolean isCancelled) {
-
-    }
-
-    @Override
-    public void onDisconnected(ConnectionDetails connectionDetails) {
-        if (connectionDetails.isCancelled()) {
-            Log.d(TAG,   "Cancelled");
-        } else {
-            Log.d(TAG,   "Disconnected");
-        }
-
-        changeButtonState(btnConnect, "Connect");
-    }
-
-    @Override
-    public void onUnableToAccessInternet(AtomException atomException, ConnectionDetails connectionDetails) {
-
-    }
-
-    @Override
-    public void onPacketsTransmitted(String s, String s1, String s2, String s3) {
-
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        AtomManager.removeVPNStateListener(this);
-        if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-
-            AtomDemoApplicationController.getInstance().getAtomManager().unBindIKEVStateService(getActivity());
-        }
-    }
-
+    // endregion
 }

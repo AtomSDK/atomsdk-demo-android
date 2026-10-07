@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Header for the screens pushed from More (Connection Features, Split Tunneling): back arrow, a
+  centred title and the theme toggle. The fragment sets tvTitle and wires btnBack to pop the back stack.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background"
+    android:elevation="10dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp">
+
+    <FrameLayout
+        android:id="@+id/btnBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="start|center_vertical"
+        android:layout_marginStart="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="@string/back">
+
+        <!-- forward_arrow mirrored, as on the Logs screen. -->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:rotation="180"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:src="@drawable/forward_arrow"
+            tools:ignore="ContentDescription" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="56dp"
+        android:layout_marginEnd="56dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/hanken_grotesk_regular"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="@color/buttonColor"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <include layout="@layout/view_theme_toggle" />
+
+</FrameLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Light / dark switch on the right of every top bar. Include it in the header's FrameLayout;
+  ThemeToggle binds it (icon, label, click) for every fragment view, so nothing else is needed.
+  40dp touch target with padding, matching the SDK Logs icon on the left.
+-->
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/btnThemeToggle"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:layout_gravity="end|center_vertical"
+    android:layout_marginEnd="8dp"
+    android:padding="8dp"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:clickable="true"
+    android:focusable="true"
+    android:src="@drawable/moon"
+    android:contentDescription="@string/switch_to_dark_theme" />

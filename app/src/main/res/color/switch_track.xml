@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Track colour for the settings switches. SwitchCompat applies its own alpha to the track, so
+  these are the same tokens as the thumb rather than pre-faded shades.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/buttonColor" android:state_checked="true" />
+    <item android:color="@color/borderColor" />
+</selector>

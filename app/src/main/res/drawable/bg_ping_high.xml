@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ping quality dot: darkest green = best latency. See bg_ping_mid / bg_ping_low. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="@color/ping_high" />
+
+</shape>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Shared spacing for the screens pushed from More, so every card and row lines up. -->
+<resources>
+    <!-- Side gutter between the screen edge and its cards. -->
+    <dimen name="screen_gutter">16dp</dimen>
+    <!-- Space left below the last card. -->
+    <dimen name="screen_bottom_space">24dp</dimen>
+
+    <!-- Inset of a row's content inside a card, and the row's minimum height. -->
+    <dimen name="card_row_padding_horizontal">16dp</dimen>
+    <dimen name="card_row_padding_vertical">12dp</dimen>
+    <dimen name="card_row_min_height">64dp</dimen>
+
+    <!-- Title to summary, and summary to the SDK call line, inside a row. -->
+    <dimen name="row_text_gap">2dp</dimen>
+    <dimen name="row_call_gap">4dp</dimen>
+    <!-- Text to the input or controls below it. -->
+    <dimen name="row_control_gap">8dp</dimen>
+</resources>

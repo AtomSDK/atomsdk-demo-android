@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One installed app on the Split Tunneling screen. The whole row toggles the checkbox. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="56dp"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/card_row_padding_horizontal"
+    android:paddingTop="8dp"
+    android:paddingEnd="@dimen/card_row_padding_horizontal"
+    android:paddingBottom="8dp">
+
+    <ImageView
+        android:id="@+id/ivAppIcon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="12dp"
+        android:importantForAccessibility="no"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="8dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvAppName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/inter_regular"
+            android:maxLines="1"
+            android:textColor="@color/title_font_color"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="Chrome" />
+
+        <TextView
+            android:id="@+id/tvAppPackage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="middle"
+            android:fontFamily="@font/mono_regular"
+            android:maxLines="1"
+            android:textColor="@color/hint_font_color"
+            android:textSize="11sp"
+            tools:text="com.android.chrome" />
+
+    </LinearLayout>
+
+    <!-- Not focusable or clickable: the ListView row handles the tap and flips this. -->
+    <CheckBox
+        android:id="@+id/cbApp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:focusable="false"
+        android:importantForAccessibility="no" />
+
+</LinearLayout>

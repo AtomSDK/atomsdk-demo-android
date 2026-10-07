@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Dark-mode overrides for the tokens fragment_main uses. Only tokens consumed by
+      the revamped screen are listed here; colours such as colorPrimaryWhite stay
+      literal white because other (not yet revamped) screens still rely on that.
+    -->
+
+    <color name="background">#111318</color>
+    <color name="secondary_font_color">#C3C6CF</color>
+
+    <color name="background_container">#1D2024</color>
+    <color name="background_container_secondary">#3E4759</color>
+
+    <color name="font_color">#E2E2E9</color>
+
+    <color name="not_background_container">#93000A</color>
+    <color name="red_circle">#FFB4AB</color>
+
+    <color name="colorDetailsContainer">#2B3038</color>
+
+    <color name="buttonColor">#A9C7FF</color>
+
+    <color name="borderColor">#43474E</color>
+    <color name="secondaryBackgroundColor">#32363E</color>
+
+    <color name="title_font_color">#E2E2E9</color>
+    <color name="hint_font_color">#9A9EA6</color>
+    <color name="card_background">#1D2024</color>
+    <color name="button_text_color">#00315F</color>
+
+    <color name="not_font_color">#FFDAD6</color>
+
+    <color name="ready_background_container">#005321</color>
+    <color name="ready_font_color">#A2F2AE</color>
+    <color name="green_circle">#7CDB8A</color>
+
+    <!-- Same scale for dark mode: bright green = good, amber = poor. -->
+    <color name="ping_high">#7CDB8A</color>
+    <color name="ping_mid">#4FA463</color>
+    <color name="ping_low">#FBBF24</color>
+
+</resources>
