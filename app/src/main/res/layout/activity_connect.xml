@@ -1,29 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  The connect screens draw their own header and send their logs to LogStore (the SDK Logs screen),
+  so the activity only adds the bottom nav under them. ConnectActivity wires the nav.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/sample_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:theme="@style/AppTheme"
-            app:title="@string/app_name" />
+    <FrameLayout
+        android:id="@+id/connect_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-        <FrameLayout
-            android:id="@+id/connect_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
-
-        <include
-            layout="@layout/fragment_logging"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            />
+    <include layout="@layout/view_bottom_nav" />
 
 </LinearLayout>

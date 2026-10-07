@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Drives both the icon tint and the label colour of a bottom nav item. The item container is a
+  ViewGroup, so setSelected() on it dispatches down to the icon and label automatically.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/buttonColor" android:state_selected="true" />
+    <item android:color="@color/hint_font_color" />
+</selector>

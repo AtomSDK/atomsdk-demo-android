@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- View tags used by common.CoachMarks. -->
+    <item name="coach_mark_text" type="id" />
+    <item name="coach_mark_a11y" type="id" />
+</resources>

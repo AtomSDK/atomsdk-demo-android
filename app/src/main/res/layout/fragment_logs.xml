@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Header, actions and filters are fixed; only the console (lvLogs) scrolls. Do not wrap this in a
+  ScrollView - a ListView inside one is measured at a single row and stops scrolling on its own.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:elevation="10dp"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <FrameLayout
+                android:id="@+id/btnBack"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/back">
+
+                <!-- forward_arrow mirrored, rather than a second copy of the same path. -->
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    android:rotation="180"
+                    android:src="@drawable/forward_arrow"
+                    tools:ignore="ContentDescription" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="56dp"
+                android:layout_marginEnd="56dp"
+                android:fontFamily="@font/hanken_grotesk_regular"
+                android:gravity="center"
+                android:text="@string/sdk_logs_title"
+                android:textColor="@color/buttonColor"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <include layout="@layout/view_theme_toggle" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/btnClear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:background="@drawable/bg_info_container_touch"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/delete"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:text="@string/clear"
+                    android:textColor="@color/title_font_color"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnPause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_info_container_touch"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/pause"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/tvPause"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:text="@string/pause"
+                    android:textColor="@color/title_font_color"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:id="@+id/btnCopy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_button_container_touch"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/copy"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:text="@string/copy"
+                    android:textColor="@color/button_text_color"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:clipToPadding="false"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp"
+            android:scrollbars="none">
+
+            <RadioGroup
+                android:id="@+id/rgLogFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkedButton="@+id/rbLogAll"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbLogAll"
+                    style="@style/LogFilterChip"
+                    android:text="@string/log_filter_all" />
+
+                <RadioButton
+                    android:id="@+id/rbLogInfo"
+                    style="@style/LogFilterChip"
+                    android:text="@string/log_filter_info" />
+
+                <RadioButton
+                    android:id="@+id/rbLogSuccess"
+                    style="@style/LogFilterChip"
+                    android:text="@string/log_filter_success" />
+
+                <RadioButton
+                    android:id="@+id/rbLogWarning"
+                    style="@style/LogFilterChip"
+                    android:text="@string/log_filter_warning" />
+
+                <RadioButton
+                    android:id="@+id/rbLogError"
+                    style="@style/LogFilterChip"
+                    android:text="@string/log_filter_error" />
+
+            </RadioGroup>
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/terminalLogsBackground">
+
+        <!-- transcriptMode="normal" follows new lines only while already scrolled to the bottom. -->
+        <ListView
+            android:id="@+id/lvLogs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="4dp"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
+            android:scrollbarStyle="outsideOverlay"
+            android:transcriptMode="normal" />
+
+        <TextView
+            android:id="@+id/tvEmptyLogs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/mono_regular"
+            android:text="@string/no_logs"
+            android:textColor="@color/log_time"
+            android:textSize="13sp" />
+
+    </FrameLayout>
+
+    <include layout="@layout/view_bottom_nav" />
+
+</LinearLayout>

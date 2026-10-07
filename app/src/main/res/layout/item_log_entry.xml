@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One console line: level bar | time | level | message. Colours are set per level in LogEntryAdapter. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <View
+        android:id="@+id/vLevelBar"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        tools:background="@color/log_info" />
+
+    <TextView
+        android:id="@+id/tvLogTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:fontFamily="@font/mono_regular"
+        android:textColor="@color/log_time"
+        android:textSize="12sp"
+        tools:text="14:32:01" />
+
+    <TextView
+        android:id="@+id/tvLogLevel"
+        android:layout_width="64sp"
+        android:maxLines="1"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:fontFamily="@font/mono_regular"
+        android:textSize="12sp"
+        tools:text="INFO"
+        tools:textColor="@color/log_text" />
+
+    <TextView
+        android:id="@+id/tvLogMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="8dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:fontFamily="@font/mono_regular"
+        android:textSize="12sp"
+        tools:text="SDK initialized successfully. Configuration loaded."
+        tools:textColor="@color/log_text" />
+
+</LinearLayout>

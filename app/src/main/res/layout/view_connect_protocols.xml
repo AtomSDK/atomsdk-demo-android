@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Primary / secondary / tertiary protocol chips, bound by BaseConnectFragment. -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <!-- First column -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:maxLines="1"
+                app:autoSizeMaxTextSize="11sp"
+                app:autoSizeMinTextSize="8sp"
+                app:autoSizeTextType="uniform"
+                android:text="@string/lbl_primary_protocol"
+                android:textColor="@color/hint_font_color"
+                android:textStyle="bold"
+                android:fontFamily="@font/inter_regular"
+                android:textSize="11sp" />
+
+            <LinearLayout
+                android:id="@+id/btnSelectPrimaryProtocol"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_main_bordered_container"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/tvPrimaryProtocol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/not_available"
+                    android:layout_margin="8dp"
+                    android:textColor="@color/title_font_color"
+                    android:fontFamily="@font/mono_regular"
+                    android:textSize="12sp"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Second column -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:maxLines="1"
+                app:autoSizeMaxTextSize="11sp"
+                app:autoSizeMinTextSize="8sp"
+                app:autoSizeTextType="uniform"
+                android:text="@string/lbl_secondary_protocol"
+                android:textColor="@color/hint_font_color"
+                android:textStyle="bold"
+                android:fontFamily="@font/inter_regular"
+                android:textSize="11sp" />
+
+            <LinearLayout
+                android:id="@+id/btnSelectSecondaryProtocol"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_main_bordered_container"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/tvSecondaryProtocol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/none"
+                    android:layout_margin="8dp"
+                    android:textColor="@color/title_font_color"
+                    android:fontFamily="@font/mono_regular"
+                    android:textSize="12sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:maxLines="1"
+                app:autoSizeMaxTextSize="11sp"
+                app:autoSizeMinTextSize="8sp"
+                app:autoSizeTextType="uniform"
+                android:text="@string/lbl_tertiary_protocol"
+                android:textColor="@color/hint_font_color"
+                android:textStyle="bold"
+                android:fontFamily="@font/inter_regular"
+                android:textSize="11sp" />
+
+            <LinearLayout
+                android:id="@+id/btnSelectTertiaryProtocol"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_main_bordered_container"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/tvTertiaryProtocol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/none"
+                    android:layout_margin="8dp"
+                    android:textColor="@color/title_font_color"
+                    android:fontFamily="@font/mono_regular"
+                    android:textSize="12sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</merge>

@@ -7,9 +7,18 @@ package com.atom.vpn.demo.common.base;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import com.atom.vpn.demo.common.CoachMarks;
+import com.atom.vpn.demo.common.ThemeToggle;
 
 
 /**
@@ -23,7 +32,18 @@ public class BaseSampleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setupHomeButton();
+    setupHomeButton();
+
+        // Every screen's top bar carries the theme toggle, so it is bound here once for all of them.
+        getSupportFragmentManager().registerFragmentLifecycleCallbacks(
+                new FragmentManager.FragmentLifecycleCallbacks() {
+                    @Override
+                    public void onFragmentViewCreated(@NonNull FragmentManager fm,
+                                                      @NonNull Fragment f, @NonNull View v,
+                                                      @Nullable Bundle savedInstanceState) {
+                        ThemeToggle.bind(v);
+                    }
+                }, true);
     }
 
     protected void setupHomeButton() {
@@ -46,13 +66,35 @@ public class BaseSampleActivity extends AppCompatActivity {
 
 
     protected void onMenuHomePressed() {
-        onBackPressed();
+        getOnBackPressedDispatcher().onBackPressed();
     }
 
 
     @Override
     protected  void onStart() {
         super.onStart();
+    }
+
+    @Nullable
+    private CoachMarks.Detector coachMarkDetector;
+
+    /** Every touch passes the coach mark detector first; see {@link CoachMarks}. */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (coachMarkDetector == null) {
+            coachMarkDetector = new CoachMarks.Detector(getWindow().getDecorView(),
+                    super::dispatchTouchEvent);
+        }
+        return coachMarkDetector.onTouch(event) || super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    protected void onPause() {
+        if (coachMarkDetector != null) {
+            coachMarkDetector.release();
+        }
+        CoachMarks.dismiss();
+        super.onPause();
     }
 
     /** Set up targets to receive log data */

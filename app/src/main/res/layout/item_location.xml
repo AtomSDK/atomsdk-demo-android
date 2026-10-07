@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One row of the available-servers list: the country card, plus its cities (item_city_location.xml)
+  underneath while a tap on the card has it expanded. The card mirrors the recommended-location card in
+  fragment_locations.xml, so keep the two in step when the card design changes.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- The card: the country row with a down chevron centred under it, hinting at its cities. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:orientation="vertical"
+        android:background="@drawable/bg_info_container">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/ivFlag"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/bg_main_container"
+                tools:ignore="ContentDescription" />
+
+            <!-- Takes the leftover width and ellipsizes, so a long name never pushes Connect off screen. -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvCountry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="14sp"
+                    android:textColor="@color/title_font_color"
+                    android:fontFamily="@font/inter_regular"
+                    android:textStyle="bold"
+                    tools:text="United States" />
+
+                <TextView
+                    android:id="@+id/tvCity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="13sp"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="@font/inter_regular"
+                    tools:text="New York" />
+
+            </LinearLayout>
+
+            <!-- Ping quality: dot shade runs bg_ping_high (best) -> bg_ping_low (worst). -->
+            <View
+                android:id="@+id/vPingDot"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_ping_high" />
+
+            <TextView
+                android:id="@+id/tvPing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:maxLines="1"
+                android:textSize="13sp"
+                android:textColor="@color/font_color"
+                android:fontFamily="@font/inter_regular"
+                tools:text="24 ms" />
+
+            <!--
+              Not focusable: a focusable child stops ListView delivering item clicks, and a tap on the
+              rest of the card is what lists the country's cities.
+            -->
+            <TextView
+                android:id="@+id/btnConnect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="32dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/bg_main_bordered_container"
+                android:clickable="true"
+                android:focusable="false"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/connect"
+                android:textAllCaps="false"
+                android:textSize="13sp"
+                android:textColor="@color/font_color"
+                android:fontFamily="@font/inter_regular"
+                tools:ignore="KeyboardInaccessibleWidget" />
+
+        </LinearLayout>
+
+        <!--
+          Coloured strip with the forward_arrow chevron. Inset 1dp to sit inside the card's stroke.
+          LocationAdapter turns the chevron down/up and hides the strip when there are no cities.
+        -->
+        <FrameLayout
+            android:id="@+id/expandStrip"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/bg_expand_strip">
+
+            <ImageView
+                android:id="@+id/ivExpand"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center"
+                android:rotation="90"
+                android:scaleType="centerInside"
+                android:src="@drawable/forward_arrow"
+                tools:ignore="ContentDescription" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <!-- Filled with item_city_location.xml rows by LocationAdapter when expanded. -->
+    <LinearLayout
+        android:id="@+id/llCities"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:orientation="vertical"
+        android:visibility="gone" />
+
+</LinearLayout>

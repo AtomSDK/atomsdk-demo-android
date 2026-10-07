@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  More > Split Tunneling. The mode picks the SDK call (withReverseSplitTunneling excludes the
+  selected apps, withSplitTunneling routes only them); the list picks which installed apps it
+  applies to. The list is a ListView, so this is deliberately not inside a ScrollView.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_back_header" />
+
+    <TextView
+        style="@style/FeatureSectionTitle"
+        android:layout_marginStart="@dimen/screen_gutter"
+        android:layout_marginEnd="@dimen/screen_gutter"
+        android:text="@string/split_mode" />
+
+    <!--
+      The radio button's own drawable carries a few dp of inset, so a smaller start padding
+      lines its circle up with the 16dp text inset of the other cards.
+    -->
+    <RadioGroup
+        android:id="@+id/rgSplitMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/screen_gutter"
+        android:layout_marginEnd="@dimen/screen_gutter"
+        android:background="@drawable/bg_info_container"
+        android:orientation="vertical"
+        android:paddingStart="12dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="@dimen/card_row_padding_horizontal"
+        android:paddingBottom="4dp">
+
+        <RadioButton
+            android:id="@+id/rbSplitOff"
+            style="@style/SplitModeOption"
+            android:text="@string/split_mode_off" />
+
+        <RadioButton
+            android:id="@+id/rbSplitExclude"
+            style="@style/SplitModeOption"
+            android:text="@string/split_mode_exclude" />
+
+        <RadioButton
+            android:id="@+id/rbSplitOnly"
+            style="@style/SplitModeOption"
+            android:text="@string/split_mode_only" />
+
+    </RadioGroup>
+
+    <!-- Starts at the card's text inset so it reads as a caption of the card above. -->
+    <TextView
+        android:id="@+id/tvSplitCall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/row_control_gap"
+        android:paddingStart="@dimen/card_row_padding_horizontal"
+        android:paddingEnd="@dimen/card_row_padding_horizontal"
+        android:layout_marginStart="@dimen/screen_gutter"
+        android:layout_marginEnd="@dimen/screen_gutter"
+        android:fontFamily="@font/mono_regular"
+        android:textColor="@color/hint_font_color"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/tvSplitAppsTitle"
+        style="@style/FeatureSectionTitle"
+        android:layout_marginStart="@dimen/screen_gutter"
+        android:layout_marginEnd="@dimen/screen_gutter" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/screen_gutter"
+        android:layout_marginEnd="@dimen/screen_gutter"
+        android:layout_marginBottom="@dimen/screen_bottom_space"
+        android:background="@drawable/bg_info_container">
+
+        <ListView
+            android:id="@+id/lvSplitApps"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/borderColor"
+            android:dividerHeight="1dp" />
+
+        <TextView
+            android:id="@+id/tvSplitAppsEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/inter_regular"
+            android:gravity="center"
+            android:padding="@dimen/card_row_padding_horizontal"
+            android:text="@string/loading_apps"
+            android:textColor="@color/font_color"
+            android:textSize="13sp" />
+
+    </FrameLayout>
+
+</LinearLayout>

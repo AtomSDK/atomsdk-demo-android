@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One switch row on the Connection Features screen: title, what it does, and the SDK call it maps
+  to. Inflated and filled by ConnectionFeaturesFragment; tapping anywhere on the row flips it.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/card_row_min_height"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/card_row_padding_horizontal"
+    android:paddingTop="@dimen/card_row_padding_vertical"
+    android:paddingEnd="@dimen/card_row_padding_horizontal"
+    android:paddingBottom="@dimen/card_row_padding_vertical">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvFeatureTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_regular"
+            android:textColor="@color/title_font_color"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="Tracker &amp; Ad Blocker" />
+
+        <TextView
+            android:id="@+id/tvFeatureSummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/row_text_gap"
+            android:fontFamily="@font/inter_regular"
+            android:textColor="@color/font_color"
+            android:textSize="13sp"
+            tools:text="Blocks trackers and ads while connected" />
+
+        <TextView
+            android:id="@+id/tvFeatureCall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/row_call_gap"
+            android:fontFamily="@font/mono_regular"
+            android:textColor="@color/hint_font_color"
+            android:textSize="11sp"
+            tools:text="withAtomShield(TRACKER_AND_AD_BLOCKER)" />
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/swFeature"
+        android:saveEnabled="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:thumbTint="@color/switch_thumb"
+        app:trackTint="@color/switch_track" />
+
+</LinearLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Log filter chips; the inset forwards the checked state to the selector.
+  The view is 48dp tall for the touch target; the inset keeps the visible shape 32dp.
+-->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/bg_log_filter_chip"
+    android:insetTop="8dp"
+    android:insetBottom="8dp" />

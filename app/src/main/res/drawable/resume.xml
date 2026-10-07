@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Play-then-pause glyph for resume(). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="14dp"
+    android:height="10dp"
+    android:tint="@color/title_font_color"
+    android:viewportWidth="14"
+    android:viewportHeight="10">
+  <path
+      android:pathData="M0,0L6,5L0,10V0M8,0H10V10H8V0M12,0H14V10H12V0"
+      android:fillColor="@color/title_font_color"/>
+</vector>

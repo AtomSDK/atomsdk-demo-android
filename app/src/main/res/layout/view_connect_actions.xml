@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Primary and secondary actions plus the result card shared by the connect screens, bound by BaseConnectFragment. -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <!-- Location: where the tunnel is, from getConnectedLocation(), while connected. -->
+    <TextView
+        style="@style/ActionSectionTitle"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="6dp"
+        android:text="@string/location_section" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/borderColor" />
+
+    <TextView
+        android:id="@+id/tvLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_regular"
+        android:text="@string/not_connected"
+        android:textColor="@color/title_font_color"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <TextView
+        style="@style/ActionCaption"
+        android:layout_gravity="start"
+        android:text="@string/call_get_connected_location" />
+
+    <!-- Primary actions -->
+    <TextView
+        style="@style/ActionSectionTitle"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="6dp"
+        android:text="@string/primary_actions" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/borderColor" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:orientation="vertical">
+
+            <!-- A Button: BaseConnectFragment finds it by id and relabels it (Cancel/Connect). -->
+            <Button
+                android:id="@+id/btnConnect"
+                style="@style/ActionButton"
+                android:background="@drawable/bg_button_container"
+                android:drawableStart="@drawable/play"
+                android:text="@string/connect"
+                android:textColor="@color/button_text_color" />
+
+            <TextView
+                style="@style/ActionCaption"
+                android:text="@string/call_connect" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnDisconnect"
+                style="@style/ActionButton"
+                android:background="@drawable/bg_outlined_button"
+                android:drawableStart="@drawable/disconnect"
+                android:text="@string/disconnect"
+                android:textColor="@color/title_font_color" />
+
+            <TextView
+                style="@style/ActionCaption"
+                android:text="@string/call_disconnect" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Secondary actions -->
+    <TextView
+        style="@style/ActionSectionTitle"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="6dp"
+        android:text="@string/secondary_actions" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/borderColor" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btnReconnect"
+                style="@style/SecondaryActionButton"
+                android:contentDescription="@string/reconnect"
+                android:src="@drawable/reload" />
+
+            <TextView
+                style="@style/ActionLabel"
+                android:text="@string/reconnect" />
+
+            <TextView
+                style="@style/ActionCaption.Small"
+                android:text="@string/call_reconnect" />
+
+        </LinearLayout>
+
+        <!--
+          Pause and Resume share one slot: only one applies at a time, so the fragment shows
+          layPause while connected and layResume while paused.
+        -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp">
+
+            <LinearLayout
+                android:id="@+id/layPause"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!--
+                  A Button, not an ImageButton: BaseConnectFragment casts btnPause to
+                  Button. With no text the icon comes from the background so it stays centred.
+                -->
+                <Button
+                    android:id="@+id/btnPause"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="-8dp"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:background="@drawable/bg_pause_button"
+                    android:contentDescription="@string/pause"
+                    android:stateListAnimator="@null" />
+
+                <TextView
+                    style="@style/ActionLabel"
+                    android:text="@string/pause" />
+
+                <TextView
+                    style="@style/ActionCaption.Small"
+                    android:text="@string/call_pause" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layResume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageButton
+                    android:id="@+id/btnResume"
+                    style="@style/SecondaryActionButton"
+                    android:contentDescription="@string/resume"
+                    android:src="@drawable/resume" />
+
+                <TextView
+                    style="@style/ActionLabel"
+                    android:text="@string/resume" />
+
+                <TextView
+                    style="@style/ActionCaption.Small"
+                    android:text="@string/call_resume" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btnConnectionOverConnection"
+                style="@style/SecondaryActionButton"
+                android:contentDescription="@string/connection_over_connection"
+                android:src="@drawable/tunneling"
+                app:tint="@color/title_font_color"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                tools:ignore="UseAppTint" />
+
+            <!--
+              No dedicated SDK call: connect() while already connected or paused is
+              Connection over Connection - the SDK drops the tunnel and dials the new one.
+            -->
+            <TextView
+                style="@style/ActionLabel"
+                android:text="@string/coc" />
+
+            <TextView
+                style="@style/ActionCaption.Small"
+                android:text="@string/call_connect" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--
+      Result of the last SDK call. Hidden until the fragment has a result to show; fill
+      tvResultTitle ("SUCCESS - CONNECT()") and tvResultMessage, then make it visible.
+    -->
+    <LinearLayout
+        android:id="@+id/resultCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/bg_result_success"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivResultIcon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/check_circle"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/tvResultTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/mono_regular"
+                android:textColor="@color/result_success_title"
+                android:textSize="13sp"
+                tools:text="SUCCESS - CONNECT()" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvResultMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="6dp"
+            android:fontFamily="@font/mono_regular"
+            android:textColor="@color/result_success_text"
+            android:textSize="13sp"
+            tools:text="Result: Connection initiated" />
+
+    </LinearLayout>
+
+</merge>

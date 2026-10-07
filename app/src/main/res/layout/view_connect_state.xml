@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Top of the connect screens' CURRENT STATE card: status chip, Tracker / Ad Blocker and traffic. BaseConnectFragment binds it. -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textStyle="bold"
+            android:text="@string/current_state"
+            android:textColor="@color/font_color"
+            android:fontFamily="@font/inter_regular"
+            android:textSize="11sp"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/initialSetupHeaderStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_not_setup_step"
+            android:gravity="center_vertical"
+            android:minHeight="22dp"
+            android:orientation="horizontal"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:paddingBottom="2dp">
+
+            <View
+                android:id="@+id/vStatusDot"
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:background="@drawable/bg_red_circle" />
+
+            <TextView
+                android:id="@+id/tvSetupStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/mono_regular"
+                android:text="@string/disconnected"
+                android:textColor="@color/red_circle"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/borderColor" />
+
+    <!-- Tracker / Ad Blocker (withAtomShield): AtomShieldListener status and blocked counter. Shown only while the feature is on. -->
+    <LinearLayout
+        android:id="@+id/layShield"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tracker_ad_blocker"
+                android:textColor="@color/hint_font_color"
+                android:textStyle="bold"
+                android:fontFamily="@font/inter_regular"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/tvShieldStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/title_font_color"
+                android:textStyle="bold"
+                android:fontFamily="@font/inter_regular"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/blocked"
+                android:textColor="@color/hint_font_color"
+                android:textStyle="bold"
+                android:fontFamily="@font/inter_regular"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/tvShieldBlocked"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/title_font_color"
+                android:textStyle="bold"
+                android:fontFamily="@font/inter_regular"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Network traffic from onPacketsTransmitted: speed and running total. Shown only while connected. -->
+    <LinearLayout
+        android:id="@+id/layTraffic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/download"
+                    android:textColor="@color/hint_font_color"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/inter_regular"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/tvTrafficDown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/title_font_color"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/inter_regular"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/upload"
+                    android:textColor="@color/hint_font_color"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/inter_regular"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/tvTrafficUp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/title_font_color"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/inter_regular"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- SDK callback behind the traffic row. -->
+        <TextView
+            style="@style/ActionCaption"
+            android:layout_gravity="start"
+            android:text="@string/call_on_packets_transmitted" />
+
+    </LinearLayout>
+
+</merge>

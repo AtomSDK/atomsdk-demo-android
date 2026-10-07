@@ -5,4 +5,74 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="background">#F9F9FF</color>
+    <color name="secondary_font_color">#575E70</color>
+
+    <color name="background_container">#F0F3FF</color>
+
+    <color name="background_container_secondary">#DCE2F3</color>
+
+    <color name="font_color">#424754</color>
+
+    <color name="not_background_container">#FFDAD6</color>
+
+    <color name="red_circle">#BA1A1A</color>
+    
+    <color name="colorDetailsContainer">#E7EEFE</color>
+
+    <color name="buttonColor">#0058BE</color>
+
+    <color name="borderColor">#C2C6D6</color>
+
+    <color name="secondaryButtonColor">#2170E4</color>
+
+    <color name="secondaryBackgroundColor">#E2E8F8</color>
+
+    <color name="terminalLogsBackground">#111827</color>
+
+    <!-- Log console palette. The console is dark in both themes, so none of these are overridden. -->
+    <color name="log_time">#9CA3AF</color>
+    <color name="log_text">#E5E7EB</color>
+    <color name="log_info">#3B82F6</color>
+    <color name="log_success">#4ADE80</color>
+    <color name="log_warning">#FBBF24</color>
+    <color name="log_warning_text">#FDE68A</color>
+    <color name="log_error">#EF4444</color>
+    <color name="log_error_text">#FCA5A5</color>
+    <color name="log_error_row">#2A1B24</color>
+
+    <!-- SDK call result card. Already a saturated fill, so it reads the same in both themes. -->
+    <color name="result_success_background">#07683F</color>
+    <color name="result_success_border">#054E30</color>
+    <color name="result_success_title">#86EFAC</color>
+    <color name="result_success_text">#FFFFFF</color>
+    <color name="result_error_background">#B3261E</color>
+    <color name="result_error_border">#8C1D18</color>
+    <color name="result_error_title">#FFDAD6</color>
+
+    <!--
+      Semantic tokens used by fragment_main. Every one of these is overridden in
+      values-night/colors.xml, so do not reuse a raw colour (e.g. colorPrimaryWhite)
+      where one of these fits.
+    -->
+    <color name="title_font_color">#1A1C1E</color>
+    <color name="hint_font_color">#5E6168</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="button_text_color">#FFFFFF</color>
+
+    <color name="not_font_color">#410002</color>
+
+    <color name="ready_background_container">#B6F2BE</color>
+    <color name="ready_font_color">#00210B</color>
+    <color name="green_circle">#006E1C</color>
+
+    <!--
+      Ping quality: green = good, lighter green = fair, amber = poor. Poor is amber rather than a
+      paler green so every step keeps 3:1 against the card, as the dot is a signal on its own.
+    -->
+    <color name="ping_high">#006E1C</color>
+    <color name="ping_mid">#3A9A4F</color>
+    <color name="ping_low">#B45309</color>
+
 </resources>

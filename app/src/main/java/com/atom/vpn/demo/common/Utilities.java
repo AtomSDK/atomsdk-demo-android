@@ -5,6 +5,8 @@
 
 package com.atom.vpn.demo.common;
 
+import com.atom.vpn.demo.R;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
@@ -51,34 +53,25 @@ public class Utilities {
         }
     }
 
-    public static void getPauseTimerList(Activity activity, AtomDemoAppCallback<PauseVPNTimer> callback) {
-        List<PauseVPNTimer> l = Arrays.asList(
-                PauseVPNTimer.MINUTES_5, PauseVPNTimer.MINUTES_10, PauseVPNTimer.MINUTES_15,
-                PauseVPNTimer.MINUTES_30, PauseVPNTimer.MINUTES_60, PauseVPNTimer.MANUAL
-        );
-        String[] times = l.stream().map(Enum::toString).toArray(String[]::new);
-        UIHelper.showListDialogBox(activity, "Pause VPN for:", times, (dialog, which) -> {
-            callback.invoke(l.get(which));
-        });
+    /** Pause durations offered to the user, in the order of R.array.pause_timer_labels. */
+    private static final List<PauseVPNTimer> PAUSE_TIMERS = Arrays.asList(
+            PauseVPNTimer.MINUTES_5, PauseVPNTimer.MINUTES_10, PauseVPNTimer.MINUTES_15,
+            PauseVPNTimer.MINUTES_30, PauseVPNTimer.MINUTES_60, PauseVPNTimer.MANUAL
+    );
+
+    /** Human-readable label for a pause duration, e.g. "5 minutes" rather than MINUTES_5. */
+    public static String pauseTimerLabel(Context context, PauseVPNTimer timer) {
+        int index = PAUSE_TIMERS.indexOf(timer);
+        return index < 0 ? timer.toString()
+                : context.getResources().getStringArray(R.array.pause_timer_labels)[index];
     }
 
-    public static void changeButtonText(Context context, Button button) {
-        if (AtomDemoApplicationController.getInstance().getAtomManager() != null) {
-            if(AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(context).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTED)){
-                if (button != null) {
-                    button.setText("Disconnect");
-                }
-            }else if(AtomDemoApplicationController.getInstance().getAtomManager().getCurrentVpnStatus(context).equalsIgnoreCase(AtomManager.VPNStatus.CONNECTING)){
-                if (button != null) {
-                    button.setText("Cancel");
-                }
-            }else{
-                if (button != null) {
-                    button.setText("Connect");
-                }
-            }
-
-        }
+    public static void getPauseTimerList(Activity activity, AtomDemoAppCallback<PauseVPNTimer> callback) {
+        List<PauseVPNTimer> l = PAUSE_TIMERS;
+        String[] times = activity.getResources().getStringArray(R.array.pause_timer_labels);
+        UIHelper.showListDialogBox(activity, activity.getString(R.string.pause_vpn_for), times, (dialog, which) -> {
+            callback.invoke(l.get(which));
+        });
     }
 
 }

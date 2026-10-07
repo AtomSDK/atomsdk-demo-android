@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  More > Connection Features. Switch rows are inflated into the containers by
+  ConnectionFeaturesFragment (item_feature_toggle); the port and server filter inputs are declared
+  here since they are not plain switches. Everything is saved to DemoSettings as it changes and
+  applied by the connect screens on the next connect().
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_back_header" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/screen_bottom_space">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/screen_gutter"
+            android:paddingEnd="@dimen/screen_gutter">
+
+            <TextView
+                style="@style/FeatureSectionTitle"
+                android:text="@string/features_section_privacy" />
+
+            <LinearLayout
+                android:id="@+id/containerPrivacy"
+                style="@style/FeatureCard" />
+
+            <TextView
+                style="@style/FeatureSectionTitle"
+                android:text="@string/features_section_dialing" />
+
+            <LinearLayout
+                android:id="@+id/containerDialing"
+                style="@style/FeatureCard" />
+
+            <TextView
+                style="@style/FeatureSectionTitle"
+                android:text="@string/features_section_params" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/inter_regular"
+                android:text="@string/features_section_params_summary"
+                android:textColor="@color/font_color"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:id="@+id/containerParams"
+                style="@style/FeatureCard">
+
+                <!-- Manual port: only while the Automatic port (multiport) switch is off. -->
+                <LinearLayout
+                    android:id="@+id/layManualPort"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="@dimen/card_row_min_height"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/card_row_padding_horizontal"
+                    android:paddingTop="@dimen/card_row_padding_vertical"
+                    android:paddingEnd="@dimen/card_row_padding_horizontal"
+                    android:paddingBottom="@dimen/card_row_padding_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvManualPortLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_regular"
+                            android:labelFor="@+id/etManualPort"
+                            android:text="@string/manual_port"
+                            android:textColor="@color/title_font_color"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/row_call_gap"
+                            android:fontFamily="@font/mono_regular"
+                            android:text="@string/call_manual_port"
+                            android:textColor="@color/hint_font_color"
+                            android:textSize="11sp" />
+
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/etManualPort"
+                        android:layout_width="96dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_main_bordered_container"
+                        android:fontFamily="@font/mono_regular"
+                        android:gravity="center"
+                        android:imeOptions="actionDone"
+                        android:importantForAutofill="no"
+                        android:inputType="number"
+                        android:maxLength="5"
+                        android:minHeight="48dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:textColor="@color/title_font_color"
+                        android:textSize="14sp"
+                        tools:text="5500" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/borderColor" />
+
+                <!--
+                  Server filter by NAS identifier: empty means no filter. No bottom padding: the
+                  48dp radio buttons already leave about a row's padding below their text.
+                -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="@dimen/card_row_padding_horizontal"
+                    android:paddingTop="@dimen/card_row_padding_vertical"
+                    android:paddingEnd="@dimen/card_row_padding_horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_regular"
+                        android:labelFor="@+id/etServerFilterNas"
+                        android:text="@string/server_filter"
+                        android:textColor="@color/title_font_color"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/row_text_gap"
+                        android:fontFamily="@font/inter_regular"
+                        android:text="@string/server_filter_summary"
+                        android:textColor="@color/font_color"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/row_call_gap"
+                        android:fontFamily="@font/mono_regular"
+                        android:text="@string/call_server_filter"
+                        android:textColor="@color/hint_font_color"
+                        android:textSize="11sp" />
+
+                    <EditText
+                        android:id="@+id/etServerFilterNas"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/row_control_gap"
+                        android:background="@drawable/bg_main_bordered_container"
+                        android:fontFamily="@font/mono_regular"
+                        android:hint="@string/server_filter_hint"
+                        android:imeOptions="actionDone"
+                        android:importantForAutofill="no"
+                        android:inputType="textNoSuggestions"
+                        android:maxLines="1"
+                        android:minHeight="48dp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:textColor="@color/title_font_color"
+                        android:textColorHint="@color/hint_font_color"
+                        android:textSize="13sp" />
+
+                    <RadioGroup
+                        android:id="@+id/rgServerFilterType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/rbServerFilterInclude"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:fontFamily="@font/inter_regular"
+                            android:minHeight="48dp"
+                            android:text="@string/server_filter_include"
+                            android:textColor="@color/title_font_color"
+                            android:textSize="13sp" />
+
+                        <RadioButton
+                            android:id="@+id/rbServerFilterExclude"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_regular"
+                            android:minHeight="48dp"
+                            android:text="@string/server_filter_exclude"
+                            android:textColor="@color/title_font_color"
+                            android:textSize="13sp" />
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/FeatureSectionTitle"
+                android:text="@string/features_section_sdk" />
+
+            <LinearLayout
+                android:id="@+id/containerSdk"
+                style="@style/FeatureCard" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

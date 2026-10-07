@@ -13,30 +13,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/sample_main_layout"
+<!--
+  The hosted fragments own their own header and their own scrolling, so this is just a
+  full-height container. Do not reintroduce a Toolbar here (it duplicated the fragment
+  header) or a ScrollView (it broke the fragment's NestedScrollView by measuring it
+  with an UNSPECIFIED height).
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sample_content_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:theme="@style/AppTheme"
-        app:title="@string/app_name" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <FrameLayout
-            android:id="@+id/sample_content_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </ScrollView>
-</LinearLayout>
+    android:background="@color/background"
+    android:fitsSystemWindows="true" />
 
 

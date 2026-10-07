@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Atom SDK Demo</string>
 
-    <string name="atom_secret_key"></string>
+    <string name="atom_secret_key">745297c529c4e27c5298f870e7d3c12d6</string>
 
     <string name="intro_message">
       <![CDATA[
@@ -40,6 +40,7 @@
     <string name="label_connect_with_psk">Connect with Pre-Shared Key</string>
     <string name="label_connect_with_params">Connect with Params</string>
     <string name="label_connect_with_dedicated_ip">Connect with Dedicated IP</string>
+    <string name="label_connect_with_multiple_dedicated_ip">Connect with Multiple Dedicated IPs</string>
     <string name="label_connect_with_channel">Connect with Channel</string>
     <string name="label_connect_with_smart_connect">Connect with SmartConnect Tags</string>
     <string name="lbl_optimize_connection">Optimize Connection</string>
@@ -78,6 +79,255 @@
     </string-array>
 
     <string name="ok">OK</string>
-    <string name="vpn_permission_screen_content">Your device will ask permission to complete the configuration.</string>
-    <string name="vpn_permission_screen_heading">Set Up Your VPN</string>
+    <string name="coc">COC</string>
+
+    <!-- Connection Features (More) -->
+    <string name="connection_features">Connection Features</string>
+    <string name="connection_features_summary">Ad blocker, LAN, failover, multiport</string>
+    <string name="features_section_privacy">Privacy</string>
+    <string name="features_section_dialing">Dialing</string>
+    <string name="features_section_params">Connection</string>
+    <string name="features_section_params_summary">These apply only to Connection With Params.</string>
+    <string name="features_section_sdk">SDK Configuration</string>
+    <string name="tracker_ad_blocker">Tracker &amp; Ad Blocker</string>
+    <string name="tracker_ad_blocker_summary">Blocks trackers and ads while connected. Not supported for channels.</string>
+    <string name="call_tracker_ad_blocker">withAtomShield(TRACKER_AND_AD_BLOCKER)</string>
+    <string name="lan_access">LAN Access</string>
+    <string name="lan_access_summary">Reach local network devices (printers, casting) while connected</string>
+    <string name="call_lan_access">allowLocalNetworkTraffic()</string>
+    <string name="protocol_switch">Protocol Switch</string>
+    <string name="protocol_switch_summary">Let the SDK try another protocol if the chosen one fails</string>
+    <string name="call_protocol_switch">enableProtocolSwitch(boolean)</string>
+    <string name="failover">Failover</string>
+    <string name="failover_summary">Dial the nearest server if the requested one is busy or unavailable</string>
+    <string name="call_failover">withUseFailoverEnabled(boolean)</string>
+    <string name="automatic_port">Automatic Port (Multiport)</string>
+    <string name="automatic_port_summary">Let the SDK pick the port. Off dials the manual port below.</string>
+    <string name="call_automatic_port">withAutomaticPort()</string>
+    <string name="manual_port">Manual Port</string>
+    <string name="call_manual_port">withManualPort(int)</string>
+    <string name="invalid_port">Enter a port between 1 and 65535</string>
+    <string name="server_filter">Server Filter</string>
+    <string name="server_filter_summary">Include or exclude one server by its NAS identifier. Leave empty for no filter.</string>
+    <string name="call_server_filter">withServerFilter(List&lt;ServerFilter&gt;)</string>
+    <string name="server_filter_hint">NAS identifier</string>
+    <string name="server_filter_include">Include</string>
+    <string name="server_filter_exclude">Exclude</string>
+    <string name="persist_vpn_details">Persist VPN Details</string>
+    <string name="persist_vpn_details_summary">Keep VPN details across app restarts. Applies from the next app launch.</string>
+    <string name="call_persist_vpn_details">AtomConfiguration.Builder.persistVPNDetails(boolean)</string>
+    <string name="applies_next_launch">Restart the app to apply this</string>
+
+    <!-- Split Tunneling (More) -->
+    <string name="split_mode">Mode</string>
+    <string name="split_mode_off">Off: all apps use the VPN</string>
+    <string name="split_mode_exclude">Exclude selected apps from the VPN</string>
+    <string name="split_mode_only">Only selected apps use the VPN</string>
+    <string name="call_split_off">No split tunneling</string>
+    <string name="call_split_exclude">withReverseSplitTunneling(String[] packageNames)</string>
+    <string name="call_split_only">withSplitTunneling(String[] packageNames)</string>
+    <string name="split_apps_title">Apps (%1$d selected)</string>
+    <string name="loading_apps">Loading apps…</string>
+    <string name="no_apps_found">No apps found</string>
+    <string name="split_summary_off">Route specific app traffic</string>
+    <string name="split_summary_exclude">Excluding %1$d apps from the VPN</string>
+    <string name="split_summary_only">Only %1$d apps use the VPN</string>
+    <string name="split_select_apps_first">Select at least one app below</string>
+
+    <!-- Connect screens: new state rows and results -->
+    <string name="blocked">Blocked</string>
+    <string name="download">Download</string>
+    <string name="upload">Upload</string>
+    <string name="traffic_format">%1$s · %2$s</string>
+    <string name="shield_waiting">Starts once connected</string>
+    <string name="shield_establishing">Establishing…</string>
+    <string name="shield_established">Active</string>
+    <string name="shield_disconnected">Disconnected</string>
+    <string name="shield_error">Error</string>
+    <string name="shield_error_format">%1$s (%2$d)</string>
+    <string name="recommended_protocol_auto">Recommended (auto)</string>
+    <string name="recommended_protocol_short">Recommended</string>
+    <string name="connected_with_recommended">Connected with the recommended protocol (%1$s)</string>
+    <string name="paused_for">Paused for %1$s</string>
+    <string name="paused_until_resumed">Paused until you resume</string>
+    <string name="resumed_automatically">Resumed automatically when the pause timer ended</string>
+    <string name="resumed_manually">Resumed manually</string>
+    <string name="error_resume_not_paused">Unable to resume: the VPN is not paused</string>
+    <string name="error_pause_not_connected">Unable to pause: the VPN is not connected</string>
+    <string name="error_pause_always_on">Unable to pause while Always-on VPN is active</string>
+    <string name="error_pause_not_enabled">Pause VPN is not enabled in AtomConfiguration</string>
+    <string name="alert">Alert</string>
+    <string name="pause_vpn_for">Pause VPN for:</string>
+    <!-- Same order as the PauseVPNTimer list in Utilities.getPauseTimerList. -->
+    <string-array name="pause_timer_labels">
+        <item>5 minutes</item>
+        <item>10 minutes</item>
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>60 minutes</item>
+        <item>Until I resume</item>
+    </string-array>
+    <string name="current_state">CURRENT STATE</string>
+    <string name="vpn_permission_required">Please provide VPN permission to use this application</string>
+    <string name="initialization_flow">Initialization Flow</string>
+    <string name="initial_setup_step_1">INITIAL SETUP - STEP 1</string>
+    <string name="not_initialized">NOT INITIALIZED</string>
+    <string name="initialized">INITIALIZED</string>
+    <string name="config_text_initialization">Configure your developer API Key and user authentication credentials to initialize the Atom VPN SDK singleton.</string>
+    <string name="atom_secret_key_here">atom_secret_key_here</string>
+    <string name="username_placeholder">vpn_user@atom.network or qa_tester</string>
+    <string name="password_placeholder">Enter VPN password</string>
+    <string name="initialize_sdk">Initialize SDK</string>
+
+    <!-- Field labels -->
+    <string name="label_atom_api_key">ATOM API KEY</string>
+    <string name="label_vpn_username">VPN USERNAME</string>
+    <string name="label_vpn_password">VPN PASSWORD</string>
+
+    <!-- "Atom SDK Demo · v7.1.1" -->
+    <string name="sdk_version_format" translatable="false">%1$s · v%2$s</string>
+
+    <!-- Accessibility -->
+    <string name="cd_show_password">Show password</string>
+    <string name="cd_hide_password">Hide password</string>
+    <string name="cd_clear_credentials">Clear username and password</string>
+    <string name="cd_explain_sdk_call">Explain the SDK call</string>
+  <string name="atom_vpn_sdk">ATOM VPN SDK</string>
+  <string name="sdk_status">SDK STATUS</string>
+  <string name="state">State</string>
+  <string name="version">Version</string>
+  <string name="platform">Platform</string>
+  <string name="android">Android</string>
+  <string name="disconnected">Disconnected</string>
+  <string name="connected">Connected</string>
+  <string name="connecting">Connecting</string>
+  <string name="disconnecting">Disconnecting</string>
+  <string name="paused">Paused</string>
+  <string name="atom_manager_not_initialized">Atom Manager is not initialized</string>
+
+  <!-- Bottom navigation -->
+  <string name="nav_dashboard">Dashboard</string>
+  <string name="nav_connection">Connection</string>
+  <string name="nav_locations">Locations</string>
+  <string name="nav_more">More</string>
+  <string name="recommended_location">RECOMMENDED LOCATION</string>
+  <string name="available_servers">AVAILABLE SERVERS</string>
+
+  <!-- Locations screen -->
+  <string name="search_country_or_city">Search country or city</string>
+  <string name="reload_locations">Reload locations</string>
+  <string name="ping">Ping</string>
+  <string name="call_reload_locations" translatable="false">getCountries()\ngetCities()</string>
+  <string name="call_get_optimized_countries" translatable="false">getOptimizedCountries()</string>
+  <string name="call_get_recommended_location" translatable="false">getRecommendedLocation()</string>
+  <string name="loading_locations">Loading locations…</string>
+  <string name="no_locations_found">No locations found</string>
+  <string name="locations_load_failed">Could not load locations</string>
+  <string name="no_recommended_location">No recommended location</string>
+  <string name="no_protocol_for_location">No protocol available for this location</string>
+  <string name="disconnect">Disconnect</string>
+  <string name="cancel">Cancel</string>
+  <string name="ping_ms">%1$d ms</string>
+  <string name="configuration">Configuration</string>
+  <string name="wireguard_ikev2_openvpn">Wireguard / IKEv2 / OpenVPN</string>
+  <plurals name="shield_blocked_count">
+    <item quantity="one">%d tracker/ad</item>
+    <item quantity="other">%d trackers/ads</item>
+  </plurals>
+  <plurals name="city_count">
+    <item quantity="one">%1$d city</item>
+    <item quantity="other">%1$d cities</item>
+  </plurals>
+
+  <!-- More screen -->
+  <string name="vpn_protocol">VPN Protocol</string>
+  <string name="protocol_default">Default</string>
+  <string name="protocol_default_first">Default (first available)</string>
+  <string name="protocols_unavailable">Could not load protocols</string>
+  <string name="split_tunneling">Split Tunneling</string>
+  <string name="split_tunneling_summary">Route specific app traffic</string>
+  <string name="cd_toggle_split_tunneling">Enable split tunneling</string>
+  <string name="developer_tools">Developer Tools</string>
+  <string name="sdk_logs">SDK Logs</string>
+  <string name="switch_to_dark_theme">Switch to dark theme</string>
+  <string name="switch_to_light_theme">Switch to light theme</string>
+  <string name="sdk_logs_summary">View runtime connection logs</string>
+  <string name="sdk_info">SDK Info</string>
+  <string name="reset_sdk_configuration">Reset SDK Configuration</string>
+  <string name="reset_sdk_configuration_message">VPN protocol, connection features and split tunneling go back to their defaults. Your theme and connect screen stay as they are.</string>
+  <string name="reset">Reset</string>
+  <string name="reset_done">SDK configuration reset</string>
+  <string name="reset_done_restart">SDK configuration reset. Restart the app to clear Persist VPN Details.</string>
+  <string name="sdk_version_build_format">Version %1$s (Build %2$s)</string>
+  <string name="log_filter_all">All</string>
+  <string name="log_filter_info">Info</string>
+  <string name="log_filter_success">Success</string>
+  <string name="log_filter_warning">Warning</string>
+  <string name="log_filter_error">Error</string>
+  <string name="sdk_logs_title">ATOM VPN SDK Logs</string>
+
+  <!-- Connection screen -->
+  <string name="location_section">LOCATION</string>
+  <string name="not_connected">Not connected</string>
+  <string name="call_get_connected_location" translatable="false">getConnectedLocation()</string>
+  <string name="call_on_packets_transmitted" translatable="false">VPNStateListener.onPacketsTransmitted()</string>
+  <string name="primary_actions">PRIMARY ACTIONS</string>
+  <string name="secondary_actions">SECONDARY ACTIONS</string>
+  <string name="connection_over_connection">Connection over Connection</string>
+  <string name="call_connect" translatable="false">connect()</string>
+  <string name="call_disconnect" translatable="false">disconnect()</string>
+  <string name="call_reconnect" translatable="false">reconnect()</string>
+  <string name="call_pause" translatable="false">pause()</string>
+  <string name="call_resume" translatable="false">resume()</string>
+  <string name="pause">Pause</string>
+  <string name="resume">Resume</string>
+  <string name="copy">Copy</string>
+  <string name="back">Back</string>
+  <string name="no_logs">No logs yet</string>
+  <string name="logs_copied">Logs copied to clipboard</string>
+  <string name="connection_with_params">Connection With Params</string>
+  <string name="connection_with_channel">Connection With Channel</string>
+  <string name="connection_with_dedicated_ip">Connection With Dedicated IP</string>
+  <string name="connection_with_multiple_dedicated_ip">Connection With Multiple Dedicated IPs</string>
+  <string name="preferred_protocol">Preferred Protocol</string>
+  <string name="automatic">Automatic</string>
+  <string name="dedicated_hosts">Dedicated Hosts</string>
+  <string name="host_number">Host %1$d</string>
+  <string name="add_host">+ Add host</string>
+  <string name="remove_host">Remove host</string>
+  <string name="dedicated_host_name">Host name</string>
+  <string name="dedicated_host_name_hint">e.g. host.example.com</string>
+  <string name="dedicated_host_ip">IP</string>
+  <string name="dedicated_host_ip_hint">e.g. 203.0.113.10</string>
+  <string name="port_optional">Port (optional)</string>
+  <string name="port_hint">Default</string>
+  <string name="call_multiple_dedicated_builder" translatable="false">new VPNProperties.Builder(List&lt;DedicatedDNS&gt;, protocol)</string>
+  <string name="channel">Channel</string>
+  <string name="dedicated_host">Dedicated IP / Host</string>
+  <string name="dedicated_host_hint">e.g. 203.0.113.10 or host.example.com</string>
+  <string name="protocol">Protocol</string>
+  <string name="ikev2" translatable="false">IKEv2</string>
+  <string name="no_channels_for_protocols">No channel supports the selected protocols</string>
+  <string name="select_protocol_and_channel">Select a primary protocol and a channel</string>
+  <string name="location">Location</string>
+  <string name="country">Country</string>
+  <string name="city">City</string>
+  <string name="any_city">Any city</string>
+  <string name="none">None</string>
+  <string name="not_available">N/A</string>
+  <string name="loading">Loading…</string>
+  <string name="no_countries_for_protocols">No country supports the selected protocols</string>
+  <string name="preselection_inventory_failed">Could not load locations, so the selected country was not applied. Pick one manually.</string>
+  <string name="preselection_country_unavailable">The selected country is no longer available</string>
+  <string name="preselection_protocol_unavailable">%1$s is not available, using %2$s instead</string>
+  <string name="select_country_first">Select a country first</string>
+  <string name="select_protocol_and_country">Select a primary protocol and a country</string>
+  <string name="switching_location">Switching to %1$s</string>
+  <string name="result_success_format" translatable="false">SUCCESS - %1$s</string>
+  <string name="result_error_format" translatable="false">ERROR - %1$s</string>
+  <string name="result_message_format">Result: %1$s</string>
+  <plurals name="log_error_count">
+    <item quantity="one">%d Error</item>
+    <item quantity="other">%d Errors</item>
+  </plurals>
 </resources>
